@@ -1,0 +1,1 @@
+from .oauth1 import OAuth1ConsumerBlueprint
