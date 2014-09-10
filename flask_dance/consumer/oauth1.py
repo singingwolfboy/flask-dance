@@ -53,10 +53,10 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             rsa_key=rsa_key,
             client_class=client_class,
             force_include_body=force_include_body,
+            base_url=base_url,
             **kwargs
         )
 
-        self.base_url = base_url  # TODO: DefaultURLSession class? Composition?
         self.request_token_url = request_token_url
         self.access_token_url = access_token_url
         self.authorization_url = authorization_url

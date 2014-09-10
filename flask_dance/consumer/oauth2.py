@@ -51,13 +51,13 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             scope=scope,
             state=state,
             token_updater=self.set_token,
+            base_url=base_url,
             **kwargs
         )
 
         self.client_secret = client_secret
         self.state = state
 
-        self.base_url = base_url  # TODO: DefaultURLSession class? Composition?
         self.authorization_url = authorization_url
         self.token_url = token_url
         self.redirect_url = redirect_url
