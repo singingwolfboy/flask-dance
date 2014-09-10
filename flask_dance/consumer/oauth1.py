@@ -1,14 +1,12 @@
 from __future__ import unicode_literals, print_function
 
-import types
-
-from flask import Blueprint, request, session, url_for, redirect, flash
-from requests_oauthlib import OAuth1Session, OAuth2Session
+from flask import request, url_for, redirect
+from requests_oauthlib import OAuth1Session
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
-from .utils import proxy_property
+from .base import BaseOAuthConsumerBlueprint
 
 
-class OAuth1ConsumerBlueprint(Blueprint):
+class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     def __init__(self, name, import_name,
             client_key=None,
             client_secret=None,
@@ -19,8 +17,10 @@ class OAuth1ConsumerBlueprint(Blueprint):
             force_include_body=False,
 
             static_folder=None, static_url_path=None, template_folder=None,
-            url_prefix=None, subdomain=None, url_defaults=None,
+            url_prefix=None, subdomain=None, url_defaults=None, root_path=None,
 
+            login_url=None,
+            authorized_url=None,
             base_url=None,
             request_token_url=None,
             access_token_url=None,
@@ -33,13 +33,15 @@ class OAuth1ConsumerBlueprint(Blueprint):
         if not redirect_url and not redirect_to:
             raise AttributeError("One of redirect_url or redirect_to must be defined")
 
-        Blueprint.__init__(
+        BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
             static_folder=static_folder,
             static_url_path=static_url_path,
             template_folder=template_folder,
             url_prefix=url_prefix, subdomain=subdomain,
-            url_defaults=url_defaults, # root_path=root_path,
+            url_defaults=url_defaults, root_path=root_path,
+            login_url=login_url,
+            authorized_url=authorized_url,
         )
 
         self.session = OAuth1Session(
@@ -60,19 +62,6 @@ class OAuth1ConsumerBlueprint(Blueprint):
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
 
-        self.add_url_rule(
-            rule="/login/{name}".format(name=self.name),
-            endpoint="login",
-            view_func=self.login,
-        )
-        self.add_url_rule(
-            rule="/login/{name}/authorized".format(name=self.name),
-            endpoint="authorized",
-            view_func=self.authorized,
-        )
-
-        self.create_token_accessors()
-
     def login(self):
         callback_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
@@ -90,35 +79,3 @@ class OAuth1ConsumerBlueprint(Blueprint):
         self.logged_in_callback(token)
         self.token = token
         return redirect(next_url)
-
-    def logged_in_callback(self, token):
-        pass
-
-    def logged_in(self, func):
-        self.logged_in_callback = types.MethodType(func, self)
-
-    token = proxy_property("token", pass_self=False)
-
-    def token_getter(self, func):
-        self.get_token = func
-
-    def token_setter(self, func):
-        self.set_token = func
-
-    def token_deleter(self, func):
-        self.delete_token = func
-
-    def create_token_accessors(self):
-        key = "{name}_oauth_token".format(name=self.name)
-
-        @self.token_getter
-        def get_token(identifier=None):
-            return session.get(key)
-
-        @self.token_setter
-        def set_token(value, identifier=None):
-            session[key] = value
-
-        @self.token_deleter
-        def delete_token(identifier=None):
-            del session[key]
