@@ -28,8 +28,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             del bp_kwargs["root_path"]
         flask.Blueprint.__init__(self, **bp_kwargs)
 
-        login_url = login_url or "/login/{bp.name}"
-        authorized_url = authorized_url or "/login/{bp.name}/authorized"
+        login_url = login_url or "/{bp.name}"
+        authorized_url = authorized_url or "/{bp.name}/authorized"
 
         self.add_url_rule(
             rule=login_url.format(bp=self),

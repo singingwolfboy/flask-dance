@@ -25,7 +25,7 @@ example, to authenticate with Github, just do the following:
         client_secret="my-secret-here",
         scope="user:email",
     )
-    app.register_blueprint(github_blueprint)
+    app.register_blueprint(github_blueprint, url_prefix="/login")
 
     @app.route("/test-page")
     def test_page():
@@ -58,7 +58,7 @@ directory, but you could use whatever values you want.
         access_token_url="https://github.com/login/oauth/access_token",
         authorize_url="https://github.com/login/oauth/authorize",
     )
-    app.register_blueprint(github_blueprint)
+    app.register_blueprint(github_blueprint, url_prefix="/login")
 
 Now, in your page template, you can do something like:
 
