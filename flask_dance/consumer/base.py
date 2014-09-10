@@ -43,12 +43,16 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         )
 
         self.create_token_accessors()
+        self.before_app_request(self.assign_token_to_session)
 
     def login(self):
         raise NotImplementedError()
 
     def authorized(self):
         raise NotImplementedError()
+
+    def assign_token_to_session(self):
+        raise NotImplementedError
 
     def logged_in_callback(self, token):
         pass

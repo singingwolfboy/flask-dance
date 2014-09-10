@@ -3,6 +3,7 @@ from __future__ import unicode_literals, print_function
 from flask import request, url_for, redirect
 from requests_oauthlib import OAuth1Session
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
+from oauthlib.common import to_unicode
 from .base import BaseOAuthConsumerBlueprint
 
 
@@ -79,3 +80,11 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.logged_in_callback(token)
         self.token = token
         return redirect(next_url)
+
+    def assign_token_to_session(self, identifier=None):
+        token = self.get_token(identifier=identifier)
+        if token and "oauth_token" in token and "oauth_token_secret" in token:
+            # This really, really violates the Law of Demeter, but
+            # I don't see a better way to set these parameters. :(
+            self.session.auth.client.resource_owner_key = to_unicode(token["oauth_token"])
+            self.session.auth.client.resource_owner_secret = to_unicode(token["oauth_token_secret"])
