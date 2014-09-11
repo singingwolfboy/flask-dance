@@ -81,10 +81,9 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         callback_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
         )
-        response = self.session.fetch_request_token(self.request_token_url)
-        url = self.session.authorization_url(
-            self.authorization_url, oauth_callback=callback_uri,
-        )
+        self.session._client.client.callback_uri = to_unicode(callback_uri)
+        self.session.fetch_request_token(self.request_token_url)
+        url = self.session.authorization_url(self.authorization_url)
         return redirect(url)
 
     def authorized(self):
