@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, print_function
 
+import sys
 import flask
 from flask import request, url_for, redirect
 from urlobject import URLObject
@@ -15,6 +16,7 @@ class OAuth2SessionWithBaseURL(OAuth2Session):
     def request(self, method, url, data=None, headers=None, **kwargs):
         if self.base_url:
             url = self.base_url.relative(url)
+        print("URL = {}".format(url), file=sys.stderr)
         return super(OAuth2SessionWithBaseURL, self).request(
             method=method, url=url, data=data, headers=headers, **kwargs
         )

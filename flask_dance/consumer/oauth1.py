@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, print_function
 
+import sys
 from flask import request, url_for, redirect
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session
@@ -16,6 +17,7 @@ class OAuth1SessionWithBaseURL(OAuth1Session):
     def prepare_request(self, request):
         if self.base_url:
             request.url = self.base_url.relative(request.url)
+        print("URL = {}".format(request.url), file=sys.stderr)
         return super(OAuth1SessionWithBaseURL, self).prepare_request(request)
 
 
