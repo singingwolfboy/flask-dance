@@ -1,4 +1,5 @@
 requests>=2.0
 oauthlib
-requests-oauthlib>=0.4.2
+requests-oauthlib
 Flask>=0.7
+urlobject

@@ -1,10 +1,22 @@
 from __future__ import unicode_literals, print_function
 
 from flask import request, url_for, redirect
+from urlobject import URLObject
 from requests_oauthlib import OAuth1Session
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
 from .base import BaseOAuthConsumerBlueprint
+
+
+class OAuth1SessionWithBaseURL(OAuth1Session):
+    def __init__(self, base_url=None, *args, **kwargs):
+        super(OAuth1SessionWithBaseURL, self).__init__(*args, **kwargs)
+        self.base_url = URLObject(base_url)
+
+    def prepare_request(self, request):
+        if self.base_url:
+            request.url = self.base_url.relative(request.url)
+        return super(OAuth1SessionWithBaseURL, self).prepare_request(request)
 
 
 class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
@@ -45,7 +57,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorized_url=authorized_url,
         )
 
-        self.session = OAuth1Session(
+        self.session = OAuth1SessionWithBaseURL(
             client_key=client_key,
             client_secret=client_secret,
             signature_method=signature_method,

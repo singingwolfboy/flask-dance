@@ -2,8 +2,22 @@ from __future__ import unicode_literals, print_function
 
 import flask
 from flask import request, url_for, redirect
+from urlobject import URLObject
 from requests_oauthlib import OAuth2Session
 from .base import BaseOAuthConsumerBlueprint
+
+
+class OAuth2SessionWithBaseURL(OAuth2Session):
+    def __init__(self, base_url=None, *args, **kwargs):
+        super(OAuth2SessionWithBaseURL, self).__init__(*args, **kwargs)
+        self.base_url = URLObject(base_url)
+
+    def request(self, method, url, data=None, headers=None, **kwargs):
+        if self.base_url:
+            url = self.base_url.relative(url)
+        return super(OAuth2SessionWithBaseURL, self).request(
+            method=method, url=url, data=data, headers=headers, **kwargs
+        )
 
 
 class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
@@ -43,7 +57,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorized_url=authorized_url,
         )
 
-        self.session = OAuth2Session(
+        self.session = OAuth2SessionWithBaseURL(
             client_id=client_id,
             client=client,
             auto_refresh_url=auto_refresh_url,
