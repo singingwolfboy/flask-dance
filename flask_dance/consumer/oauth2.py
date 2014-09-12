@@ -1,6 +1,5 @@
 from __future__ import unicode_literals, print_function
 
-import sys
 import flask
 from flask import request, url_for, redirect
 from urlobject import URLObject
@@ -16,7 +15,6 @@ class OAuth2SessionWithBaseURL(OAuth2Session):
     def request(self, method, url, data=None, headers=None, **kwargs):
         if self.base_url:
             url = self.base_url.relative(url)
-        print("URL = {}".format(url), file=sys.stderr)
         return super(OAuth2SessionWithBaseURL, self).request(
             method=method, url=url, data=data, headers=headers, **kwargs
         )
@@ -89,7 +87,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             ".authorized", next=request.args.get('next'),
             _external=True, _scheme="https",
         )
-        print("redirect url = {}".format(self.session.redirect_uri), file=sys.stderr)
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state,
         )
@@ -103,7 +100,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session._state = flask.session[state_key]
         del flask.session[state_key]
 
-        url = URLObject(request.url).with_scheme("https")
+        url = URLObject(request.url)
+        if request.headers.get("X-Forwarded-Proto", "http") == "https":
+            url = url.with_scheme("https")
         token = self.session.fetch_token(
             self.token_url,
             authorization_response=url,
