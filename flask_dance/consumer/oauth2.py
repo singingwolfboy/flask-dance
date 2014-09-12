@@ -103,9 +103,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session._state = flask.session[state_key]
         del flask.session[state_key]
 
+        url = URLObject(request.url).with_scheme("https")
         token = self.session.fetch_token(
             self.token_url,
-            authorization_response=request.url,
+            authorization_response=url,
             client_secret=self.client_secret,
         )
         self.logged_in_callback(token)
