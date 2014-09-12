@@ -89,6 +89,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             ".authorized", next=request.args.get('next'),
             _external=True, _scheme="https",
         )
+        print("redirect url = {}".format(self.session.redirect_uri), file=sys.stderr)
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state,
         )
