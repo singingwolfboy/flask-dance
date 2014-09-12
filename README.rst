@@ -110,7 +110,7 @@ get and set functions, and attach them to the Blueprint object using the
         db.session.add(user)
         db.commit()
 
-    @oauth_blueprint.token_getter
+    @github_blueprint.token_getter
     def get_github_token(identifier=None):
         user = flask.g.user
         if user.github_access_token:
