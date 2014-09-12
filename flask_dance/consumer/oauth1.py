@@ -17,7 +17,6 @@ class OAuth1SessionWithBaseURL(OAuth1Session):
     def prepare_request(self, request):
         if self.base_url:
             request.url = self.base_url.relative(request.url)
-        print("URL = {}".format(request.url), file=sys.stderr)
         return super(OAuth1SessionWithBaseURL, self).prepare_request(request)
 
 
