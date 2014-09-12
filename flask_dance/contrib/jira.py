@@ -19,7 +19,7 @@ def make_jira_blueprint(consumer_key, rsa_key, base_url,
         base_url=base_url,
         request_token_url=base_url.relative("plugins/servlet/oauth/request-token"),
         access_token_url=base_url.relative("plugins/servlet/oauth/access-token"),
-        authorization_url=base_url.relative("plugins/servlet/oauth/authorize")
+        authorization_url=base_url.relative("plugins/servlet/oauth/authorize"),
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
