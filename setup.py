@@ -32,6 +32,7 @@ setup(
     url="https://github.com/singingwolfboy/flask-dance",
     packages=find_packages(),
     install_requires=get_requirements("requirements.txt"),
+    tests_require=['pytest', 'responses'],
     license='MIT',
     classifiers=(
         'License :: OSI Approved :: MIT License',
