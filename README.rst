@@ -1,5 +1,5 @@
-Flask-Dance
-===========
+Flask-Dance |build-status| |coverage-status|
+============================================
 Doing the OAuth dance with style using Flask, requests, and oauthlib. Currently,
 only OAuth consumers are supported, but this project could easily support
 OAuth providers in the future, as well.
@@ -153,3 +153,10 @@ by passing the ``token`` parameter to your ``requests`` method:
     resp = twitter.post("statuses/update.json", data=tweet, token="user")
     # make a request on behalf of the application
     resp = twitter.get("statuses/home_timeline.json", token="app")
+
+.. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master
+   :target: https://travis-ci.org/singingwolfboy/flask-dance
+   :alt: Build status
+.. |coverage-status| image:: https://img.shields.io/coveralls/singingwolfboy/flask-dance.svg
+   :target: https://coveralls.io/r/singingwolfboy/flask-dance?branch=master
+   :alt: Test coverage
