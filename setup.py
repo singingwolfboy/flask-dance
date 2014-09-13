@@ -1,7 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from setuptools import setup, find_packages
+from setuptools import setup, Command, find_packages
+
+
+class PyTest(Command):
+    user_options = []
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys,subprocess
+        errno = subprocess.call([sys.executable, 'runtests.py'])
+        raise SystemExit(errno)
 
 
 def is_requirement(line):
@@ -32,7 +46,8 @@ setup(
     url="https://github.com/singingwolfboy/flask-dance",
     packages=find_packages(),
     install_requires=get_requirements("requirements.txt"),
-    tests_require=['pytest', 'responses'],
+    tests_require=get_requirements("dev-requirements.txt"),
+    cmdclass = {'test': PyTest},
     license='MIT',
     classifiers=(
         'License :: OSI Approved :: MIT License',
