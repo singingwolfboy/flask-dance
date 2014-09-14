@@ -2,6 +2,12 @@ import os.path
 from urlobject import URLObject
 from oauthlib.oauth1 import SIGNATURE_RSA
 from flask_dance.consumer import OAuth1ConsumerBlueprint
+from functools import partial
+from flask.globals import LocalProxy, _lookup_app_object
+try:
+    from flask import _app_ctx_stack as stack
+except ImportError:
+    from flask import _request_ctx_stack as stack
 
 
 def make_jira_blueprint(consumer_key, rsa_key, base_url,
@@ -26,4 +32,12 @@ def make_jira_blueprint(consumer_key, rsa_key, base_url,
         authorized_url=authorized_url,
     )
     jira_bp.session.headers["Content-Type"] = "application/json"
+
+    @jira_bp.before_app_request
+    def set_applocal_session():
+        ctx = stack.top
+        ctx.jira_oauth = jira_bp.session
+
     return jira_bp
+
+jira = LocalProxy(partial(_lookup_app_object, "jira_oauth"))

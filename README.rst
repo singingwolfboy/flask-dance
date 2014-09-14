@@ -24,13 +24,14 @@ example, to authenticate with Github, just do the following:
         client_id="my-key-here",
         client_secret="my-secret-here",
         scope="user:email",
+        redirect_to="index",
     )
     app.register_blueprint(github_blueprint, url_prefix="/login")
 
-    @app.route("/test-page")
-    def test_page():
+    @app.route("/")
+    def index():
         if not github.authorized:
-            return redirect(url_for("github.login", next=url_for("test-page")))
+            return redirect(url_for("github.login"))
         resp = github.get("/user/emails")
         assert resp.ok
         emails = [result["email"] for result in resp.json()]
@@ -57,6 +58,7 @@ directory, but you could use whatever values you want.
         base_url="https://api.github.com",
         access_token_url="https://github.com/login/oauth/access_token",
         authorize_url="https://github.com/login/oauth/authorize",
+        redirect_to="index",
     )
     app.register_blueprint(github_blueprint, url_prefix="/login")
 
