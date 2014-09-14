@@ -81,6 +81,9 @@ def test_authorized_url():
             "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
             base_url="https://a.b.c",
         )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/"
         # check that we obtained an access token
         assert len(responses.calls) == 1
         assert "Authorization" in responses.calls[0].request.headers
@@ -95,6 +98,3 @@ def test_authorized_url():
             flask.session["test-service_oauth_token"] ==
             {'oauth_token': 'xxx', 'oauth_token_secret': 'yyy'}
         )
-    # check that we redirected the client
-    assert resp.status_code == 302
-    assert resp.headers["Location"] == "https://a.b.c/"
