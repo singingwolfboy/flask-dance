@@ -43,6 +43,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         )
 
         self.create_token_accessors()
+        self.logged_in(lambda token: None)
         self.before_app_request(self.assign_token_to_session)
 
     def login(self):
@@ -56,8 +57,6 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
     def logged_in(self, func):
         self.logged_in_callback = func
-
-    logged_in_callback = lambda token: None
 
     token = proxy_property("token", pass_self=False)
 
