@@ -2,8 +2,10 @@
 from __future__ import absolute_import, unicode_literals
 
 import responses
+from six.moves.urllib.parse import quote_plus
 import flask
 from flask_dance.consumer import OAuth1ConsumerBlueprint
+from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 
 def make_app(login_url=None):
@@ -48,8 +50,19 @@ def test_login_url():
     )
     app = make_app()
     client = app.test_client()
-    resp = client.get("/login/test-service", follow_redirects=False)
+    resp = client.get(
+        "/login/test-service",
+        base_url="https://a.b.c",
+        follow_redirects=False,
+    )
     assert len(responses.calls) == 1
+    assert "Authorization" in responses.calls[0].request.headers
+    auth_header = dict(parse_authorization_header(
+        responses.calls[0].request.headers['Authorization']
+    ))
+    assert auth_header["oauth_consumer_key"] == "client_key"
+    assert "oauth_signature" in auth_header
+    assert auth_header["oauth_callback"] == quote_plus("https://a.b.c/login/test-service/authorized")
     assert resp.status_code == 302
     assert resp.headers["Location"] == "https://example.com/oauth/authorize?oauth_token=foobar"
 

@@ -83,9 +83,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             self.session.token_updater = func
 
     def login(self):
+        secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https"
         self.session.redirect_uri = url_for(
-            ".authorized", next=request.args.get('next'),
-            _external=True, _scheme="https",
+            ".authorized", next=request.args.get('next'), _external=True,
+            _scheme="https" if secure else "http",
         )
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state,

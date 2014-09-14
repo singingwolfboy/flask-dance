@@ -77,8 +77,10 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.redirect_to = redirect_to
 
     def login(self):
+        secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https"
         callback_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
+            _scheme="https" if secure else "http",
         )
         self.session._client.client.callback_uri = to_unicode(callback_uri)
         self.session.fetch_request_token(self.request_token_url)
