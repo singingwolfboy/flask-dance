@@ -59,7 +59,7 @@ def test_login_url():
     assert len(responses.calls) == 1
     assert "Authorization" in responses.calls[0].request.headers
     auth_header = dict(parse_authorization_header(
-        responses.calls[0].request.headers['Authorization']
+        responses.calls[0].request.headers['Authorization'].decode('utf-8')
     ))
     assert auth_header["oauth_consumer_key"] == "client_key"
     assert "oauth_signature" in auth_header
@@ -88,7 +88,7 @@ def test_authorized_url():
         assert len(responses.calls) == 1
         assert "Authorization" in responses.calls[0].request.headers
         auth_header = dict(parse_authorization_header(
-            responses.calls[0].request.headers['Authorization']
+            responses.calls[0].request.headers['Authorization'].decode('utf-8')
         ))
         assert auth_header["oauth_consumer_key"] == "client_key"
         assert auth_header["oauth_token"] == "foobar"
