@@ -1,5 +1,12 @@
+from __future__ import unicode_literals
+
+import pytest
+import mock
+import responses
+from flask import Flask
 from flask_dance.contrib.jira import make_jira_blueprint, jira
 from flask_dance.consumer import OAuth1ConsumerBlueprint
+from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 
 def test_blueprint_factory():
@@ -17,3 +24,45 @@ def test_blueprint_factory():
     assert jira_bp.access_token_url == "https://flask.atlassian.net/plugins/servlet/oauth/access-token"
     assert jira_bp.authorization_url == "https://flask.atlassian.net/plugins/servlet/oauth/authorize"
     assert jira_bp.session.headers["Content-Type"] == "application/json"
+
+
+@responses.activate
+def test_context_local():
+    responses.add(responses.GET, "https://google.com")
+
+    # set up two apps with two different set of auth tokens
+    app1 = Flask(__name__)
+    jbp1 = make_jira_blueprint("foo1", "bar1", "https://t1.atlassian.com", redirect_to="url1")
+    app1.register_blueprint(jbp1)
+    jbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
+
+    app2 = Flask(__name__)
+    jbp2 = make_jira_blueprint("foo2", "bar2", "https://t2.atlassian.com", redirect_to="url2")
+    app2.register_blueprint(jbp2)
+    jbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
+
+
+    # outside of a request context, referencing functions on the `jira` object
+    # will raise an exception
+    with pytest.raises(RuntimeError):
+        jira.get("https://google.com")
+
+    # inside of a request context, `jira` should be a proxy to the correct
+    # blueprint session
+    with app1.test_request_context("/"):
+        app1.preprocess_request()
+        jira.get("https://google.com")
+        auth_header = dict(parse_authorization_header(
+            responses.calls[0].request.headers['Authorization'].decode('utf-8')
+        ))
+        assert auth_header["oauth_consumer_key"] == "foo1"
+        assert auth_header["oauth_signature"] == "sig1"
+
+    with app2.test_request_context("/"):
+        app2.preprocess_request()
+        jira.get("https://google.com")
+        auth_header = dict(parse_authorization_header(
+            responses.calls[1].request.headers['Authorization'].decode('utf-8')
+        ))
+        assert auth_header["oauth_consumer_key"] == "foo2"
+        assert auth_header["oauth_signature"] == "sig2"

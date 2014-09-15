@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 class proxy_property(object):
     def __init__(self, name, pass_self=True, doc=None):
         self.name = name

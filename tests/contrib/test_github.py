@@ -1,3 +1,8 @@
+from __future__ import unicode_literals
+
+import pytest
+import responses
+from flask import Flask
 from flask_dance.contrib.github import make_github_blueprint, github
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -16,3 +21,39 @@ def test_blueprint_factory():
     assert github_bp.client_secret == "bar"
     assert github_bp.authorization_url == "https://github.com/login/oauth/authorize"
     assert github_bp.token_url == "https://github.com/login/oauth/access_token"
+
+
+@responses.activate
+def test_context_local():
+    responses.add(responses.GET, "https://google.com")
+
+    # set up two apps with two different set of auth tokens
+    app1 = Flask(__name__)
+    ghbp1 = make_github_blueprint("foo1", "bar1", redirect_to="url1")
+    app1.register_blueprint(ghbp1)
+    ghbp1.token_getter(lambda: {"access_token": "app1"})
+
+    app2 = Flask(__name__)
+    ghbp2 = make_github_blueprint("foo2", "bar2", redirect_to="url2")
+    app2.register_blueprint(ghbp2)
+    ghbp2.token_getter(lambda: {"access_token": "app2"})
+
+    # outside of a request context, referencing functions on the `github` object
+    # will raise an exception
+    with pytest.raises(RuntimeError):
+        github.get("https://google.com")
+
+    # inside of a request context, `github` should be a proxy to the correct
+    # blueprint session
+    with app1.test_request_context("/"):
+        app1.preprocess_request()
+        github.get("https://google.com")
+        request = responses.calls[0].request
+        assert request.headers["Authorization"] == "Bearer app1"
+
+
+    with app2.test_request_context("/"):
+        app2.preprocess_request()
+        github.get("https://google.com")
+        request = responses.calls[1].request
+        assert request.headers["Authorization"] == "Bearer app2"

@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import pytest
 import mock
 from flask_dance.consumer.base import BaseOAuthConsumerBlueprint
