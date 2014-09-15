@@ -37,7 +37,7 @@ example, to authenticate with Github, just do the following:
         emails = [result["email"] for result in resp.json()]
         return " ".join(emails)
 
-The `github` object is a `context local`_, just like ``flask.request``. That means
+The ``github`` object is a `context local`_, just like ``flask.request``. That means
 that you can import it in any Python file you want, and use it in the context
 of an incoming HTTP request. If you've split your Flask app up into multiple
 different files, feel free to import this object in any of your files, and use
