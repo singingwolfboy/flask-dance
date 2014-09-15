@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import mock
 import responses
 from six.moves.urllib.parse import quote_plus, parse_qsl
 from urlobject import URLObject
@@ -28,23 +29,23 @@ def make_app(login_url=None):
     def index():
         return "index"
 
-    return app
+    return app, blueprint
 
 def test_generate_login_url():
-    app = make_app()
+    app, _ = make_app()
     with app.test_request_context("/"):
         login_url = flask.url_for("test-service.login")
         assert login_url == "/login/test-service"
 
 def test_override_login_url():
-    app = make_app(login_url="/crazy/custom/url")
+    app, _ = make_app(login_url="/crazy/custom/url")
     with app.test_request_context("/"):
         login_url = flask.url_for("test-service.login")
         assert login_url == "/login/crazy/custom/url"
 
 @responses.activate
 def test_login_url():
-    app = make_app()
+    app, _ = make_app()
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service",
@@ -69,7 +70,7 @@ def test_authorized_url():
         "https://example.com/oauth/access_token",
         body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
     )
-    app = make_app()
+    app, _ = make_app()
     with app.test_client() as client:
         # reset the session before the request
         with client.session_transaction() as sess:
@@ -91,3 +92,24 @@ def test_authorized_url():
             flask.session["test-service_oauth_token"] ==
             {'access_token': 'foobar', 'scope': ['admin'], 'token_type': 'bearer'}
         )
+
+
+def test_login_callbacks():
+    app, bp = make_app()
+    bp.session.fetch_token = mock.Mock(return_value="test-token")
+
+    cb1 = mock.Mock()
+    cb2 = mock.Mock()
+    bp.logged_in(cb1)
+    bp.logged_in(cb2)
+
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+        )
+
+    cb1.assert_called_with("test-token")
+    cb2.assert_called_with("test-token")

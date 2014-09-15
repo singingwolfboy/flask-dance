@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import mock
 import responses
 from six.moves.urllib.parse import quote_plus
 import flask
@@ -27,16 +28,16 @@ def make_app(login_url=None):
     def index():
         return "index"
 
-    return app
+    return app, blueprint
 
 def test_generate_login_url():
-    app = make_app()
+    app, _ = make_app()
     with app.test_request_context("/"):
         login_url = flask.url_for("test-service.login")
         assert login_url == "/login/test-service"
 
 def test_override_login_url():
-    app = make_app(login_url="/crazy/custom/url")
+    app, _ = make_app(login_url="/crazy/custom/url")
     with app.test_request_context("/"):
         login_url = flask.url_for("test-service.login")
         assert login_url == "/login/crazy/custom/url"
@@ -48,7 +49,7 @@ def test_login_url():
         "https://example.com/oauth/request_token",
         body="oauth_token=foobar&oauth_token_secret=bazqux",
     )
-    app = make_app()
+    app, _ = make_app()
     client = app.test_client()
     resp = client.get(
         "/login/test-service",
@@ -75,7 +76,7 @@ def test_authorized_url():
         "https://example.com/oauth/access_token",
         body="oauth_token=xxx&oauth_token_secret=yyy",
     )
-    app = make_app()
+    app, _ = make_app()
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
@@ -98,3 +99,20 @@ def test_authorized_url():
             flask.session["test-service_oauth_token"] ==
             {'oauth_token': 'xxx', 'oauth_token_secret': 'yyy'}
         )
+
+
+def test_login_callbacks():
+    app, bp = make_app()
+    bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+
+    cb1 = mock.Mock()
+    cb2 = mock.Mock()
+    bp.logged_in(cb1)
+    bp.logged_in(cb2)
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
+        )
+    cb1.assert_called_with("test-token")
+    cb2.assert_called_with("test-token")
