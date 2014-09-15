@@ -17,7 +17,7 @@ example, to authenticate with Github, just do the following:
 .. code-block:: python
 
     from flask import Flask, redirect, url_for
-    from flask_dance.contrib.github import github, make_github_blueprint
+    from flask_dance.contrib.github import make_github_blueprint, github
 
     app = Flask(__name__)
     github_blueprint = make_github_blueprint(
@@ -37,6 +37,13 @@ example, to authenticate with Github, just do the following:
         emails = [result["email"] for result in resp.json()]
         return " ".join(emails)
 
+The `github` object is a `context local`_, just like ``flask.request``. That means
+that you can import it in any Python file you want, and use it in the context
+of an incoming HTTP request. If you've split your Flask app up into multiple
+different files, feel free to import this object in any of your files, and use
+it just like you would use the ``requests`` module.
+
+.. _context local: http://flask.pocoo.org/docs/latest/quickstart/#context-locals
 
 Custom Services
 ===============
@@ -105,56 +112,16 @@ get and set functions, and attach them to the Blueprint object using the
 .. code-block:: python
 
     @github_blueprint.token_setter
-    def set_github_token(response):
+    def set_github_token(token):
         user = flask.g.user
-        user.github_access_token = response["access_token"]
-        user.github_scopes = response["scope"]
+        user.github_token = token
         db.session.add(user)
         db.commit()
 
     @github_blueprint.token_getter
-    def get_github_token(identifier=None):
+    def get_github_token():
         user = flask.g.user
-        if user.github_access_token:
-            return user.github_access_token
-        return None
-
-You'll notice that the ``token_getter`` function takes an optional ``identifier``
-parameter. You can use this parameter to differentate among multiple tokens
-that you have have. For example, Twitter allows you to get two different kinds
-of authentication tokens: application-only authentication and single-user
-authentication. You could then save both tokens, and specify which you want to use
-by passing the ``token`` parameter to your ``requests`` method:
-
-.. code-block:: python
-
-    @twitter_blueprint.token_getter
-    def get_twitter_token(identifier="app"):
-        if identifier not in ("user", "app"):
-            raise ValueError("invalid Twitter token identifier")
-
-        if identifier == "user":
-            user = flask.g.user
-            if user.twitter_oauth:
-                return (user.twitter_oauth, user.twitter_oauth_secret)
-            else:
-                return None
-
-        if identifier == "app":
-            creds = AppCredentials.query.filter(service="twitter").first()
-            if creds:
-                return (creds.token, creds.secret)
-            else:
-                return None
-
-.. code-block:: python
-
-    twitter = twitter_blueprint.session
-    # make a request on behalf of the user
-    tweet = {"status": "Tweeting from Flask-Dance"}
-    resp = twitter.post("statuses/update.json", data=tweet, token="user")
-    # make a request on behalf of the application
-    resp = twitter.get("statuses/home_timeline.json", token="app")
+        return user.github_token
 
 .. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master
    :target: https://travis-ci.org/singingwolfboy/flask-dance

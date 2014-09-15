@@ -113,8 +113,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.token = token
         return redirect(next_url)
 
-    def assign_token_to_session(self, identifier=None):
-        token = self.get_token(identifier=identifier)
+    def assign_token_to_session(self):
+        token = self.token
         if token:
             # This really, really violates the Law of Demeter, but
             # I don't see a better way to set these parameters. :(

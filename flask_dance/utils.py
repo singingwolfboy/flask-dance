@@ -29,7 +29,7 @@ class proxy_property(object):
     def __delete__(self, obj):
         deleter_name = "delete_{name}".format(name=self.name)
         deleter_func = getattr(obj, deleter_name, None)
-        if setter_func is None:
+        if deleter_func is None:
             raise AttributeError("Undefined function {}".format(deleter_name))
         args = []
         if self.pass_self:

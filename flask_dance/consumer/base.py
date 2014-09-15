@@ -73,13 +73,13 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         key = "{name}_oauth_token".format(name=self.name)
 
         @self.token_getter
-        def get_token(identifier=None):
+        def get_token():
             return flask.session.get(key)
 
         @self.token_setter
-        def set_token(value, identifier=None):
+        def set_token(value):
             flask.session[key] = value
 
         @self.token_deleter
-        def delete_token(identifier=None):
+        def delete_token():
             del flask.session[key]
