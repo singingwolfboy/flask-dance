@@ -123,6 +123,45 @@ get and set functions, and attach them to the Blueprint object using the
         user = flask.g.user
         return user.github_token
 
+    @github_blueprint.token_deleter
+    def delete_github_token():
+        user = flask.g.user
+        user.github_token = None
+        db.session.add(user)
+        db.commit()
+
+
+Login Callbacks
+===============
+You probably have some custom processing code that you want to run when a user
+logs in. You might need to update their user profile, make fire an event, or
+simply `flash a message`_ to let them know they've logged in. It's easy,
+just use the ``logged_in`` decorator on the blueprint to ensure the function
+is called at the right time:
+
+.. code-block:: python
+
+    @github_blueprint.logged_in
+    def github_logged_in(token):
+        if "error" in token:
+            flash("You denied the request to sign in. Please try again.")
+            del github_blueprint.token
+        else:
+            flash("Signed in successfully!")
+
+The function is passed a dict containing whatever OAuth token information is
+returned from the OAuth provider. Remember that errors can happen, so it's worth
+checking for them! If you're using OAuth 2, the user may also grant you
+different scopes than the ones you requested, so you should verify that, as well.
+By the time this function is called, the token will already be saved (either
+into the Flask session by default, or using your custom ``token_setter`` function)
+so if you want to delete the saved token, you can just delete the ``token``
+property from the blueprint. That will call your ``token_deleter`` function,
+or remove it from the Flask session if you haven't defined a ``token_deleter``
+function.
+
+.. _flash a message: http://flask.pocoo.org/docs/latest/patterns/flashing/
+
 .. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master
    :target: https://travis-ci.org/singingwolfboy/flask-dance
    :alt: Build status

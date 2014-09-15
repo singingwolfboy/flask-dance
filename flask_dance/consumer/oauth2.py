@@ -109,9 +109,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorization_response=url,
             client_secret=self.client_secret,
         )
+        self.token = token
         for func in self.logged_in_funcs:
             func(token)
-        self.token = token
         return redirect(next_url)
 
     def assign_token_to_session(self):
