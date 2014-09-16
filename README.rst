@@ -54,14 +54,14 @@ directory, but you could use whatever values you want.
 .. code-block:: python
 
     from flask import Flask
-    from flask_dance import OAuth2ConsumerBlueprint
+    from flask_dance.consumer import OAuth2ConsumerBlueprint
 
     app = Flask(__name__)
     github_blueprint = OAuth2ConsumerBlueprint(
         "github", __name__,
         client_key="my-key-here",
         client_secret="my-secret-here",
-        request_token_params={"scope": "user:email"},
+        scope="user:email",
         base_url="https://api.github.com",
         access_token_url="https://github.com/login/oauth/access_token",
         authorize_url="https://github.com/login/oauth/authorize",
