@@ -1,5 +1,5 @@
-Flask-Dance |build-status| |coverage-status|
-============================================
+Flask-Dance |build-status| |coverage-status| |pypi|
+===================================================
 Doing the OAuth dance with style using Flask, requests, and oauthlib. Currently,
 only OAuth consumers are supported, but this project could easily support
 OAuth providers in the future, as well.
@@ -168,3 +168,6 @@ function.
 .. |coverage-status| image:: https://img.shields.io/coveralls/singingwolfboy/flask-dance.svg
    :target: https://coveralls.io/r/singingwolfboy/flask-dance?branch=master
    :alt: Test coverage
+.. |pypi| image:: https://pypip.in/version/Flask-Dance/badge.svg
+   :target: https://pypi.python.org/pypi/Flask-Dance/
+   :alt: Latest Version
