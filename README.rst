@@ -172,5 +172,5 @@ function.
    :target: https://pypi.python.org/pypi/Flask-Dance/
    :alt: Latest Version
 .. |docs| image:: https://readthedocs.org/projects/flask-dance/badge/?version=latest
-   :target: https://readthedocs.org/projects/flask-dance/?badge=latest
+   :target: http://flask-dance.readthedocs.org/
    :alt: Documentation
