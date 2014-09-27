@@ -136,7 +136,7 @@ get and set functions, and attach them to the Blueprint object using the
 Login Callbacks
 ===============
 You probably have some custom processing code that you want to run when a user
-logs in. You might need to update their user profile, make fire an event, or
+logs in. You might need to update their user profile, fire an event, or
 simply `flash a message`_ to let them know they've logged in. It's easy,
 just use the ``logged_in`` decorator on the blueprint to ensure the function
 is called at the right time:
