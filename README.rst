@@ -7,6 +7,8 @@ OAuth providers in the future, as well.
 Installation
 ============
 
+.. code-block:: bash
+
     $ pip install Flask-Dance
 
 Quickstart
