@@ -9,8 +9,8 @@ configuration to accepted:
    for example, ``my_service.py``.
 2. The file must declare a ``__maintainer__`` variable, with the name and
    email address of the maintainer of this configuration.
-3. The file must have a factory function that returns an instance of an
-   OAuth1ConsumerBlueprint or an instance of an OAuth2ConsumerBlueprint.
+3. The file must have a factory function that returns an instance of
+   OAuth1ConsumerBlueprint or an instance of OAuth2ConsumerBlueprint.
    The factory function must be named after the service: for example,
    ``make_my_service_blueprint()``.
 4. The file must expose a variable named after the service, which is a local
