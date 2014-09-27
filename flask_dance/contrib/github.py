@@ -9,9 +9,32 @@ except ImportError:
     from flask import _request_ctx_stack as stack
 
 
+__maintainer__ = "David Baumgold <david@davidbaumgold.com>"
+
+
 def make_github_blueprint(client_id, client_secret, scope=None,
                           redirect_url=None, redirect_to=None,
                           login_url=None, authorized_url=None):
+    """
+    Make a blueprint for authenticating with Github using OAuth 2.
+
+    Args:
+        client_id (str): The client ID for your application on Github
+        client_secret (str): The client secret for your application on Github
+        scope (str, optional): comma-separated list of scopes for the OAuth token
+        redirect_url (str): the URL to redirect to after the authentication
+            dance is complete
+        redirect_to (str): if ``redirect_url`` is not defined, the name of the
+            view to redirect to after the authentication dance is complete.
+            The actual URL will be determined by :func:`flask.url_for`
+        login_url (str, optional): the URL path for the ``login`` view.
+            Defaults to ``/github``
+        authorized_url (str, optional): the URL path for the ``authorized`` view.
+            Defaults to ``/github/authorized``.
+
+    :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
+    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    """
     github_bp = OAuth2ConsumerBlueprint("github", __name__,
         client_id=client_id,
         client_secret=client_secret,

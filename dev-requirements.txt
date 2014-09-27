@@ -1,2 +1,4 @@
 mock
 responses
+sphinx
+sphinxcontrib-napoleon

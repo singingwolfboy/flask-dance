@@ -9,9 +9,31 @@ except ImportError:
     from flask import _request_ctx_stack as stack
 
 
+__maintainer__ = "David Baumgold <david@davidbaumgold.com>"
+
+
 def make_twitter_blueprint(api_key, api_secret,
                            redirect_url=None, redirect_to=None,
                            login_url=None, authorized_url=None):
+    """
+    Make a blueprint for authenticating with Twitter using OAuth 1.
+
+    Args:
+        api_key (str): The API key for your Twitter application
+        api_secret (str): The API secret for your Twitter application
+        redirect_url (str): the URL to redirect to after the authentication
+            dance is complete
+        redirect_to (str): if ``redirect_url`` is not defined, the name of the
+            view to redirect to after the authentication dance is complete.
+            The actual URL will be determined by :func:`flask.url_for`
+        login_url (str, optional): the URL path for the ``login`` view.
+            Defaults to ``/twitter``
+        authorized_url (str, optional): the URL path for the ``authorized`` view.
+            Defaults to ``/twitter/authorized``.
+
+    :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
+    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    """
     twitter_bp = OAuth1ConsumerBlueprint("twitter", __name__,
         client_key=api_key,
         client_secret=api_secret,

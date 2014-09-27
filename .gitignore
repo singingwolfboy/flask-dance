@@ -1,3 +1,4 @@
 *.pyc
 .coverage
 dist
+docs/_build

@@ -12,9 +12,36 @@ except ImportError:
     from flask import _request_ctx_stack as stack
 
 
+__maintainer__ = "David Baumgold <david@davidbaumgold.com>"
+
+
 def make_jira_blueprint(consumer_key, rsa_key, base_url,
                         redirect_url=None, redirect_to=None,
                         login_url=None, authorized_url=None):
+    """
+    Make a blueprint for authenticating with JIRA using OAuth 1.
+
+    Args:
+        consumer_key (str): The consumer key for your Application Link on JIRA
+        rsa_key (str or path): The RSA private key for your Application Link
+            on JIRA. This can be the contents of the key as a string, or a path
+            to the key file on disk.
+        base_url (str): The base URL of your JIRA installation. For example,
+            for Atlassian's hosted OnDemand JIRA, the base_url would be
+            ``https://jira.atlassian.com``
+        redirect_url (str): the URL to redirect to after the authentication
+            dance is complete
+        redirect_to (str): if ``redirect_url`` is not defined, the name of the
+            view to redirect to after the authentication dance is complete.
+            The actual URL will be determined by :func:`flask.url_for`
+        login_url (str, optional): the URL path for the ``login`` view.
+            Defaults to ``/jira``
+        authorized_url (str, optional): the URL path for the ``authorized`` view.
+            Defaults to ``/jira/authorized``.
+
+    :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
+    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    """
     if os.path.isfile(rsa_key):
         with open(rsa_key) as f:
             rsa_key = f.read()
