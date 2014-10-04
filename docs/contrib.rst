@@ -16,7 +16,7 @@ Github
 ------
 .. autofunction:: flask_dance.contrib.github.make_github_blueprint
 
-.. py:data:: flask_dance.contrib.github.github
+.. data:: flask_dance.contrib.github.github
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the Github authentication token loaded (assuming that the user
@@ -26,7 +26,7 @@ Twitter
 -------
 .. autofunction:: flask_dance.contrib.twitter.make_twitter_blueprint
 
-.. py:data:: flask_dance.contrib.twitter.twitter
+.. data:: flask_dance.contrib.twitter.twitter
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the Twitter authentication token loaded (assuming that the user
@@ -36,7 +36,7 @@ JIRA
 -------
 .. autofunction:: flask_dance.contrib.jira.make_jira_blueprint
 
-.. py:data:: flask_dance.contrib.jira.jira
+.. data:: flask_dance.contrib.jira.jira
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the JIRA authentication token loaded (assuming that the user
