@@ -10,6 +10,7 @@ to add new pre-set configurations to Flask-Dance!
 
 .. contents:: Included Configurations
    :local:
+   :backlinks: none
 
 Github
 ------
