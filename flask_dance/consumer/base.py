@@ -56,17 +56,39 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         raise NotImplementedError
 
     def logged_in(self, func):
+        """
+        A decorator used to indicate a function to be run immediately after
+        the OAuth dance is completed. The function will be called with the OAuth
+        token as an argument. You can use this decorator on multiple functions,
+        and they will all be run after the OAuth dance is completed.
+        """
         self.logged_in_funcs.append(func)
 
-    token = proxy_property("token", pass_self=False)
+    token = proxy_property(
+        "token", pass_self=False,
+        doc=("A proxy property for getting, setting, and deleting the stored "
+             "OAuth token."),
+    )
 
     def token_getter(self, func):
+        """
+        A decorator used to indicate the function used to retrieve a stored
+        token from a completed OAuth dance.
+        """
         self.get_token = func
 
     def token_setter(self, func):
+        """
+        A decorator used to indicate the function used to store a token
+        from a completed OAuth dance, so that it can be retrieved later.
+        """
         self.set_token = func
 
     def token_deleter(self, func):
+        """
+        A decorator used to indicate the function used to delete a
+        previously-stored OAuth token.
+        """
         self.delete_token = func
 
     def create_token_accessors(self):

@@ -21,6 +21,9 @@ class OAuth1SessionWithBaseURL(OAuth1Session):
 
 
 class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
+    """
+    A subclass of :class:`flask.Blueprint` that sets up OAuth 1 authentication.
+    """
     def __init__(self, name, import_name,
             client_key=None,
             client_secret=None,
@@ -37,13 +40,63 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorized_url=None,
             base_url=None,
             request_token_url=None,
-            access_token_url=None,
             authorization_url=None,
+            access_token_url=None,
             redirect_url=None,
             redirect_to=None,
 
             **kwargs):
+        """
+        Most of the constructor arguments are forwarded either to the
+        :class:`flask.Blueprint` constructor or the
+        :class:`requests_oauthlib.OAuth1Session` construtor, including
+        ``**kwargs`` (which is forwarded to
+        :class:`~requests_oauthlib.OAuth1Session`).
+        The only arguments that are specific to this class are
+        ``base_url``,
+        ``request_token_url``, ``access_token_url``, ``authorization_url``,
+        ``login_url``, ``authorized_url``,
+        ``redirect_url``, and ``redirect_to``.
 
+        Args:
+            base_url (str, optional): The base URL of the OAuth provider.
+                If specified, all URLs passed to this instance will be
+                resolved relative to this URL.
+            request_token_url (str): The URL specified by the OAuth provider for
+                obtaining a
+                `request token <http://oauth.net/core/1.0a/#auth_step1>`_.
+                This can be an fully-qualified URL, or a path that is
+                resolved relative to the ``base_url``.
+            authorization_url (str): The URL specified by the OAuth provider for
+                the user to
+                `grant token authorization <http://oauth.net/core/1.0a/#auth_step2>`_.
+                This can be an fully-qualified URL, or a path that is
+                resolved relative to the ``base_url``.
+            access_token_url (str): The URL specified by the OAuth provider for
+                obtaining an
+                `access token <http://oauth.net/core/1.0a/#auth_step3>`_.
+                This can be an fully-qualified URL, or a path that is
+                resolved relative to the ``base_url``.
+            login_url (str, optional): The URL route for the ``login`` view that kicks off
+                the OAuth dance. This string will be
+                :ref:`formatted <python:formatstrings>`
+                with the instance so that attributes can be interpolated.
+                Defaults to ``/{bp.name}``, so that the URL is based on the name
+                of the blueprint.
+            authorized_url (str, optional): The URL route for the ``authorized`` view that
+                completes the OAuth dance. This string will be
+                :ref:`formatted <python:formatstrings>`
+                with the instance so that attributes can be interpolated.
+                Defaults to ``/{bp.name}/authorized``, so that the URL is
+                based on the name of the blueprint.
+            redirect_url (str, optional): When the OAuth dance is complete,
+                redirect the user to this URL.
+            redirect_to (str, optional): When the OAuth dance is complete,
+                redirect the user to the URL obtained by calling
+                :func:`~flask.url_for` with this argument. You must specify
+                either ``redirect_url`` or ``redirect_to``. If you specify both,
+                ``redirect_url`` will take precedence.
+        """
         if not redirect_url and not redirect_to:
             raise AttributeError("One of redirect_url or redirect_to must be defined")
 
@@ -71,8 +124,8 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         )
 
         self.request_token_url = request_token_url
-        self.access_token_url = access_token_url
         self.authorization_url = authorization_url
+        self.access_token_url = access_token_url
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
 

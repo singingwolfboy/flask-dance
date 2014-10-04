@@ -21,6 +21,9 @@ class OAuth2SessionWithBaseURL(OAuth2Session):
 
 
 class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
+    """
+    A subclass of :class:`flask.Blueprint` that sets up OAuth 2 authentication.
+    """
     def __init__(self, name, import_name,
             client_id=None,
             client_secret=None,
@@ -42,7 +45,52 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             redirect_to=None,
 
             **kwargs):
+        """
+        Most of the constructor arguments are forwarded either to the
+        :class:`flask.Blueprint` constructor or the
+        :class:`requests_oauthlib.OAuth2Session` construtor, including
+        ``**kwargs`` (which is forwarded to
+        :class:`~requests_oauthlib.OAuth2Session`).
+        The only arguments that are specific to this class are
+        ``base_url``,
+        ``authorization_url``, ``token_url``,
+        ``login_url``, ``authorized_url``,
+        ``redirect_url``, and ``redirect_to``.
 
+        Args:
+            base_url (str, optional): The base URL of the OAuth provider.
+                If specified, all URLs passed to this instance will be
+                resolved relative to this URL.
+            authorization_url (str): The URL specified by the OAuth provider for
+                obtaining an
+                `authorization grant <http://tools.ietf.org/html/rfc6749#section-1.3>`_.
+                This can be an fully-qualified URL, or a path that is
+                resolved relative to the ``base_url``.
+            token_url (str): The URL specified by the OAuth provider for
+                obtaining an
+                `access token <http://tools.ietf.org/html/rfc6749#section-1.4>`_.
+                This can be an fully-qualified URL, or a path that is
+                resolved relative to the ``base_url``.
+            login_url (str, optional): The URL route for the ``login`` view that kicks off
+                the OAuth dance. This string will be
+                :ref:`formatted <python:formatstrings>`
+                with the instance so that attributes can be interpolated.
+                Defaults to ``/{bp.name}``, so that the URL is based on the name
+                of the blueprint.
+            authorized_url (str, optional): The URL route for the ``authorized`` view that
+                completes the OAuth dance. This string will be
+                :ref:`formatted <python:formatstrings>`
+                with the instance so that attributes can be interpolated.
+                Defaults to ``/{bp.name}/authorized``, so that the URL is
+                based on the name of the blueprint.
+            redirect_url (str, optional): When the OAuth dance is complete,
+                redirect the user to this URL.
+            redirect_to (str, optional): When the OAuth dance is complete,
+                redirect the user to the URL obtained by calling
+                :func:`~flask.url_for` with this argument. You must specify
+                either ``redirect_url`` or ``redirect_to``. If you specify both,
+                ``redirect_url`` will take precedence.
+        """
         if not redirect_url and not redirect_to:
             raise AttributeError("One of redirect_url or redirect_to must be defined")
 
@@ -78,6 +126,11 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.redirect_to = redirect_to
 
     def token_setter(self, func):
+        """
+        A decorator used to indicate the function used to store a token
+        from a completed OAuth dance, so that it can be retrieved later.
+        This function will also be called when the token is refreshed.
+        """
         BaseOAuthConsumerBlueprint.token_setter(self, func)
         if hasattr(self, "session"):
             self.session.token_updater = func

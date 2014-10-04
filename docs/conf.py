@@ -271,4 +271,7 @@ intersphinx_mapping = {
     'flask': ('http://flask.pocoo.org/docs/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'requests': ('http://docs.python-requests.org/en/latest/', None),
+    'requests_oauthlib': ('http://requests-oauthlib.readthedocs.org/en/latest/', None),
 }
+
+autodoc_member_order = "bysource"
