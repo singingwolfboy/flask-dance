@@ -8,6 +8,9 @@ that isn't listed here, simply create an instance of
 and provide the information for your service. We also welcome pull requests
 to add new pre-set configurations to Flask-Dance!
 
+.. contents:: Included Configurations
+   :local:
+
 Github
 ------
 .. autofunction:: flask_dance.contrib.github.make_github_blueprint

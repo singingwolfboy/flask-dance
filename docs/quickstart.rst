@@ -1,7 +1,7 @@
 Quickstart
 ==========
-For a few popular services, Flask-Dance provides pre-set configurations. For
-example, to authenticate with Github, just do the following:
+For a few popular services, Flask-Dance provides :doc:`pre-set configurations
+<contrib>`. For example, to authenticate with Github, just do the following:
 
 .. code-block:: python
 
