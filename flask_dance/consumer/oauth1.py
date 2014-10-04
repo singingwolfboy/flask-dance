@@ -54,7 +54,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         :class:`~requests_oauthlib.OAuth1Session`).
         The only arguments that are specific to this class are
         ``base_url``,
-        ``request_token_url``, ``access_token_url``, ``authorization_url``,
+        ``request_token_url``, ``authorization_url``, ``access_token_url``,
         ``login_url``, ``authorized_url``,
         ``redirect_url``, and ``redirect_to``.
 
