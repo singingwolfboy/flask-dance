@@ -1,9 +1,7 @@
 Quickstart
 ==========
 For a few popular services, Flask-Dance provides :doc:`pre-set configurations
-<contrib>`. For example, to authenticate with Github, just do the following:
-
-.. code-block:: python
+<contrib>`. For example, to authenticate with Github, just do the following::
 
     from flask import Flask, redirect, url_for
     from flask_dance.contrib.github import make_github_blueprint, github

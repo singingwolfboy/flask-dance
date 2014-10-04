@@ -14,9 +14,7 @@ Installation
 Quickstart
 ==========
 For a few popular services, Flask-Dance provides pre-set configurations. For
-example, to authenticate with Github, just do the following:
-
-.. code-block:: python
+example, to authenticate with Github, just do the following::
 
     from flask import Flask, redirect, url_for
     from flask_dance.contrib.github import make_github_blueprint, github
@@ -73,7 +71,7 @@ directory, but you could use whatever values you want.
 
 Now, in your page template, you can do something like:
 
-.. code-block:: jinja2
+.. code-block:: jinja
 
     <a href="{{ url_for("github.login") }}">Login with Github</a>
 
@@ -109,9 +107,7 @@ that if the user ever clears their browser cookies, they will have to go through
 the OAuth flow again, which is not good. You're better off storing access tokens
 in a database or some other persistent store. To do that, just write custom
 get and set functions, and attach them to the Blueprint object using the
-``token_getter`` and ``token_setter`` decorators:
-
-.. code-block:: python
+``token_getter`` and ``token_setter`` decorators::
 
     @github_blueprint.token_setter
     def set_github_token(token):

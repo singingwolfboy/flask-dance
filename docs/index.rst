@@ -21,6 +21,9 @@ Contents:
 
    quickstart
    contrib
+   custom-services
+   token-storage
+   login-callbacks
    consumers
 
 
