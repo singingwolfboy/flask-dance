@@ -14,9 +14,11 @@ to add new pre-set configurations to Flask-Dance!
 
 Github
 ------
-.. autofunction:: flask_dance.contrib.github.make_github_blueprint
+.. module:: flask_dance.contrib.github
 
-.. data:: flask_dance.contrib.github.github
+.. autofunction:: make_github_blueprint
+
+.. data:: github
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the Github authentication token loaded (assuming that the user
@@ -24,19 +26,23 @@ Github
 
 Twitter
 -------
-.. autofunction:: flask_dance.contrib.twitter.make_twitter_blueprint
+.. module:: flask_dance.contrib.twitter
 
-.. data:: flask_dance.contrib.twitter.twitter
+.. autofunction:: make_twitter_blueprint
+
+.. data:: twitter
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the Twitter authentication token loaded (assuming that the user
     has authenticated with Twitter at some point in the past).
 
 JIRA
--------
-.. autofunction:: flask_dance.contrib.jira.make_jira_blueprint
+----
+.. module:: flask_dance.contrib.jira
 
-.. data:: flask_dance.contrib.jira.jira
+.. autofunction:: make_jira_blueprint
+
+.. data:: jira
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the JIRA authentication token loaded (assuming that the user

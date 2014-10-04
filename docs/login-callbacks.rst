@@ -1,3 +1,5 @@
+.. module:: flask_dance.consumer
+
 Login Callbacks
 ===============
 You probably have some custom processing code that you want to run when a user

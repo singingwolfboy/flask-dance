@@ -1,3 +1,5 @@
+.. module:: flask_dance.consumer
+
 Consumers
 =========
 An OAuth consumer is a website that allows users to log in with other websites
@@ -5,9 +7,9 @@ An OAuth consumer is a website that allows users to log in with other websites
 consumer website is allowed to interact with the provider website on behalf
 of the user.
 
-.. autoclass:: flask_dance.consumer.OAuth1ConsumerBlueprint(...)
+.. autoclass:: OAuth1ConsumerBlueprint(...)
 
-   .. automethod:: flask_dance.consumer.OAuth1ConsumerBlueprint.__init__
+   .. automethod:: __init__
 
    .. attribute:: session
 
@@ -15,16 +17,16 @@ of the user.
       automatically loads credentials for the OAuth provider (if the user has
       already gone through the OAuth dance).
 
-   .. automethod:: flask_dance.consumer.OAuth1ConsumerBlueprint.token_getter
-   .. automethod:: flask_dance.consumer.OAuth1ConsumerBlueprint.token_setter
-   .. automethod:: flask_dance.consumer.OAuth1ConsumerBlueprint.token_deleter
-   .. autoattribute:: flask_dance.consumer.OAuth1ConsumerBlueprint.token
+   .. automethod:: token_getter
+   .. automethod:: token_setter
+   .. automethod:: token_deleter
+   .. autoattribute:: token
 
-   .. automethod:: flask_dance.consumer.OAuth1ConsumerBlueprint.logged_in
+   .. automethod:: logged_in
 
-.. autoclass:: flask_dance.consumer.OAuth2ConsumerBlueprint(...)
+.. autoclass:: OAuth2ConsumerBlueprint(...)
 
-   .. automethod:: flask_dance.consumer.OAuth2ConsumerBlueprint.__init__
+   .. automethod:: __init__
 
    .. attribute:: session
 
@@ -32,9 +34,9 @@ of the user.
       automatically loads credentials for the OAuth provider (if the user has
       already gone through the OAuth dance).
 
-   .. automethod:: flask_dance.consumer.OAuth2ConsumerBlueprint.token_getter
-   .. automethod:: flask_dance.consumer.OAuth2ConsumerBlueprint.token_setter
-   .. automethod:: flask_dance.consumer.OAuth2ConsumerBlueprint.token_deleter
-   .. autoattribute:: flask_dance.consumer.OAuth2ConsumerBlueprint.token
+   .. automethod:: token_getter
+   .. automethod:: token_setter
+   .. automethod:: token_deleter
+   .. autoattribute:: token
 
-   .. automethod:: flask_dance.consumer.OAuth2ConsumerBlueprint.logged_in
+   .. automethod:: logged_in
