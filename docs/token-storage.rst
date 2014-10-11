@@ -11,6 +11,9 @@ in a database or some other persistent store.
 
 SQLAlchemy
 ----------
+
+.. versionadded:: 0.2
+
 If you're using `SQLAlchemy`_ and `PostgreSQL`_, you've got a leg up:
 Flask-Dance has built-in support for this common use case. First, define your
 model with a ``token`` column and a ``provider`` column. Flask-Dance includes
