@@ -40,7 +40,7 @@ If you have a User model in your application, you can also set up a
         user = db.relationship(User)
 
 Then just pass your OAuth model and your SQLAlchemy session to your blueprint
-using the :meth:`OAuth2ConsumerBlueprint.set_token_storage_sqlalchemy` method::
+using the :meth:`~OAuth2ConsumerBlueprint.set_token_storage_sqlalchemy` method::
 
     blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
 
