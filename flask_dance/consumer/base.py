@@ -126,14 +126,22 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
         @self.token_setter
         def set_token(token):
+            has_user = hasattr(model, "user")
+            # if there was an existing model, delete it
+            existing_query = session.query(model).filter_by(provider=self.name)
+            if has_user:
+                u = user() if callable(user) else user
+                existing_query = existing_query.filter_by(user=u)
+            existing_query.delete()
+            # create a new model for this token
             kwargs = {
                 "provider": self.name,
                 "token": token,
             }
-            if hasattr(model, "user"):
-                u = user() if callable(user) else user
+            if has_user:
                 kwargs["user"] = u
             session.add(model(**kwargs))
+            # commit to delete and add simultaneously
             session.commit()
 
         @self.token_deleter

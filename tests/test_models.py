@@ -141,3 +141,54 @@ def test_model_with_user(app, db, blueprint, request):
         "scope": [""],
     }
 
+
+def test_model_repeated_token(app, db, blueprint, request):
+
+    class OAuth(db.Model, OAuthMixin):
+        pass
+
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    # Create an existing OAuth token for the service
+    existing = OAuth(
+        provider="test-service",
+        token={
+            "access_token": "something",
+            "token_type": "bearer",
+            "scope": ["blah"],
+        },
+    )
+    db.session.add(existing)
+    db.session.commit()
+    assert len(OAuth.query.all()) == 1
+
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    # check that the database record was overwritten
+    authorizations = OAuth.query.all()
+    assert len(authorizations) == 1
+    oauth = authorizations[0]
+    assert oauth.provider == "test-service"
+    assert isinstance(oauth.token, dict)
+    assert oauth.token == {
+        "access_token": "foobar",
+        "token_type": "bearer",
+        "scope": [""],
+    }
