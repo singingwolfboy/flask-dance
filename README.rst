@@ -133,36 +133,45 @@ get and set functions, and attach them to the Blueprint object using the
         db.commit()
 
 
-Login Callbacks
-===============
+Signals
+=======
 You probably have some custom processing code that you want to run when a user
 logs in. You might need to update their user profile, fire an event, or
-simply `flash a message`_ to let them know they've logged in. It's easy,
-just use the ``logged_in`` decorator on the blueprint to ensure the function
-is called at the right time:
+simply `flash a message`_ to let them know they've logged in. That's a perfect
+case for a signal, powered by the `blinker`_ library. Just make sure that
+blinker is installed, and connect to the ``flask_dance.consumer.oauth_authorized``
+signal:
 
 .. code-block:: python
 
-    @github_blueprint.logged_in
-    def github_logged_in(token):
+    from flask import flash
+    from flask_dance.consumer import oauth_authorized
+
+    @oauth_authorized.connect
+    def github_logged_in(blueprint, token):
         if "error" in token:
             flash("You denied the request to sign in. Please try again.")
-            del github_blueprint.token
+            del blueprint.token
         else:
-            flash("Signed in successfully!")
+            flash("Signed in successfully with {name}!".format(
+                name=blueprint.name.capitalize()
+            ))
 
-The function is passed a dict containing whatever OAuth token information is
-returned from the OAuth provider. Remember that errors can happen, so it's worth
-checking for them! If you're using OAuth 2, the user may also grant you
-different scopes than the ones you requested, so you should verify that, as well.
-By the time this function is called, the token will already be saved (either
-into the Flask session by default, or using your custom ``token_setter`` function)
-so if you want to delete the saved token, you can just delete the ``token``
-property from the blueprint. That will call your ``token_deleter`` function,
+The argument will be called with the blueprint instance as the first argument,
+and the token object from the OAuth provider as a keyword argument.
+Remember that OAuth errors can happen, and just because your function gets
+called doesn't mean that the OAuth dance was successful: check the token object
+for information from the OAuth provider to see what happened. If you're using
+OAuth 2, the user may also grant you different scopes than the ones you
+requested, so you should verify that, as well. By the time this function is
+called, the token will already be saved, so if you want to delete the
+saved token from storage, you can just delete the ``token`` property from
+the blueprint. That will call your ``token_deleter`` function,
 or remove it from the Flask session if you haven't defined a ``token_deleter``
 function.
 
 .. _flash a message: http://flask.pocoo.org/docs/latest/patterns/flashing/
+.. _blinker: http://pythonhosted.org/blinker/
 
 .. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master
    :target: https://travis-ci.org/singingwolfboy/flask-dance

@@ -5,7 +5,7 @@ import mock
 import responses
 from six.moves.urllib.parse import quote_plus
 import flask
-from flask_dance.consumer import OAuth1ConsumerBlueprint
+from flask_dance.consumer import OAuth1ConsumerBlueprint, oauth_authorized
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 
@@ -101,18 +101,21 @@ def test_authorized_url():
         )
 
 
-def test_login_callbacks():
+def test_signal_oauth_authorized():
     app, bp = make_app()
     bp.session.fetch_access_token = mock.Mock(return_value="test-token")
 
-    cb1 = mock.Mock()
-    cb2 = mock.Mock()
-    bp.logged_in(cb1)
-    bp.logged_in(cb2)
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_authorized.connect(callback)
 
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
         )
-    cb1.assert_called_with("test-token")
-    cb2.assert_called_with("test-token")
+
+    assert len(calls), 1
+    assert calls[0][0] == (app,)
+    assert calls[0][1] == {"token": "test-token"}

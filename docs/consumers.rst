@@ -22,8 +22,6 @@ of the user.
    .. automethod:: token_deleter
    .. autoattribute:: token
 
-   .. automethod:: logged_in
-
 .. autoclass:: OAuth2ConsumerBlueprint(...)
 
    .. automethod:: __init__
@@ -38,5 +36,3 @@ of the user.
    .. automethod:: token_setter
    .. automethod:: token_deleter
    .. autoattribute:: token
-
-   .. automethod:: logged_in

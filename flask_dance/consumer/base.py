@@ -3,7 +3,12 @@ from __future__ import unicode_literals, print_function
 import types
 from distutils.version import StrictVersion
 import flask
+from flask.signals import Namespace
 from flask_dance.utils import proxy_property, FakeCache
+
+
+_signals = Namespace()
+oauth_authorized = _signals.signal('oauth-authorized')
 
 
 class BaseOAuthConsumerBlueprint(flask.Blueprint):
@@ -54,15 +59,6 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
     def assign_token_to_session(self):
         raise NotImplementedError
-
-    def logged_in(self, func):
-        """
-        A decorator used to indicate a function to be run immediately after
-        the OAuth dance is completed. The function will be called with the OAuth
-        token as an argument. You can use this decorator on multiple functions,
-        and they will all be run after the OAuth dance is completed.
-        """
-        self.logged_in_funcs.append(func)
 
     token = proxy_property(
         "token", pass_self=False,

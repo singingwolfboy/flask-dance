@@ -6,7 +6,7 @@ import responses
 from six.moves.urllib.parse import quote_plus, parse_qsl
 from urlobject import URLObject
 import flask
-from flask_dance.consumer import OAuth2ConsumerBlueprint
+from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
 
 
 def make_app(login_url=None):
@@ -94,14 +94,15 @@ def test_authorized_url():
         )
 
 
-def test_login_callbacks():
+def test_signal_oauth_authorized():
     app, bp = make_app()
     bp.session.fetch_token = mock.Mock(return_value="test-token")
 
-    cb1 = mock.Mock()
-    cb2 = mock.Mock()
-    bp.logged_in(cb1)
-    bp.logged_in(cb2)
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_authorized.connect(callback)
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
@@ -111,5 +112,6 @@ def test_login_callbacks():
             "/login/test-service/authorized?code=secret-code&state=random-string",
         )
 
-    cb1.assert_called_with("test-token")
-    cb2.assert_called_with("test-token")
+    assert len(calls), 1
+    assert calls[0][0] == (app,)
+    assert calls[0][1] == {"token": "test-token"}

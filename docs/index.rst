@@ -23,7 +23,7 @@ Contents:
    contrib
    custom-services
    token-storage
-   login-callbacks
+   signals
    consumers
 
 

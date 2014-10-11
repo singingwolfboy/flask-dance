@@ -1,12 +1,12 @@
 from __future__ import unicode_literals, print_function
 
 import sys
-from flask import request, url_for, redirect
+from flask import request, url_for, redirect, current_app
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
-from .base import BaseOAuthConsumerBlueprint
+from .base import BaseOAuthConsumerBlueprint, oauth_authorized
 
 
 class OAuth1SessionWithBaseURL(OAuth1Session):
@@ -145,8 +145,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session.parse_authorization_response(request.url)
         token = self.session.fetch_access_token(self.access_token_url)
         self.token = token
-        for func in self.logged_in_funcs:
-            func(token)
+        oauth_authorized.send(current_app._get_current_object(), token=token)
         return redirect(next_url)
 
     def assign_token_to_session(self):
