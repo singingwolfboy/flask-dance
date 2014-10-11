@@ -14,7 +14,7 @@ they've logged in. In a case like this, just import the appropriate signal of
 the ones listed below, and connect your custom processing code to the signal.
 
 Core Signals
-============
+------------
 The following signals exist in Flask-Dance:
 
 .. data:: oauth_authorized
