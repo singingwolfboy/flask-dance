@@ -42,7 +42,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             view_func=self.authorized,
         )
 
-        self.create_token_accessors()
+        self.set_token_storage_session()
         self.logged_in_funcs = []
         self.before_app_request(self.assign_token_to_session)
 
@@ -91,7 +91,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         """
         self.delete_token = func
 
-    def create_token_accessors(self):
+    def set_token_storage_session(self):
         key = "{name}_oauth_token".format(name=self.name)
 
         @self.token_getter
@@ -99,9 +99,47 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             return flask.session.get(key)
 
         @self.token_setter
-        def set_token(value):
-            flask.session[key] = value
+        def set_token(token):
+            flask.session[key] = token
 
         @self.token_deleter
         def delete_token():
             del flask.session[key]
+
+    def set_token_storage_sqlalchemy(self, model, session, user=None):
+        """
+        Set token accessors to work with a SQLAlchemy database for token
+        storage/retrieval.
+        """
+        from sqlalchemy.orm.exc import NoResultFound
+
+        @self.token_getter
+        def get_token():
+            query = session.query(model).filter_by(provider=self.name)
+            if hasattr(model, "user"):
+                u = user() if callable(user) else user
+                query = query.filter_by(user=u)
+            try:
+                return query.one().token
+            except NoResultFound:
+                return None
+
+        @self.token_setter
+        def set_token(token):
+            kwargs = {
+                "provider": self.name,
+                "token": token,
+            }
+            if hasattr(model, "user"):
+                u = user() if callable(user) else user
+                kwargs["user"] = u
+            session.add(model(**kwargs))
+            session.commit()
+
+        @self.token_deleter
+        def delete_token():
+            query = session.query(model).filter_by(provider=self.name)
+            if hasattr(model, "user"):
+                u = user() if callable(user) else user
+                query = query.filter_by(user=u)
+            query.delete()
