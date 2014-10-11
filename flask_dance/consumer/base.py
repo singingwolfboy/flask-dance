@@ -3,7 +3,7 @@ from __future__ import unicode_literals, print_function
 import types
 from distutils.version import StrictVersion
 import flask
-from flask_dance.utils import proxy_property
+from flask_dance.utils import proxy_property, FakeCache
 
 
 class BaseOAuthConsumerBlueprint(flask.Blueprint):
@@ -106,14 +106,21 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         def delete_token():
             del flask.session[key]
 
-    def set_token_storage_sqlalchemy(self, model, session, user=None):
+    def set_token_storage_sqlalchemy(self, model, session, user=None, cache=None):
         """
         Set token accessors to work with a SQLAlchemy database for token
         storage/retrieval.
         """
         from sqlalchemy.orm.exc import NoResultFound
+        if not cache:
+            cache = FakeCache()
+        def make_cache_key(name=None):
+            u = user() if callable(user) else user
+            return "flask_dance_token|{name}|{user}".format(
+                name=self.name, user=getattr(u, "id", u),
+            )
 
-        @self.token_getter
+        @cache.memoize()
         def get_token():
             query = session.query(model).filter_by(provider=self.name)
             if hasattr(model, "user"):
@@ -123,6 +130,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
                 return query.one().token
             except NoResultFound:
                 return None
+        get_token.make_cache_key = make_cache_key
+        self.token_getter(get_token)
 
         @self.token_setter
         def set_token(token):
@@ -143,6 +152,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             session.add(model(**kwargs))
             # commit to delete and add simultaneously
             session.commit()
+            # invalidate cache
+            cache.delete_memoized(self.get_token)
 
         @self.token_deleter
         def delete_token():
@@ -151,3 +162,5 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
                 u = user() if callable(user) else user
                 query = query.filter_by(user=u)
             query.delete()
+            # invalidate cache
+            cache.delete_memoized(self.get_token)

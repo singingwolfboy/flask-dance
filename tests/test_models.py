@@ -3,7 +3,9 @@ import pytest
 import responses
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import event
 from sqlalchemy.orm.exc import NoResultFound
+from flask_cache import Cache
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.models import OAuthMixin
 
@@ -42,6 +44,7 @@ def db():
 def app(blueprint, db, request):
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
+    app.config["CACHE_TYPE"] = "simple"
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
     db.init_app(app)
@@ -65,6 +68,11 @@ def test_model(app, db, blueprint, request):
         db.drop_all()
     request.addfinalizer(done)
 
+    queries = []
+    @event.listens_for(db.engine, "before_cursor_execute")
+    def record_query(conn, cursor, statement, parameters, context, executemany):
+        queries.append(statement)
+
     with app.test_client() as client:
         # reset the session before the request
         with client.session_transaction() as sess:
@@ -77,6 +85,8 @@ def test_model(app, db, blueprint, request):
         # check that we redirected the client
         assert resp.status_code == 302
         assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    assert len(queries) == 3
 
     # check the database
     authorizations = OAuth.query.all()
@@ -114,6 +124,11 @@ def test_model_with_user(app, db, blueprint, request):
     db.session.add(alice)
     db.session.commit()
 
+    queries = []
+    @event.listens_for(db.engine, "before_cursor_execute")
+    def record_query(conn, cursor, statement, parameters, context, executemany):
+        queries.append(statement)
+
     with app.test_client() as client:
         # reset the session before the request
         with client.session_transaction() as sess:
@@ -126,6 +141,8 @@ def test_model_with_user(app, db, blueprint, request):
         # check that we redirected the client
         assert resp.status_code == 302
         assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    assert len(queries) == 5
 
     # check the database
     alice = User.query.first()
@@ -168,6 +185,11 @@ def test_model_repeated_token(app, db, blueprint, request):
     db.session.commit()
     assert len(OAuth.query.all()) == 1
 
+    queries = []
+    @event.listens_for(db.engine, "before_cursor_execute")
+    def record_query(conn, cursor, statement, parameters, context, executemany):
+        queries.append(statement)
+
     with app.test_client() as client:
         # reset the session before the request
         with client.session_transaction() as sess:
@@ -181,6 +203,8 @@ def test_model_repeated_token(app, db, blueprint, request):
         assert resp.status_code == 302
         assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
+    assert len(queries) == 3
+
     # check that the database record was overwritten
     authorizations = OAuth.query.all()
     assert len(authorizations) == 1
@@ -192,3 +216,71 @@ def test_model_repeated_token(app, db, blueprint, request):
         "token_type": "bearer",
         "scope": [""],
     }
+
+
+def test_model_with_cache(app, db, blueprint, request):
+    cache = Cache(app)
+
+    class OAuth(db.Model, OAuthMixin):
+        pass
+
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, cache=cache)
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    queries = []
+    @event.listens_for(db.engine, "before_cursor_execute")
+    def record_query(conn, cursor, statement, parameters, context, executemany):
+        queries.append(statement)
+
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    assert len(queries) == 3
+
+    expected_token = {
+        "access_token": "foobar",
+        "token_type": "bearer",
+        "scope": [""],
+    }
+
+    # check the database
+    authorizations = OAuth.query.all()
+    assert len(authorizations) == 1
+    oauth = authorizations[0]
+    assert oauth.provider == "test-service"
+    assert isinstance(oauth.token, dict)
+    assert oauth.token == expected_token
+
+    # cache should be invalidated
+    assert cache.get("flask_dance_token|test-service|None") is None
+
+    # first reference to the token should generate SQL queries
+    queries = []
+    assert blueprint.token == expected_token
+    assert len(queries) == 1
+
+    # should now be in the cache
+    assert cache.get("flask_dance_token|test-service|None") == expected_token
+
+    # subsequent references should not generate SQL queries
+    queries = []
+    assert blueprint.token == expected_token
+    assert len(queries) == 0
+    assert blueprint.get_token() == expected_token
+    assert len(queries) == 0
+

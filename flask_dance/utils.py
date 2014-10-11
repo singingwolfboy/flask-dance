@@ -37,3 +37,17 @@ class proxy_property(object):
         if self.pass_self:
             args.insert(0, obj)
         return deleter_func(*args)
+
+
+class FakeCache(object):
+    """
+    An object that mimics just enough of Flask-Cache's API to be compatible
+    with our needs, but does nothing.
+    """
+    def memoize(self, timeout=None, make_name=None, unless=None):
+        def decorator(func):
+            return func
+        return decorator
+
+    def delete_memoized(self, *args, **kwargs):
+        pass
