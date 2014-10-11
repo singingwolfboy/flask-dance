@@ -7,11 +7,13 @@ from sqlalchemy.orm.exc import NoResultFound
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.models import OAuthMixin
 
-pytestmark = pytest.mark.skipif("DATABASE_URI" not in os.environ,
-                                reason="DATABASE_URI required")
+pytestmark = [
+    pytest.mark.skipif("DATABASE_URI" not in os.environ,
+                       reason="DATABASE_URI required"),
+    pytest.mark.usefixtures("responses"),
+]
 
 
-@pytest.mark.usefixtures("responses")
 def test_model(request):
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
@@ -70,7 +72,6 @@ def test_model(request):
     }
 
 
-@pytest.mark.usefixtures("responses")
 def test_model_with_user(request):
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
