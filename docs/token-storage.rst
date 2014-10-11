@@ -80,18 +80,18 @@ get, set, and delete functions, and attach them to the Blueprint object using th
 :obj:`~OAuth2ConsumerBlueprint.token_deleter` decorators::
 
     @blueprint.token_getter
-    def get_github_token():
+    def get_token():
         user = get_current_user()
         return user.token
 
     @blueprint.token_setter
-    def set_github_token(token):
+    def set_token(token):
         user = get_current_user()
         user.token = token
         user.save()
 
     @blueprint.token_deleter
-    def delete_github_token():
+    def delete_token():
         user = get_current_user()
         del user.token
         user.save()
