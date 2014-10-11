@@ -74,7 +74,7 @@ And of course, it can also be combined with a User model::
 .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
 
 Custom Storage
-==============
+--------------
 Of course, you don't have to use `SQLAlchemy`_, you're free to use whatever
 storage system you want. To use something else, just write custom
 get, set, and delete functions, and attach them to the Blueprint object using the
