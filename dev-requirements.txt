@@ -6,3 +6,4 @@ sqlalchemy>=0.9
 psycopg2
 flask-sqlalchemy
 flask-cache
+blinker
