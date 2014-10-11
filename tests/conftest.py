@@ -2,7 +2,7 @@ import pytest
 import responses as resp_module
 
 
-@pytest.fixture()
+@pytest.fixture
 def responses(request):
     resp_module.start()
     def done():

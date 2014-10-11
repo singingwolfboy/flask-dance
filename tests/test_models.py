@@ -14,15 +14,9 @@ pytestmark = [
 ]
 
 
-def test_model(request):
-    app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
-    db = SQLAlchemy(app)
-
-    class OAuth(db.Model, OAuthMixin):
-        pass
-
-    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+@pytest.fixture
+def blueprint():
+    bp = OAuth2ConsumerBlueprint("test-service", __name__,
         client_id="client_id",
         client_secret="client_secret",
         state="random-string",
@@ -31,9 +25,39 @@ def test_model(request):
         token_url="https://example.com/oauth/access_token",
         redirect_url="/oauth_done",
     )
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":""}',
+    )
+    return bp
+
+
+@pytest.fixture
+def db():
+    return SQLAlchemy()
+
+
+@pytest.fixture
+def app(blueprint, db, request):
+    app = Flask(__name__)
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
+    db.init_app(app)
+    # establish app context
+    ctx = app.app_context()
+    ctx.push()
+    request.addfinalizer(ctx.pop)
+    return app
+
+
+def test_model(app, db, blueprint, request):
+
+    class OAuth(db.Model, OAuthMixin):
+        pass
+
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
 
     db.create_all()
     def done():
@@ -41,11 +65,6 @@ def test_model(request):
         db.drop_all()
     request.addfinalizer(done)
 
-    responses.add(
-        responses.POST,
-        "https://example.com/oauth/access_token",
-        body='{"access_token":"foobar","token_type":"bearer","scope":""}',
-    )
     with app.test_client() as client:
         # reset the session before the request
         with client.session_transaction() as sess:
@@ -72,10 +91,7 @@ def test_model(request):
     }
 
 
-def test_model_with_user(request):
-    app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
-    db = SQLAlchemy(app)
+def test_model_with_user(app, db, blueprint, request):
 
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -85,18 +101,7 @@ def test_model_with_user(request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
-        client_id="client_id",
-        client_secret="client_secret",
-        state="random-string",
-        base_url="https://example.com",
-        authorization_url="https://example.com/oauth/authorize",
-        token_url="https://example.com/oauth/access_token",
-        redirect_url="/oauth_done",
-    )
     blueprint.set_token_storage_sqlalchemy(OAuth, db.session, lambda: User.query.first())
-    app.secret_key = "secret"
-    app.register_blueprint(blueprint, url_prefix="/login")
 
     db.create_all()
     def done():
@@ -109,11 +114,6 @@ def test_model_with_user(request):
     db.session.add(alice)
     db.session.commit()
 
-    responses.add(
-        responses.POST,
-        "https://example.com/oauth/access_token",
-        body='{"access_token":"foobar","token_type":"bearer","scope":""}',
-    )
     with app.test_client() as client:
         # reset the session before the request
         with client.session_transaction() as sess:
