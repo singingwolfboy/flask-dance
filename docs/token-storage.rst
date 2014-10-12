@@ -47,9 +47,11 @@ using the :meth:`~OAuth2ConsumerBlueprint.set_token_storage_sqlalchemy` method::
 
     blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
 
-Or if you're using a User model, pass that along as well::
+Or if you're using a User model, pass along a reference to the current user so
+that Flask-Dance can associate users with OAuth tokens. `Flask-Login`_ provides
+a ``current_user`` proxy that should work great::
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=User)
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user)
 
 And you should be all set! However, it's also highly recommended that you use
 some kind of caching system, to prevent unnecessary load on your database.
@@ -67,9 +69,10 @@ candidates to be cached. Fortunately, Flask-Dance also integrates with
 
 And of course, it can also be combined with a User model::
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=User, cache=cache)
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user, cache=cache)
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
+.. _Flask-Login: https://flask-login.readthedocs.org/
 .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
 
 Custom Storage
