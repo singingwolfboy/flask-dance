@@ -53,6 +53,27 @@ def app(blueprint, db, request):
     return app
 
 
+class record_queries(object):
+    """
+    A context manager for recording the SQLAlchemy queries that were executed
+    in a given context block.
+    """
+    def __init__(self, target, identifier="before_cursor_execute"):
+        self.target = target
+        self.identifier = identifier
+
+    def record_query(self, conn, cursor, statement, parameters, context, executemany):
+        self.queries.append(statement)
+
+    def __enter__(self):
+        self.queries = []
+        event.listen(self.target, self.identifier, self.record_query)
+        return self.queries
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        event.remove(self.target, self.identifier, self.record_query)
+
+
 def test_model(app, db, blueprint, request):
 
     class OAuth(db.Model, OAuthMixin):
@@ -66,23 +87,19 @@ def test_model(app, db, blueprint, request):
         db.drop_all()
     request.addfinalizer(done)
 
-    queries = []
-    @event.listens_for(db.engine, "before_cursor_execute")
-    def record_query(conn, cursor, statement, parameters, context, executemany):
-        queries.append(statement)
-
-    with app.test_client() as client:
-        # reset the session before the request
-        with client.session_transaction() as sess:
-            sess["test-service_oauth_state"] = "random-string"
-        # make the request
-        resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
-            base_url="https://a.b.c",
-        )
-        # check that we redirected the client
-        assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+    with record_queries(db.engine) as queries:
+        with app.test_client() as client:
+            # reset the session before the request
+            with client.session_transaction() as sess:
+                sess["test-service_oauth_state"] = "random-string"
+            # make the request
+            resp = client.get(
+                "/login/test-service/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that we redirected the client
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
     assert len(queries) == 3
 
@@ -183,23 +200,19 @@ def test_model_repeated_token(app, db, blueprint, request):
     db.session.commit()
     assert len(OAuth.query.all()) == 1
 
-    queries = []
-    @event.listens_for(db.engine, "before_cursor_execute")
-    def record_query(conn, cursor, statement, parameters, context, executemany):
-        queries.append(statement)
-
-    with app.test_client() as client:
-        # reset the session before the request
-        with client.session_transaction() as sess:
-            sess["test-service_oauth_state"] = "random-string"
-        # make the request
-        resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
-            base_url="https://a.b.c",
-        )
-        # check that we redirected the client
-        assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+    with record_queries(db.engine) as queries:
+        with app.test_client() as client:
+            # reset the session before the request
+            with client.session_transaction() as sess:
+                sess["test-service_oauth_state"] = "random-string"
+            # make the request
+            resp = client.get(
+                "/login/test-service/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that we redirected the client
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
     assert len(queries) == 3
 
@@ -230,23 +243,19 @@ def test_model_with_cache(app, db, blueprint, request):
         db.drop_all()
     request.addfinalizer(done)
 
-    queries = []
-    @event.listens_for(db.engine, "before_cursor_execute")
-    def record_query(conn, cursor, statement, parameters, context, executemany):
-        queries.append(statement)
-
-    with app.test_client() as client:
-        # reset the session before the request
-        with client.session_transaction() as sess:
-            sess["test-service_oauth_state"] = "random-string"
-        # make the request
-        resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
-            base_url="https://a.b.c",
-        )
-        # check that we redirected the client
-        assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+    with record_queries(db.engine) as queries:
+        with app.test_client() as client:
+            # reset the session before the request
+            with client.session_transaction() as sess:
+                sess["test-service_oauth_state"] = "random-string"
+            # make the request
+            resp = client.get(
+                "/login/test-service/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that we redirected the client
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
     assert len(queries) == 3
 
@@ -268,17 +277,17 @@ def test_model_with_cache(app, db, blueprint, request):
     assert cache.get("flask_dance_token|test-service|None") is None
 
     # first reference to the token should generate SQL queries
-    queries = []
-    assert blueprint.token == expected_token
+    with record_queries(db.engine) as queries:
+        assert blueprint.token == expected_token
     assert len(queries) == 1
 
     # should now be in the cache
     assert cache.get("flask_dance_token|test-service|None") == expected_token
 
     # subsequent references should not generate SQL queries
-    queries = []
-    assert blueprint.token == expected_token
+    with record_queries(db.engine) as queries:
+        assert blueprint.token == expected_token
     assert len(queries) == 0
-    assert blueprint.get_token() == expected_token
+    with record_queries(db.engine) as queries:
+        assert blueprint.get_token() == expected_token
     assert len(queries) == 0
-
