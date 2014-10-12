@@ -14,10 +14,10 @@ SQLAlchemy
 
 .. versionadded:: 0.2
 
-If you're using `SQLAlchemy`_ and `PostgreSQL`_, you've got a leg up:
-Flask-Dance has built-in support for this common use case. First, define your
-model with a ``token`` column and a ``provider`` column. Flask-Dance includes
-a :class:`~flask_dance.models.OAuthMixin` class to make this easier::
+If you're using `SQLAlchemy`_, you've got a leg up: Flask-Dance has built-in
+support for this common use case. First, define your model with a ``token``
+column and a ``provider`` column. Flask-Dance includes a
+:class:`~flask_dance.models.OAuthMixin` class to make this easier::
 
     from flask_sqlalchemy import SQLAlchemy
     from flask_dance.models import OAuthMixin
@@ -69,7 +69,6 @@ And of course, it can also be combined with a User model::
 
     blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=User, cache=cache)
 
-.. _PostgreSQL: http://www.postgresql.org/
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
 

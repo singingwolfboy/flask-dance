@@ -10,8 +10,6 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.models import OAuthMixin
 
 pytestmark = [
-    pytest.mark.skipif("DATABASE_URI" not in os.environ,
-                       reason="DATABASE_URI required"),
     pytest.mark.usefixtures("responses"),
 ]
 
@@ -43,7 +41,7 @@ def db():
 @pytest.fixture
 def app(blueprint, db, request):
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URI"]
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI", "sqlite://")
     app.config["CACHE_TYPE"] = "simple"
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")

@@ -4,10 +4,11 @@ python:
   - 3.3
 addons:
   postgresql: "9.2"
-before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
 env:
   - DATABASE_URI=postgresql://localhost/travis_ci_test
+  - DATABASE_URI=sqlite://
+before_script:
+  - if [[ $DATABASE_URI == postgresql* ]]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 install:
   - pip install -r requirements.txt
   - pip install -r dev-requirements.txt
