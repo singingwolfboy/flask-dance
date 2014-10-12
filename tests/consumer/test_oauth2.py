@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+try:
+    from urllib.parse import quote_plus, parse_qsl
+except ImportError:
+    from urllib import quote_plus
+    from urlparse import parse_qsl
+
 import mock
 import responses
-from six.moves.urllib.parse import quote_plus, parse_qsl
 from urlobject import URLObject
 import flask
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized

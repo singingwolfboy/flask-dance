@@ -12,6 +12,7 @@ before_script:
 install:
   - pip install -r requirements.txt
   - pip install -r dev-requirements.txt
+  - if [[ $DATABASE_URI == postgresql* ]]; then pip install psycopg2; fi
   - pip install coveralls
 script:
   - coverage run --source=flask_dance runtests.py
