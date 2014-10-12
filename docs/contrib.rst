@@ -1,11 +1,11 @@
 Pre-set Configurations
 ======================
 Flask-Dance comes with pre-set OAuth consumer configurations
-for a few popular services. If you want to use Flask-Dance with a service
-that isn't listed here, simply create an instance of
+for a few popular OAuth providers. If you want to use Flask-Dance with an
+OAuth provider that isn't listed here, simply create an instance of
 :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint` or
 :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
-and provide the information for your service. We also welcome pull requests
+and provide the information for your provider. We also welcome pull requests
 to add new pre-set configurations to Flask-Dance!
 
 .. contents:: Included Configurations

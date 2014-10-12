@@ -88,6 +88,12 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         self.delete_token = func
 
     def set_token_storage_session(self):
+        """
+        A helper method to set up the blueprint to store and retrieve OAuth
+        tokens using the Flask session. This will overwrite any custom token
+        accessors you've set up. This method is called by the constructor as
+        a default -- in general, you shouldn't call this method yoursel.
+        """
         key = "{name}_oauth_token".format(name=self.name)
 
         @self.token_getter
@@ -104,8 +110,28 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
     def set_token_storage_sqlalchemy(self, model, session, user=None, cache=None):
         """
-        Set token accessors to work with a SQLAlchemy database for token
-        storage/retrieval.
+        A helper method to set up the blueprint to store and retrieve OAuth
+        tokens using SQLAlchemy. This will overwrite any custom token
+        accessors you've set up.
+
+        Args:
+            model: A class that represents a database table. At a minimum, it
+                must have a ``token`` column and a ``provider`` column.
+                If you're using a User class, this model must also declare a
+                ``user`` relation to that class. It is recommended, but not
+                required, that your model inherit from
+                :class:`flask_dance.models.OAuthMixin`.
+            session: A :class:`sqlalchemy.orm.session.Session` object. If you're
+                using Flask-SQLAlchemy, this is ``db.session``.
+            user: The current logged in user, if any.
+                This can also be a function that returns the current logged
+                in user. This is argument is optional; if not provided,
+                OAuth tokens will not be associated with specific users in
+                your application.
+            cache: An instance of `Flask-Cache`_. This is optional, but highly
+                recommended for performance reasons.
+
+        .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
         """
         from sqlalchemy.orm.exc import NoResultFound
         if not cache:

@@ -21,10 +21,10 @@ Contents:
 
    quickstart
    contrib
-   custom-services
+   consumers
    token-storage
    signals
-   consumers
+   api
 
 
 

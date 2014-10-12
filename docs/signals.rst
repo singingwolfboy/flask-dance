@@ -8,9 +8,9 @@ Signals
 Flask-Dance supports signals, :ref:`just as Flask does <flask:signals>`.
 Signals are perfect for custom processing code that you want to run at a certain
 point in the OAuth dance. For example, after the dance is complete, you might
-need to update their user profile, fire an event, or simply
-:ref:`flash a message <flask:message-flashing-pattern>` to let them know
-they've logged in. In a case like this, just import the appropriate signal of
+need to update the user's profile, kick off a long-running task, or simply
+:ref:`flash a message <flask:message-flashing-pattern>` to let the user know
+that the login was successful. It's easy, just import the appropriate signal of
 the ones listed below, and connect your custom processing code to the signal.
 
 Core Signals
@@ -32,7 +32,7 @@ The following signals exist in Flask-Dance:
         from flask_dance.consumer import oauth_authorized
 
         @oauth_authorized.connect
-        def github_logged_in(blueprint, token):
+        def logged_in(blueprint, token):
             if "error" in token:
                 flash("You denied the request to sign in. Please try again.")
                 del blueprint.token

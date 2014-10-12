@@ -1,38 +1,54 @@
-.. module:: flask_dance.consumer
+Other Providers
+===============
+Flask-Dance allows you to build authentication blueprints for any OAuth
+provider, not just the :doc:`pre-set configurations <contrib>`.
+For these examples, we'll reimplement the Github provider,
+but you could use whatever values you want.
 
-Consumers
-=========
-An OAuth consumer is a website that allows users to log in with other websites
-(known as OAuth providers). Once a user has gone through the OAuth dance, the
-consumer website is allowed to interact with the provider website on behalf
-of the user.
+.. code-block:: python
 
-.. autoclass:: OAuth1ConsumerBlueprint(...)
+    from flask import Flask
+    from flask_dance.consumer import OAuth2ConsumerBlueprint
 
-   .. automethod:: __init__
+    app = Flask(__name__)
+    github_blueprint = OAuth2ConsumerBlueprint(
+        "github", __name__,
+        client_key="my-key-here",
+        client_secret="my-secret-here",
+        scope="user:email",
+        base_url="https://api.github.com",
+        access_token_url="https://github.com/login/oauth/access_token",
+        authorize_url="https://github.com/login/oauth/authorize",
+        redirect_to="index",
+    )
+    app.register_blueprint(github_blueprint, url_prefix="/login")
 
-   .. attribute:: session
+Now, in your page template, you can do something like:
 
-      An :class:`~requests_oauthlib.OAuth1Session` instance that
-      automatically loads credentials for the OAuth provider (if the user has
-      already gone through the OAuth dance).
+.. code-block:: jinja
 
-   .. automethod:: token_getter
-   .. automethod:: token_setter
-   .. automethod:: token_deleter
-   .. autoattribute:: token
+    <a href="{{ url_for("github.login") }}">Login with Github</a>
 
-.. autoclass:: OAuth2ConsumerBlueprint(...)
+``url_for("github.login")`` will resolve to ``/login/github`` by default,
+which will kick off the OAuth dance. The application will fetch an access token
+from the configured ``access_token_url``, then redirect the user to the
+``authorize_token_url``. When the user authorizes with the OAuth provider,
+the user will be redirected back to ``/login/github/authorized``, which
+will save the OAuth tokens and redirect the user back to the home page.
+Of course, all of the details of this process can be configured and overriden
+to make sure that you dance the OAuth dance precisely the way *you* want.
 
-   .. automethod:: __init__
+Once you've got your OAuth credentials, making authenticated requests couldn't
+be easier!
 
-   .. attribute:: session
+.. code-block:: python
 
-      An :class:`~requests_oauthlib.OAuth2Session` instance that
-      automatically loads credentials for the OAuth provider (if the user has
-      already gone through the OAuth dance).
+    github = github_blueprint.session
+    resp = github.get("/user")
+    assert resp.ok
+    print("Hi, @{login}!".format(login=resp.json()["login"]))
 
-   .. automethod:: token_getter
-   .. automethod:: token_setter
-   .. automethod:: token_deleter
-   .. autoattribute:: token
+The :attr:`~OAuth2ConsumerBlueprint.session` object attached to the blueprint
+is a ``requests.Session`` object that is already properly configured
+with your OAuth credentials. The fact that you are using OAuth is
+completely transparent -- you don't even have to think about it!

@@ -2,7 +2,9 @@ Flask-Dance |build-status| |coverage-status| |pypi| |docs|
 ==========================================================
 Doing the OAuth dance with style using Flask, requests, and oauthlib. Currently,
 only OAuth consumers are supported, but this project could easily support
-OAuth providers in the future, as well.
+OAuth providers in the future, as well. The `full documentation for this project
+is hosted on ReadTheDocs <http://flask-dance.readthedocs.org/>`_, but this
+README will give you a taste of the features.
 
 Installation
 ============
@@ -13,7 +15,7 @@ Installation
 
 Quickstart
 ==========
-For a few popular services, Flask-Dance provides pre-set configurations. For
+For `a few popular OAuth providers`_, Flask-Dance provides pre-set configurations. For
 example, to authenticate with Github, just do the following:
 
 .. code-block:: python
@@ -25,7 +27,6 @@ example, to authenticate with Github, just do the following:
     github_blueprint = make_github_blueprint(
         client_id="my-key-here",
         client_secret="my-secret-here",
-        scope="user:email",
         redirect_to="index",
     )
     app.register_blueprint(github_blueprint, url_prefix="/login")
@@ -34,10 +35,9 @@ example, to authenticate with Github, just do the following:
     def index():
         if not github.authorized:
             return redirect(url_for("github.login"))
-        resp = github.get("/user/emails")
+        resp = github.get("/user")
         assert resp.ok
-        emails = [result["email"] for result in resp.json()]
-        return " ".join(emails)
+        return "You are @{login} on Github".format(login=resp.json()["login"])
 
 The ``github`` object is a `context local`_, just like ``flask.request``. That means
 that you can import it in any Python file you want, and use it in the context
@@ -45,6 +45,9 @@ of an incoming HTTP request. If you've split your Flask app up into multiple
 different files, feel free to import this object in any of your files, and use
 it just like you would use the ``requests`` module.
 
+You can also use Flask-Dance with other services
+
+.. _a few popular OAuth providers: http://flask-dance.readthedocs.org/en/latest/contrib.html
 .. _context local: http://flask.pocoo.org/docs/latest/quickstart/#context-locals
 
 Custom Services
