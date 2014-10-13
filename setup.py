@@ -48,8 +48,8 @@ setup(
     install_requires=get_requirements("requirements.txt"),
     tests_require=get_requirements("dev-requirements.txt"),
     extras_require={
-        'models': 'sqlalchemy, sqlalchemy-utils',
-        'signals': 'blinker',
+        'models': ['sqlalchemy', 'sqlalchemy-utils'],
+        'signals': ['blinker'],
     },
     cmdclass = {'test': PyTest},
     license='MIT',
