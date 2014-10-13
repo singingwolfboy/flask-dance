@@ -8,7 +8,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from flask_cache import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint
-from flask_dance.models import OAuthMixin
+from flask_dance.models import OAuthConsumerMixin
 
 pytestmark = [
     pytest.mark.usefixtures("responses"),
@@ -77,7 +77,7 @@ class record_queries(object):
 
 def test_model(app, db, blueprint, request):
 
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
     blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
@@ -118,7 +118,7 @@ def test_model(app, db, blueprint, request):
 
 
 def test_model_repr(app, db, request):
-    class MyAwesomeOAuth(db.Model, OAuthMixin):
+    class MyAwesomeOAuth(db.Model, OAuthConsumerMixin):
         pass
 
     db.create_all()
@@ -146,7 +146,7 @@ def test_model_with_user(app, db, blueprint, request):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
 
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -200,7 +200,7 @@ def test_model_with_flask_login(app, db, blueprint, request):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
 
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -290,7 +290,7 @@ def test_model_with_flask_login(app, db, blueprint, request):
 
 def test_model_repeated_token(app, db, blueprint, request):
 
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
     blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
@@ -346,7 +346,7 @@ def test_model_repeated_token(app, db, blueprint, request):
 def test_model_with_cache(app, db, blueprint, request):
     cache = Cache(app)
 
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
     blueprint.set_token_storage_sqlalchemy(OAuth, db.session, cache=cache)

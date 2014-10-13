@@ -120,7 +120,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
                 If you're using a User class, this model must also declare a
                 ``user`` relation to that class. It is recommended, but not
                 required, that your model inherit from
-                :class:`flask_dance.models.OAuthMixin`.
+                :class:`flask_dance.models.OAuthConsumerMixin`.
             session: A :class:`sqlalchemy.orm.session.Session` object. If you're
                 using Flask-SQLAlchemy, this is ``db.session``.
             user: The current logged in user, if any.

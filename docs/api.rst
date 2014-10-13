@@ -52,4 +52,4 @@ Models
 
 .. currentmodule:: flask_dance.models
 
-.. autoclass:: OAuthMixin
+.. autoclass:: OAuthConsumerMixin

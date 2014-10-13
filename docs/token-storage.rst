@@ -17,20 +17,20 @@ SQLAlchemy
 If you're using `SQLAlchemy`_, you've got a leg up: Flask-Dance has built-in
 support for this common use case. First, define your model with a ``token``
 column and a ``provider`` column. Flask-Dance includes a
-:class:`~flask_dance.models.OAuthMixin` class to make this easier::
+:class:`~flask_dance.models.OAuthConsumerMixin` class to make this easier::
 
     from flask_sqlalchemy import SQLAlchemy
-    from flask_dance.models import OAuthMixin
+    from flask_dance.models import OAuthConsumerMixin
 
     db = SQLAlchemy()
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
 If you have a User model in your application, you can also set up a
 :class:`~sqlalchemy.schema.ForeignKey` to your User model::
 
     from flask_sqlalchemy import SQLAlchemy
-    from flask_dance.models import OAuthMixin
+    from flask_dance.models import OAuthConsumerMixin
 
     db = SQLAlchemy()
 
@@ -38,7 +38,7 @@ If you have a User model in your application, you can also set up a
         id = db.Column(db.Integer, primary_key=True)
         # ... other columns as needed
 
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 

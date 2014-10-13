@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy_utils import JSONType
 
 
-class OAuthMixin(object):
+class OAuthConsumerMixin(object):
     """
     A :ref:`SQLAlchemy declarative mixin <sqlalchemy:declarative_mixins>` with
     some suggested columns for a model to store OAuth tokens:

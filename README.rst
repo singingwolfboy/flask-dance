@@ -73,7 +73,7 @@ and it works with User models, too!
 .. code-block:: python
 
     from flask_sqlalchemy import SQLAlchemy
-    from flask_dance.models import OAuthMixin
+    from flask_dance.models import OAuthConsumerMixin
 
     db = SQLAlchemy()
 
@@ -81,7 +81,7 @@ and it works with User models, too!
         id = db.Column(db.Integer, primary_key=True)
         # ... other columns as needed
 
-    class OAuth(db.Model, OAuthMixin):
+    class OAuth(db.Model, OAuthConsumerMixin):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
