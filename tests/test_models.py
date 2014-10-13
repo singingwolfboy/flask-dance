@@ -117,6 +117,29 @@ def test_model(app, db, blueprint, request):
     }
 
 
+def test_model_repr(app, db, request):
+    class MyAwesomeOAuth(db.Model, OAuthMixin):
+        pass
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    o = MyAwesomeOAuth()
+    assert "MyAwesomeOAuth" in repr(o)
+    o.provider = "supercool"
+    assert 'provider="supercool"' in repr(o)
+    o.token = {"access_token": "secret"}
+    assert "secret" not in repr(o)
+
+    db.session.add(o)
+    db.session.commit()
+    assert "id=" in repr(o)
+    assert "secret" not in repr(o)
+
+
 def test_model_with_user(app, db, blueprint, request):
 
     class User(db.Model):
