@@ -31,3 +31,12 @@ class OAuthMixin(object):
     provider = Column(String(50))
     created_on = Column(DateTime, default=datetime.utcnow)
     token = Column(MutableDict.as_mutable(JSONType))
+
+    def __repr__(self):
+        parts = []
+        parts.append(self.__class__.__name__)
+        if self.id:
+            parts.append("id={}".format(self.id))
+        if self.provider:
+            parts.append('provider="{}"'.format(self.provider))
+        return "<{}>".format(" ".join(parts))
