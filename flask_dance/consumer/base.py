@@ -92,7 +92,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         A helper method to set up the blueprint to store and retrieve OAuth
         tokens using the Flask session. This will overwrite any custom token
         accessors you've set up. This method is called by the constructor as
-        a default -- in general, you shouldn't call this method yoursel.
+        a default -- in general, you shouldn't call this method yourself.
         """
         key = "{name}_oauth_token".format(name=self.name)
 
