@@ -117,6 +117,61 @@ def test_signal_oauth_authorized():
             "/login/test-service/authorized?code=secret-code&state=random-string",
         )
 
-    assert len(calls), 1
-    assert calls[0][0] == (app,)
+    assert len(calls) == 1
+    assert calls[0][0] == (bp,)
     assert calls[0][1] == {"token": "test-token"}
+
+
+def test_signal_sender_oauth_authorized():
+    app, bp = make_app()
+    bp.session.fetch_token = mock.Mock(return_value="test-token")
+    bp2 = OAuth2ConsumerBlueprint("test2", __name__,
+        client_id="client_id",
+        client_secret="client_secret",
+        scope="admin",
+        state="random-string",
+        base_url="https://example.com",
+        authorization_url="https://example.com/oauth/authorize",
+        token_url="https://example.com/oauth/access_token",
+        redirect_to="index",
+    )
+    bp2.session.fetch_token = mock.Mock(return_value="test2-token")
+    app.register_blueprint(bp2, url_prefix="/login")
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_authorized.connect(callback, sender=bp)
+
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+
+        resp = client.get(
+            "/login/test2/authorized?code=secret-code&state=random-string",
+        )
+
+    assert len(calls) == 0
+
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+        )
+
+    assert len(calls) == 1
+    assert calls[0][0] == (bp,)
+    assert calls[0][1] == {"token": "test-token"}
+
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+
+        resp = client.get(
+            "/login/test2/authorized?code=secret-code&state=random-string",
+        )
+
+    assert len(calls) == 1  # unchanged

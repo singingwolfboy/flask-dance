@@ -121,5 +121,49 @@ def test_signal_oauth_authorized():
         )
 
     assert len(calls), 1
-    assert calls[0][0] == (app,)
+    assert calls[0][0] == (bp,)
     assert calls[0][1] == {"token": "test-token"}
+
+def test_signal_sender_oauth_authorized():
+    app, bp = make_app()
+    bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+    bp2 = OAuth1ConsumerBlueprint("test2", __name__,
+        client_key="client_key",
+        client_secret="client_secret",
+        base_url="https://example.com",
+        request_token_url="https://example.com/oauth/request_token",
+        access_token_url="https://example.com/oauth/access_token",
+        authorization_url="https://example.com/oauth/authorize",
+        redirect_to="index",
+    )
+    bp2.session.fetch_access_token = mock.Mock(return_value="test2-token")
+    app.register_blueprint(bp2, url_prefix="/login")
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_authorized.connect(callback, sender=bp)
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test2/authorized?oauth_token=foobar&oauth_verifier=xyz",
+        )
+
+    assert len(calls) == 0
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
+        )
+
+    assert len(calls) == 1
+    assert calls[0][0] == (bp,)
+    assert calls[0][1] == {"token": "test-token"}
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test2/authorized?oauth_token=foobar&oauth_verifier=xyz",
+        )
+
+    assert len(calls) == 1  # unchanged

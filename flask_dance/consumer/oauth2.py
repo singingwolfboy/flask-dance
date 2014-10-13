@@ -1,7 +1,7 @@
 from __future__ import unicode_literals, print_function
 
 import flask
-from flask import request, url_for, redirect, current_app
+from flask import request, url_for, redirect
 from urlobject import URLObject
 from requests_oauthlib import OAuth2Session
 from .base import BaseOAuthConsumerBlueprint, oauth_authorized
@@ -163,7 +163,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             client_secret=self.client_secret,
         )
         self.token = token
-        oauth_authorized.send(current_app._get_current_object(), token=token)
+        oauth_authorized.send(self, token=token)
         return redirect(next_url)
 
     def assign_token_to_session(self):
