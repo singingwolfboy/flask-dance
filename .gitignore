@@ -3,3 +3,5 @@
 .coverage
 dist
 docs/_build
+build
+MANIFEST
