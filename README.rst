@@ -9,13 +9,13 @@ README will give you a taste of the features.
 Installation
 ============
 
-Just the basics::
+Just the basics:
 
 .. code-block:: bash
 
     $ pip install Flask-Dance
 
-Or if you're planning on using the built-in `SQLAlchemy`_ support::
+Or if you're planning on using the built-in `SQLAlchemy`_ support:
 
 .. code-block:: bash
 
