@@ -137,7 +137,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         if not cache:
             cache = FakeCache()
         def make_cache_key(name=None):
-            u = user() if callable(user) else user
+            u = _get_real_user(user)
             return "flask_dance_token|{name}|{user}".format(
                 name=self.name, user=getattr(u, "id", u),
             )
@@ -146,7 +146,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         def get_token():
             query = session.query(model).filter_by(provider=self.name)
             if hasattr(model, "user"):
-                u = user() if callable(user) else user
+                u = _get_real_user(user)
                 query = query.filter_by(user=u)
             try:
                 return query.one().token
@@ -161,7 +161,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             # if there was an existing model, delete it
             existing_query = session.query(model).filter_by(provider=self.name)
             if has_user:
-                u = user() if callable(user) else user
+                u = _get_real_user(user)
                 existing_query = existing_query.filter_by(user=u)
             existing_query.delete()
             # create a new model for this token
@@ -181,8 +181,27 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         def delete_token():
             query = session.query(model).filter_by(provider=self.name)
             if hasattr(model, "user"):
-                u = user() if callable(user) else user
+                u = _get_real_user(user)
                 query = query.filter_by(user=u)
             query.delete()
             # invalidate cache
             cache.delete_memoized(self.get_token)
+
+
+def _get_real_user(user):
+    """
+    set_token_storage_sqlalchemy() has a user parameter that can be called with:
+
+    * a real user object
+    * a function that returns a real user object
+    * a LocalProxy to a real user object (like Flask-Login's ``current_user``)
+
+    This function returns the real user object, regardless of which we have.
+    """
+    if hasattr(user, "_get_current_object"):
+        # this is a proxy
+        user = user._get_current_object()
+    if callable(user):
+        # this is a function
+        user = user()
+    return user

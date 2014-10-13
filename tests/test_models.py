@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.orm.exc import NoResultFound
 from flask_cache import Cache
+from flask_login import LoginManager, UserMixin, current_user, login_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.models import OAuthMixin
 
@@ -126,8 +127,6 @@ def test_model_with_user(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, lambda: User.query.first())
-
     db.create_all()
     def done():
         db.session.remove()
@@ -139,25 +138,23 @@ def test_model_with_user(app, db, blueprint, request):
     db.session.add(alice)
     db.session.commit()
 
-    queries = []
-    @event.listens_for(db.engine, "before_cursor_execute")
-    def record_query(conn, cursor, statement, parameters, context, executemany):
-        queries.append(statement)
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=alice)
 
-    with app.test_client() as client:
-        # reset the session before the request
-        with client.session_transaction() as sess:
-            sess["test-service_oauth_state"] = "random-string"
-        # make the request
-        resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
-            base_url="https://a.b.c",
-        )
-        # check that we redirected the client
-        assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+    with record_queries(db.engine) as queries:
+        with app.test_client() as client:
+            # reset the session before the request
+            with client.session_transaction() as sess:
+                sess["test-service_oauth_state"] = "random-string"
+            # make the request
+            resp = client.get(
+                "/login/test-service/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that we redirected the client
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 5
+    assert len(queries) == 4
 
     # check the database
     alice = User.query.first()
@@ -172,6 +169,100 @@ def test_model_with_user(app, db, blueprint, request):
         "token_type": "bearer",
         "scope": [""],
     }
+
+def test_model_with_flask_login(app, db, blueprint, request):
+    login_manager = LoginManager(app)
+
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(80))
+
+    class OAuth(db.Model, OAuthMixin):
+        user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+        user = db.relationship(User)
+
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user)
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    # create some users
+    u1 = User(name="Alice")
+    u2 = User(name="Bob")
+    u3 = User(name="Chuck")
+    db.session.add_all([u1, u2, u3])
+    db.session.commit()
+
+    # configure login manager
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.get(userid)
+
+    with record_queries(db.engine) as queries:
+        with app.test_client() as client:
+            # reset the session before the request
+            with client.session_transaction() as sess:
+                sess["test-service_oauth_state"] = "random-string"
+                # set alice as the logged in user
+                sess["user_id"] = u1.id
+            # make the request
+            resp = client.get(
+                "/login/test-service/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that we redirected the client
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    assert len(queries) == 4
+
+    # lets do it again, with Bob as the logged in user -- he gets a different token
+    responses.reset()
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"abcdef","token_type":"bearer","scope":"bob"}',
+    )
+    with record_queries(db.engine) as queries:
+        with app.test_client() as client:
+            # reset the session before the request
+            with client.session_transaction() as sess:
+                sess["test-service_oauth_state"] = "random-string"
+                # set bob as the logged in user
+                sess["user_id"] = u2.id
+            # make the request
+            resp = client.get(
+                "/login/test-service/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that we redirected the client
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    assert len(queries) == 4
+
+    # check the database
+    authorizations = OAuth.query.all()
+    assert len(authorizations) == 2
+    u1_oauth = OAuth.query.filter_by(user=u1).one()
+    assert u1_oauth.provider == "test-service"
+    assert u1_oauth.token == {
+        "access_token": "foobar",
+        "token_type": "bearer",
+        "scope": [""],
+    }
+    u2_oauth = OAuth.query.filter_by(user=u2).one()
+    assert u2_oauth.provider == "test-service"
+    assert u2_oauth.token == {
+        "access_token": "abcdef",
+        "token_type": "bearer",
+        "scope": ["bob"],
+    }
+    u3_oauth = OAuth.query.filter_by(user=u3).all()
+    assert len(u3_oauth) == 0
 
 
 def test_model_repeated_token(app, db, blueprint, request):
