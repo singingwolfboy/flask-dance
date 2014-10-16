@@ -32,6 +32,7 @@ example, to authenticate with Github, just do the following:
     from flask_dance.contrib.github import make_github_blueprint, github
 
     app = Flask(__name__)
+    app.secret_key = "supersekrit"
     blueprint = make_github_blueprint(
         client_id="my-key-here",
         client_secret="my-secret-here",
@@ -46,6 +47,15 @@ example, to authenticate with Github, just do the following:
         resp = github.get("/user")
         assert resp.ok
         return "You are @{login} on Github".format(login=resp.json()["login"])
+
+
+**NOTE:** For this example to work, you must first `register an application on
+Github`_ to get a ``client_id`` and ``client_secret``. The application's
+authorization callback must be ``http://localhost:5000/login/github/authorized``.
+You'll also need to set the ``OAUTHLIB_INSECURE_TRANSPORT`` environment variable,
+to so that oauthlib allows you to use HTTP rather than HTTPS.
+
+.. _register an application on Github: https://github.com/settings/applications/new
 
 The ``github`` object is a `context local`_, just like ``flask.request``. That means
 that you can import it in any Python file you want, and use it in the context
