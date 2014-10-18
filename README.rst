@@ -48,14 +48,17 @@ example, to authenticate with Github, just do the following:
         assert resp.ok
         return "You are @{login} on Github".format(login=resp.json()["login"])
 
+    if __name__ == "__main__":
+        app.run()
 
 **NOTE:** For this example to work, you must first `register an application on
 Github`_ to get a ``client_id`` and ``client_secret``. The application's
 authorization callback must be ``http://localhost:5000/login/github/authorized``.
-You'll also need to set the ``OAUTHLIB_INSECURE_TRANSPORT`` environment variable,
+You'll also need to set the `OAUTHLIB_INSECURE_TRANSPORT`_ environment variable,
 to so that oauthlib allows you to use HTTP rather than HTTPS.
 
 .. _register an application on Github: https://github.com/settings/applications/new
+.. _OAUTHLIB_INSECURE_TRANSPORT: http://oauthlib.readthedocs.org/en/latest/oauth2/security.html#envvar-OAUTHLIB_INSECURE_TRANSPORT
 
 The ``github`` object is a `context local`_, just like ``flask.request``. That means
 that you can import it in any Python file you want, and use it in the context
