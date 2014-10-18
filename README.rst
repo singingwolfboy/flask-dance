@@ -53,7 +53,7 @@ example, to authenticate with Github, just do the following:
 
 **NOTE:** For this example to work, you must first `register an application on
 Github`_ to get a ``client_id`` and ``client_secret``. The application's
-authorization callback must be ``http://localhost:5000/login/github/authorized``.
+authorization callback URL must be ``http://localhost:5000/login/github/authorized``.
 You'll also need to set the `OAUTHLIB_INSECURE_TRANSPORT`_ environment variable,
 so that oauthlib allows you to use HTTP rather than HTTPS.
 
