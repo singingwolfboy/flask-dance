@@ -24,3 +24,5 @@ configuration to accepted:
    that your factory function has a RST-formatted docstring that the
    documentation can pick up.
 7. All automated tests must pass, and the test coverage must not drop.
+8. You must update the ``CHANGELOG.rst`` file to indicate that this configuration
+   was added.
