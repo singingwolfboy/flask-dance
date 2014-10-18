@@ -55,7 +55,7 @@ example, to authenticate with Github, just do the following:
 Github`_ to get a ``client_id`` and ``client_secret``. The application's
 authorization callback must be ``http://localhost:5000/login/github/authorized``.
 You'll also need to set the `OAUTHLIB_INSECURE_TRANSPORT`_ environment variable,
-to so that oauthlib allows you to use HTTP rather than HTTPS.
+so that oauthlib allows you to use HTTP rather than HTTPS.
 
 .. _register an application on Github: https://github.com/settings/applications/new
 .. _OAUTHLIB_INSECURE_TRANSPORT: http://oauthlib.readthedocs.org/en/latest/oauth2/security.html#envvar-OAUTHLIB_INSECURE_TRANSPORT
