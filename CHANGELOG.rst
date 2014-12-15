@@ -5,6 +5,13 @@ unreleased
 ----------
 nothing yet
 
+0.3.0 (2014-12-15)
+------------------
+* Changed ``OAuthConsumerMixin.created_on`` to ``OAuthConsumerMixin.created_at``,
+  to reflect the fact that it is a DateTime, not a Date. If you are upgrading
+  from an older version of Flask-Dance and using ``OAuthConsumerMixin``,
+  this will require a database migration.
+
 0.2.3 (2014-10-13)
 ------------------
 * Renamed ``OAuthMixin`` to ``OAuthConsumerMixin``

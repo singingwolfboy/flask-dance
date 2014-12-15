@@ -29,7 +29,7 @@ class OAuthConsumerMixin(object):
 
     id = Column(Integer, primary_key=True)
     provider = Column(String(50))
-    created_on = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
     token = Column(MutableDict.as_mutable(JSONType))
 
     def __repr__(self):
