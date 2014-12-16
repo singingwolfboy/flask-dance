@@ -14,7 +14,8 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 def make_twitter_blueprint(api_key, api_secret,
                            redirect_url=None, redirect_to=None,
-                           login_url=None, authorized_url=None):
+                           login_url=None, authorized_url=None,
+                           session_class=None):
     """
     Make a blueprint for authenticating with Twitter using OAuth 1.
 
@@ -30,6 +31,9 @@ def make_twitter_blueprint(api_key, api_secret,
             Defaults to ``/twitter``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/twitter/authorized``.
+        session_class (class, optional): The class to use for creating a
+            Requests session. Defaults to
+            :class:`~flask_dance.consumer.oauth1.OAuth1SessionWithBaseURL`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -45,6 +49,7 @@ def make_twitter_blueprint(api_key, api_secret,
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
+        session_class=session_class,
     )
 
     @twitter_bp.before_app_request

@@ -17,7 +17,8 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 def make_jira_blueprint(consumer_key, rsa_key, base_url,
                         redirect_url=None, redirect_to=None,
-                        login_url=None, authorized_url=None):
+                        login_url=None, authorized_url=None,
+                        session_class=None):
     """
     Make a blueprint for authenticating with JIRA using OAuth 1.
 
@@ -38,6 +39,9 @@ def make_jira_blueprint(consumer_key, rsa_key, base_url,
             Defaults to ``/jira``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/jira/authorized``.
+        session_class (class, optional): The class to use for creating a
+            Requests session. Defaults to
+            :class:`~flask_dance.consumer.oauth1.OAuth1SessionWithBaseURL`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -59,6 +63,7 @@ def make_jira_blueprint(consumer_key, rsa_key, base_url,
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
+        session_class=session_class,
     )
     jira_bp.session.headers["Content-Type"] = "application/json"
 

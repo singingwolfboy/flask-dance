@@ -44,6 +44,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             access_token_url=None,
             redirect_url=None,
             redirect_to=None,
+            session_class=None,
 
             **kwargs):
         """
@@ -56,7 +57,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         ``base_url``,
         ``request_token_url``, ``authorization_url``, ``access_token_url``,
         ``login_url``, ``authorized_url``,
-        ``redirect_url``, and ``redirect_to``.
+        ``redirect_url``, ``redirect_to``, and ``session_class``.
 
         Args:
             base_url (str, optional): The base URL of the OAuth provider.
@@ -96,6 +97,9 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :func:`~flask.url_for` with this argument. You must specify
                 either ``redirect_url`` or ``redirect_to``. If you specify both,
                 ``redirect_url`` will take precedence.
+            session_class (class, optional): The class to use for creating a
+                Requests session. Defaults to
+                :class:`~flask_dance.consumer.oauth1.OAuth1SessionWithBaseURL`.
         """
         if not redirect_url and not redirect_to:
             raise AttributeError("One of redirect_url or redirect_to must be defined")
@@ -111,7 +115,8 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorized_url=authorized_url,
         )
 
-        self.session = OAuth1SessionWithBaseURL(
+        session_class = session_class or OAuth1SessionWithBaseURL
+        self.session = session_class(
             client_key=client_key,
             client_secret=client_secret,
             signature_method=signature_method,

@@ -11,6 +11,7 @@ import responses
 import flask
 from flask_dance.consumer import OAuth1ConsumerBlueprint, oauth_authorized
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
+from flask_dance.consumer.oauth1 import OAuth1SessionWithBaseURL
 
 
 def make_app(login_url=None):
@@ -167,3 +168,22 @@ def test_signal_sender_oauth_authorized():
         )
 
     assert len(calls) == 1  # unchanged
+
+
+class CustomOAuth1Session(OAuth1SessionWithBaseURL):
+    my_attr = "foobar"
+
+
+def test_custom_session_class():
+    bp = OAuth1ConsumerBlueprint("test", __name__,
+        client_key="client_key",
+        client_secret="client_secret",
+        base_url="https://example.com",
+        request_token_url="https://example.com/oauth/request_token",
+        access_token_url="https://example.com/oauth/access_token",
+        authorization_url="https://example.com/oauth/authorize",
+        redirect_to="index",
+        session_class=CustomOAuth1Session,
+    )
+    assert isinstance(bp.session, CustomOAuth1Session)
+    assert bp.session.my_attr == "foobar"

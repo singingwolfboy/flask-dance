@@ -14,7 +14,8 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 def make_github_blueprint(client_id, client_secret, scope=None,
                           redirect_url=None, redirect_to=None,
-                          login_url=None, authorized_url=None):
+                          login_url=None, authorized_url=None,
+                          session_class=None):
     """
     Make a blueprint for authenticating with Github using OAuth 2.
 
@@ -31,6 +32,9 @@ def make_github_blueprint(client_id, client_secret, scope=None,
             Defaults to ``/github``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/github/authorized``.
+        session_class (class, optional): The class to use for creating a
+            Requests session. Defaults to
+            :class:`~flask_dance.consumer.oauth2.OAuth2SessionWithBaseURL`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -46,6 +50,7 @@ def make_github_blueprint(client_id, client_secret, scope=None,
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
+        session_class=session_class,
     )
 
     @github_bp.before_app_request
