@@ -5,6 +5,11 @@ unreleased
 ----------
 nothing yet
 
+0.3.1 (2014-12-16)
+------------------
+* Added a new ``session_class`` parameter, so that you can specify a custom
+  requests.Session subclass with custom behavior.
+
 0.3.0 (2014-12-15)
 ------------------
 * Changed ``OAuthConsumerMixin.created_on`` to ``OAuthConsumerMixin.created_at``,

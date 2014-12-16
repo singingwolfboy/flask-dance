@@ -38,7 +38,7 @@ def get_requirements(path):
 
 setup(
     name="Flask-Dance",
-    version="0.3.0",
+    version="0.3.1",
     description="Doing the OAuth dance with style using Flask, requests, and oauthlib",
     long_description=open('README.rst').read(),
     author="David Baumgold",
