@@ -24,6 +24,18 @@ Github
     already has the Github authentication token loaded (assuming that the user
     has authenticated with Github at some point in the past).
 
+Google
+------
+.. module:: flask_dance.contrib.google
+
+.. autofunction:: make_google_blueprint
+
+.. data:: google
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Google authentication token loaded (assuming that the user
+    has authenticated with Google at some point in the past).
+
 Twitter
 -------
 .. module:: flask_dance.contrib.twitter

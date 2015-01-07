@@ -5,6 +5,10 @@ unreleased
 ----------
 nothing yet
 
+0.3.2 (2015-01-06)
+------------------
+* Added a the Google pre-set configuration.
+
 0.3.1 (2014-12-16)
 ------------------
 * Added a new ``session_class`` parameter, so that you can specify a custom

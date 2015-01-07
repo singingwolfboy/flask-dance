@@ -51,7 +51,6 @@ def test_context_local():
         request = responses.calls[0].request
         assert request.headers["Authorization"] == "Bearer app1"
 
-
     with app2.test_request_context("/"):
         app2.preprocess_request()
         github.get("https://google.com")
