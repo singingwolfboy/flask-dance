@@ -114,15 +114,15 @@ use other token storage systems.
 .. _Flask-Login: https://flask-login.readthedocs.org/
 .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
 
-.. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master
+.. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master&style=flat
    :target: https://travis-ci.org/singingwolfboy/flask-dance
    :alt: Build status
-.. |coverage-status| image:: https://img.shields.io/coveralls/singingwolfboy/flask-dance.svg
+.. |coverage-status| image:: https://img.shields.io/coveralls/singingwolfboy/flask-dance.svg?style=flat
    :target: https://coveralls.io/r/singingwolfboy/flask-dance?branch=master
    :alt: Test coverage
-.. |pypi| image:: https://pypip.in/version/Flask-Dance/badge.svg
+.. |pypi| image:: https://pypip.in/version/Flask-Dance/badge.svg?style=flat
    :target: https://pypi.python.org/pypi/Flask-Dance/
    :alt: Latest Version
-.. |docs| image:: https://readthedocs.org/projects/flask-dance/badge/?version=latest
+.. |docs| image:: https://readthedocs.org/projects/flask-dance/badge/?version=latest&style=flat
    :target: http://flask-dance.readthedocs.org/
    :alt: Documentation
