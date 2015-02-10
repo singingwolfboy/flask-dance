@@ -4,7 +4,7 @@ import types
 from distutils.version import StrictVersion
 import flask
 from flask.signals import Namespace
-from flask_dance.utils import proxy_property, FakeCache
+from flask_dance.utils import proxy_property, FakeCache, getattrd
 
 
 _signals = Namespace()
@@ -49,6 +49,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
         self.set_token_storage_session()
         self.logged_in_funcs = []
+        self.from_config = {}
+        self.before_app_request(self.load_config)
         self.before_app_request(self.load_token)
 
     def login(self):
@@ -56,6 +58,30 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
     def authorized(self):
         raise NotImplementedError()
+
+    def load_config(self):
+        """
+        Used to dynamically load variables from the Flask application config
+        into the blueprint. To tell this blueprint to pull configuration from
+        the app, just set key-value pairs in the ``from_config`` dict. Keys
+        are the name of the local variable to set on the blueprint object,
+        and values are the variable name in the Flask application config.
+        For example:
+
+            blueprint["session.client_id"] = "GITHUB_OAUTH_CLIENT_ID"
+
+        """
+        for local_var, config_var in self.from_config.items():
+            value = flask.current_app.config.get(config_var)
+            if value:
+                if "." in local_var:
+                    # this is a dotpath -- needs special handling
+                    body, tail = local_var.rsplit(".", 1)
+                    obj = getattrd(self, body)
+                    setattr(obj, tail, value)
+                else:
+                    # just use a normal setattr call
+                    setattr(self, local_var, value)
 
     def load_token(self):
         raise NotImplementedError()

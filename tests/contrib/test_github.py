@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import pytest
 import responses
+from urlobject import URLObject
 from flask import Flask
 from flask_dance.contrib.github import make_github_blueprint, github
 from flask_dance.consumer import OAuth2ConsumerBlueprint
@@ -21,6 +22,20 @@ def test_blueprint_factory():
     assert github_bp.client_secret == "bar"
     assert github_bp.authorization_url == "https://github.com/login/oauth/authorize"
     assert github_bp.token_url == "https://github.com/login/oauth/access_token"
+
+
+def test_load_from_config():
+    app = Flask(__name__)
+    app.secret_key = "anything"
+    app.config["GITHUB_OAUTH_CLIENT_ID"] = "foo"
+    app.config["GITHUB_OAUTH_CLIENT_SECRET"] = "bar"
+    github_bp = make_github_blueprint(redirect_to="index")
+    app.register_blueprint(github_bp)
+
+    resp = app.test_client().get("/github")
+    url = resp.headers["Location"]
+    client_id = URLObject(url).query.dict.get("client_id")
+    assert client_id == "foo"
 
 
 @responses.activate

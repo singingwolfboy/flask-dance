@@ -15,21 +15,25 @@ except ImportError:
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
-def make_jira_blueprint(consumer_key, rsa_key, base_url,
+def make_jira_blueprint(base_url, consumer_key=None, rsa_key=None,
                         redirect_url=None, redirect_to=None,
                         login_url=None, authorized_url=None,
                         session_class=None):
     """
-    Make a blueprint for authenticating with JIRA using OAuth 1.
+    Make a blueprint for authenticating with JIRA using OAuth 1. This requires
+    a consumer key and RSA key for the JIRA appication link. You should either
+    pass them to this constructor, or make sure that your Flask application
+    config defines them, using the variables JIRA_OAUTH_CONSUMER_KEY and
+    JIRA_OAUTH_RSA_KEY.
 
     Args:
+        base_url (str): The base URL of your JIRA installation. For example,
+            for Atlassian's hosted OnDemand JIRA, the base_url would be
+            ``https://jira.atlassian.com``
         consumer_key (str): The consumer key for your Application Link on JIRA
         rsa_key (str or path): The RSA private key for your Application Link
             on JIRA. This can be the contents of the key as a string, or a path
             to the key file on disk.
-        base_url (str): The base URL of your JIRA installation. For example,
-            for Atlassian's hosted OnDemand JIRA, the base_url would be
-            ``https://jira.atlassian.com``
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
@@ -46,7 +50,7 @@ def make_jira_blueprint(consumer_key, rsa_key, base_url,
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    if os.path.isfile(rsa_key):
+    if rsa_key and os.path.isfile(rsa_key):
         with open(rsa_key) as f:
             rsa_key = f.read()
     base_url = URLObject(base_url)
@@ -66,6 +70,8 @@ def make_jira_blueprint(consumer_key, rsa_key, base_url,
         session_class=session_class,
     )
     jira_bp.session.headers["Content-Type"] = "application/json"
+    jira_bp.from_config["client_key"] = "JIRA_OAUTH_CONSUMER_KEY"
+    jira_bp.from_config["rsa_key"] = "JIRA_OAUTH_RSA_KEY"
 
     @jira_bp.before_app_request
     def set_applocal_session():

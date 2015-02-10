@@ -12,12 +12,15 @@ except ImportError:
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
-def make_twitter_blueprint(api_key, api_secret,
+def make_twitter_blueprint(api_key=None, api_secret=None,
                            redirect_url=None, redirect_to=None,
                            login_url=None, authorized_url=None,
                            session_class=None):
     """
-    Make a blueprint for authenticating with Twitter using OAuth 1.
+    Make a blueprint for authenticating with Twitter using OAuth 1. This requires
+    an API key and API secret from Twitter. You should either pass them to
+    this constructor, or make sure that your Flask application config defines
+    them, using the variables TWITTER_OAUTH_API_KEY and TWITTER_OAUTH_API_SECRET.
 
     Args:
         api_key (str): The API key for your Twitter application
@@ -51,6 +54,8 @@ def make_twitter_blueprint(api_key, api_secret,
         authorized_url=authorized_url,
         session_class=session_class,
     )
+    twitter_bp.from_config["client_key"] = "TWITTER_OAUTH_API_KEY"
+    twitter_bp.from_config["client_secret"] = "TWITTER_OAUTH_API_SECRET"
 
     @twitter_bp.before_app_request
     def set_applocal_session():

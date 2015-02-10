@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import pytest
 import responses
+from urlobject import URLObject
 from flask import Flask
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.consumer import OAuth2ConsumerBlueprint
@@ -20,6 +21,20 @@ def test_blueprint_factory():
     assert google_bp.client_secret == "bar"
     assert google_bp.authorization_url == "https://accounts.google.com/o/oauth2/auth"
     assert google_bp.token_url == "https://accounts.google.com/o/oauth2/token"
+
+
+def test_load_from_config():
+    app = Flask(__name__)
+    app.secret_key = "anything"
+    app.config["GOOGLE_OAUTH_CLIENT_ID"] = "foo"
+    app.config["GOOGLE_OAUTH_CLIENT_SECRET"] = "bar"
+    google_bp = make_google_blueprint(redirect_to="index")
+    app.register_blueprint(google_bp)
+
+    resp = app.test_client().get("/google")
+    url = resp.headers["Location"]
+    client_id = URLObject(url).query.dict.get("client_id")
+    assert client_id == "foo"
 
 
 def test_blueprint_factory_scope():

@@ -51,3 +51,18 @@ class FakeCache(object):
 
     def delete_memoized(self, *args, **kwargs):
         pass
+
+
+sentinel = object()
+
+def getattrd(obj, name, default=sentinel):
+    """
+    Same as getattr(), but allows dot notation lookup
+    Source: http://stackoverflow.com/a/14324459
+    """
+    try:
+        return reduce(getattr, name.split("."), obj)
+    except AttributeError, e:
+        if default is not sentinel:
+            return default
+        raise

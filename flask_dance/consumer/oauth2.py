@@ -140,6 +140,15 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         if hasattr(self, "session"):
             self.session.token_updater = func
 
+    @property
+    def client_id(self):
+        return self.session.client_id
+
+    @client_id.setter
+    def client_id(self, value):
+        self.session.client_id = value
+        self.session._client.client_id = value
+
     def login(self):
         secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https"
         self.session.redirect_uri = url_for(

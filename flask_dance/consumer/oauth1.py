@@ -134,6 +134,30 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
 
+    @property
+    def client_key(self):
+        return self.session._client.client.client_key
+
+    @client_key.setter
+    def client_key(self, value):
+        self.session._client.client.client_key = to_unicode(value)
+
+    @property
+    def client_secret(self):
+        return self.session._client.client.client_secret
+
+    @client_secret.setter
+    def client_secret(self, value):
+        self.session._client.client.client_secret = to_unicode(value)
+
+    @property
+    def rsa_key(self):
+        return self.session._client.client.rsa_key
+
+    @rsa_key.setter
+    def rsa_key(self, value):
+        self.session._client.client.rsa_key = to_unicode(value)
+
     def login(self):
         secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https"
         callback_uri = url_for(

@@ -27,17 +27,40 @@ def test_blueprint_factory():
 
 
 @responses.activate
+@mock.patch("oauthlib.oauth1.rfc5849.signature.sign_rsa_sha1", return_value="fakesig")
+def test_load_from_config(sign_func):
+    responses.add(
+        responses.POST,
+        "https://flask.atlassian.net/plugins/servlet/oauth/request-token",
+        body="oauth_token=faketoken&oauth_token_secret=fakesecret",
+    )
+    app = Flask(__name__)
+    app.secret_key = "anything"
+    app.config["JIRA_OAUTH_CONSUMER_KEY"] = "foo"
+    app.config["JIRA_OAUTH_RSA_KEY"] = "bar"
+    jira_bp = make_jira_blueprint("https://flask.atlassian.net", redirect_to="index")
+    app.register_blueprint(jira_bp)
+
+    resp = app.test_client().get("/jira")
+    auth_header = dict(parse_authorization_header(
+        responses.calls[0].request.headers['Authorization'].decode('utf-8')
+    ))
+    assert auth_header["oauth_consumer_key"] == "foo"
+    assert sign_func.call_args[0][1] == "bar"
+
+
+@responses.activate
 def test_context_local():
     responses.add(responses.GET, "https://google.com")
 
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
-    jbp1 = make_jira_blueprint("foo1", "bar1", "https://t1.atlassian.com", redirect_to="url1")
+    jbp1 = make_jira_blueprint("https://t1.atlassian.com", "foo1", "bar1", redirect_to="url1")
     app1.register_blueprint(jbp1)
     jbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
 
     app2 = Flask(__name__)
-    jbp2 = make_jira_blueprint("foo2", "bar2", "https://t2.atlassian.com", redirect_to="url2")
+    jbp2 = make_jira_blueprint("https://t2.atlassian.com", "foo2", "bar2", redirect_to="url2")
     app2.register_blueprint(jbp2)
     jbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
 

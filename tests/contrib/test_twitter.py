@@ -25,6 +25,27 @@ def test_blueprint_factory():
 
 
 @responses.activate
+def test_load_from_config():
+    responses.add(
+        responses.POST,
+        "https://api.twitter.com/oauth/request_token",
+        body="oauth_token=faketoken&oauth_token_secret=fakesecret",
+    )
+    app = Flask(__name__)
+    app.secret_key = "anything"
+    app.config["TWITTER_OAUTH_API_KEY"] = "foo"
+    app.config["TWITTER_OAUTH_API_SECRET"] = "bar"
+    twitter_bp = make_twitter_blueprint(redirect_to="index")
+    app.register_blueprint(twitter_bp)
+
+    app.test_client().get("/twitter")
+    auth_header = dict(parse_authorization_header(
+        responses.calls[0].request.headers['Authorization'].decode('utf-8')
+    ))
+    assert auth_header["oauth_consumer_key"] == "foo"
+
+
+@responses.activate
 def test_context_local():
     responses.add(responses.GET, "https://google.com")
 
