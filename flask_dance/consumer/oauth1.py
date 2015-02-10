@@ -153,7 +153,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         oauth_authorized.send(self, token=token)
         return redirect(next_url)
 
-    def assign_token_to_session(self):
+    def load_token(self):
         token = self.token
         if token and "oauth_token" in token and "oauth_token_secret" in token:
             # This really, really violates the Law of Demeter, but

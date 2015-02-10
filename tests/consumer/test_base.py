@@ -12,7 +12,7 @@ def test_not_impl():
     with pytest.raises(NotImplementedError):
         bp.authorized()
     with pytest.raises(NotImplementedError):
-        bp.assign_token_to_session()
+        bp.load_token()
 
 
 def test_default_token_getter():

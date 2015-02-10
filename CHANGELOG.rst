@@ -3,7 +3,7 @@ Change Log
 
 unreleased
 ----------
-nothing yet
+* Renamed ``assign_token_to_session`` to ``load_token``
 
 0.3.2 (2015-01-06)
 ------------------

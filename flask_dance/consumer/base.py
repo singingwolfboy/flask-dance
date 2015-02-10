@@ -49,7 +49,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
         self.set_token_storage_session()
         self.logged_in_funcs = []
-        self.before_app_request(self.assign_token_to_session)
+        self.before_app_request(self.load_token)
 
     def login(self):
         raise NotImplementedError()
@@ -57,7 +57,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
     def authorized(self):
         raise NotImplementedError()
 
-    def assign_token_to_session(self):
+    def load_token(self):
         raise NotImplementedError()
 
     token = proxy_property(
