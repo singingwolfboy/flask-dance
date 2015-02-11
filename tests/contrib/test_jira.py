@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 
 import pytest
 import mock
+import os
+import tempfile
 import responses
 from flask import Flask
 from flask_dance.contrib.jira import make_jira_blueprint, jira
@@ -24,6 +26,20 @@ def test_blueprint_factory():
     assert jira_bp.access_token_url == "https://flask.atlassian.net/plugins/servlet/oauth/access-token"
     assert jira_bp.authorization_url == "https://flask.atlassian.net/plugins/servlet/oauth/authorize"
     assert jira_bp.session.headers["Content-Type"] == "application/json"
+
+
+def test_rsa_key_file():
+    key_fd, key_file_path = tempfile.mkstemp()
+    with os.fdopen(key_fd, 'w') as key_file:
+        key_file.write("my-fake-key")
+
+    jira_bp = make_jira_blueprint(
+        rsa_key=key_file_path,
+        base_url="https://flask.atlassian.net",
+    )
+    assert jira_bp.rsa_key == "my-fake-key"
+
+    os.remove(key_file_path)
 
 
 @pytest.mark.xfail  # remove when https://github.com/idan/oauthlib/pull/314 is released
