@@ -1,6 +1,7 @@
 *.pyc
 .DS_Store
 .coverage
+htmlcov
 dist
 docs/_build
 build
