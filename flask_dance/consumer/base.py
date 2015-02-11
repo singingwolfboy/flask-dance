@@ -148,7 +148,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
                 required, that your model inherit from
                 :class:`flask_dance.models.OAuthConsumerMixin`.
             session: A :class:`sqlalchemy.orm.session.Session` object. If you're
-                using Flask-SQLAlchemy, this is ``db.session``.
+                using `Flask-SQLAlchemy`_, this is ``db.session``.
             user: The current logged in user, if any.
                 This can also be a function that returns the current logged
                 in user. This argument is optional; if not provided,
@@ -157,6 +157,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             cache: An instance of `Flask-Cache`_. This is optional, but highly
                 recommended for performance reasons.
 
+        .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
         .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
         """
         from sqlalchemy.orm.exc import NoResultFound
