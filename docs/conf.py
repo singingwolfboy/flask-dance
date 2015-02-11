@@ -110,6 +110,7 @@ html_theme = 'flask'
 # documentation.
 html_theme_options = {
     'index_logo': 'flask-dance.png',
+    'github_fork': 'singingwolfboy/flask-dance',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
