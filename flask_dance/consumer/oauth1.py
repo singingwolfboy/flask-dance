@@ -94,16 +94,13 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 redirect the user to this URL.
             redirect_to (str, optional): When the OAuth dance is complete,
                 redirect the user to the URL obtained by calling
-                :func:`~flask.url_for` with this argument. You must specify
-                either ``redirect_url`` or ``redirect_to``. If you specify both,
-                ``redirect_url`` will take precedence.
+                :func:`~flask.url_for` with this argument. If you do not specify
+                either ``redirect_url`` or ``redirect_to``, the user will be
+                redirected to the root path (``/``).
             session_class (class, optional): The class to use for creating a
                 Requests session. Defaults to
                 :class:`~flask_dance.consumer.oauth1.OAuth1SessionWithBaseURL`.
         """
-        if not redirect_url and not redirect_to:
-            raise AttributeError("One of redirect_url or redirect_to must be defined")
-
         BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
             static_folder=static_folder,
@@ -170,7 +167,14 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         return redirect(url)
 
     def authorized(self):
-        next_url = request.args.get('next') or self.redirect_url or url_for(self.redirect_to)
+        if "next" in request.args:
+            next_url = request.args["next"]
+        elif self.redirect_url:
+            next_url = self.redirect_url
+        elif self.redirect_to:
+            next_url = url_for(self.redirect_to)
+        else:
+            next_url = "/"
         self.session.parse_authorization_response(request.url)
         token = self.session.fetch_access_token(self.access_token_url)
         self.token = token

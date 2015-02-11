@@ -106,6 +106,100 @@ def test_authorized_url():
         )
 
 
+@responses.activate
+def test_redirect_url():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body="oauth_token=xxx&oauth_token_secret=yyy",
+    )
+    blueprint = OAuth1ConsumerBlueprint("test-service", __name__,
+        client_key="client_key",
+        client_secret="client_secret",
+        base_url="https://example.com",
+        request_token_url="https://example.com/oauth/request_token",
+        access_token_url="https://example.com/oauth/access_token",
+        authorization_url="https://example.com/oauth/authorize",
+        redirect_url="http://mysite.cool/whoa?query=basketball",
+    )
+    app = flask.Flask(__name__)
+    app.secret_key = "secret"
+    app.register_blueprint(blueprint, url_prefix="/login")
+
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "http://mysite.cool/whoa?query=basketball"
+
+
+@responses.activate
+def test_redirect_to():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body="oauth_token=xxx&oauth_token_secret=yyy",
+    )
+    blueprint = OAuth1ConsumerBlueprint("test-service", __name__,
+        client_key="client_key",
+        client_secret="client_secret",
+        base_url="https://example.com",
+        request_token_url="https://example.com/oauth/request_token",
+        access_token_url="https://example.com/oauth/access_token",
+        authorization_url="https://example.com/oauth/authorize",
+        redirect_to="my_view",
+    )
+    app = flask.Flask(__name__)
+    app.secret_key = "secret"
+    app.register_blueprint(blueprint, url_prefix="/login")
+
+    @app.route("/blargl")
+    def my_view():
+        return "check out my url"
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/blargl"
+
+
+@responses.activate
+def test_redirect_fallback():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body="oauth_token=xxx&oauth_token_secret=yyy",
+    )
+    blueprint = OAuth1ConsumerBlueprint("test-service", __name__,
+        client_key="client_key",
+        client_secret="client_secret",
+        base_url="https://example.com",
+        request_token_url="https://example.com/oauth/request_token",
+        access_token_url="https://example.com/oauth/access_token",
+        authorization_url="https://example.com/oauth/authorize",
+    )
+    app = flask.Flask(__name__)
+    app.secret_key = "secret"
+    app.register_blueprint(blueprint, url_prefix="/login")
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/"
+
+
 def test_signal_oauth_authorized():
     app, bp = make_app()
     bp.session.fetch_access_token = mock.Mock(return_value="test-token")

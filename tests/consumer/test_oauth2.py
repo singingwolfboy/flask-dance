@@ -49,6 +49,7 @@ def test_override_login_url():
         login_url = flask.url_for("test-service.login")
         assert login_url == "/login/crazy/custom/url"
 
+
 @responses.activate
 def test_login_url():
     app, _ = make_app()
@@ -98,6 +99,115 @@ def test_authorized_url():
             flask.session["test-service_oauth_token"] ==
             {'access_token': 'foobar', 'scope': ['admin'], 'token_type': 'bearer'}
         )
+
+
+@responses.activate
+def test_redirect_url():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+    )
+    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+        client_id="client_id",
+        client_secret="client_secret",
+        state="random-string",
+        base_url="https://example.com",
+        authorization_url="https://example.com/oauth/authorize",
+        token_url="https://example.com/oauth/access_token",
+        redirect_url="http://mysite.cool/whoa?query=basketball",
+    )
+    app = flask.Flask(__name__)
+    app.secret_key = "secret"
+    app.register_blueprint(blueprint, url_prefix="/login")
+
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "http://mysite.cool/whoa?query=basketball"
+
+
+@responses.activate
+def test_redirect_to():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+    )
+    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+        client_id="client_id",
+        client_secret="client_secret",
+        state="random-string",
+        base_url="https://example.com",
+        authorization_url="https://example.com/oauth/authorize",
+        token_url="https://example.com/oauth/access_token",
+        redirect_to="my_view",
+    )
+    app = flask.Flask(__name__)
+    app.secret_key = "secret"
+    app.register_blueprint(blueprint, url_prefix="/login")
+
+    @app.route("/blargl")
+    def my_view():
+        return "check out my url"
+
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/blargl"
+
+
+@responses.activate
+def test_redirect_fallback():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+    )
+    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+        client_id="client_id",
+        client_secret="client_secret",
+        state="random-string",
+        base_url="https://example.com",
+        authorization_url="https://example.com/oauth/authorize",
+        token_url="https://example.com/oauth/access_token",
+    )
+    app = flask.Flask(__name__)
+    app.secret_key = "secret"
+    app.register_blueprint(blueprint, url_prefix="/login")
+
+    @app.route("/blargl")
+    def my_view():
+        return "check out my url"
+
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/"
 
 
 def test_signal_oauth_authorized():

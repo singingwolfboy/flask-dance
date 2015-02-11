@@ -9,6 +9,9 @@ unreleased
   at runtime from the configuration of the app that the blueprint is bound to.
   Also set up sensible configuration variable names for the pre-set
   configurations.
+* If neither ``redirect_url`` nor ``redirect_to`` are specified, default to
+  redirecting the user to the root of the website (``/``). Previously,
+  specifying one of these two options was required.
 
 0.3.2 (2015-01-06)
 ------------------
