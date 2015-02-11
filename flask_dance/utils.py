@@ -62,7 +62,7 @@ def getattrd(obj, name, default=sentinel):
     """
     try:
         return reduce(getattr, name.split("."), obj)
-    except AttributeError, e:
+    except AttributeError as e:
         if default is not sentinel:
             return default
         raise

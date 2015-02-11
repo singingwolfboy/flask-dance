@@ -23,6 +23,7 @@ def test_blueprint_factory():
     assert google_bp.token_url == "https://accounts.google.com/o/oauth2/token"
 
 
+@pytest.mark.xfail  # remove when https://github.com/requests/requests-oauthlib/pull/172 is released
 def test_load_from_config():
     app = Flask(__name__)
     app.secret_key = "anything"
