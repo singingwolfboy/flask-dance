@@ -16,7 +16,7 @@ class OAuthConsumerMixin(object):
     ``provider``
         a short name to indicate which OAuth provider issued
         this token
-    ``created_on``
+    ``created_at``
         an automatically generated datetime that indicates when
         the OAuth provider issued this token
     ``token``
