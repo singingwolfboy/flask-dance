@@ -151,7 +151,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
                 using Flask-SQLAlchemy, this is ``db.session``.
             user: The current logged in user, if any.
                 This can also be a function that returns the current logged
-                in user. This is argument is optional; if not provided,
+                in user. This argument is optional; if not provided,
                 OAuth tokens will not be associated with specific users in
                 your application.
             cache: An instance of `Flask-Cache`_. This is optional, but highly
