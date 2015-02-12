@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.4.0 (2015-02-12)
+------------------
 * Renamed ``assign_token_to_session`` to ``load_token``
 * Added a ``from_config`` dict to OAuthConsumerBlueprint objects. The info
   in that dict is used to dynamically populate information on the blueprint
