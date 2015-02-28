@@ -193,6 +193,56 @@ def test_model_with_user(app, db, blueprint, request):
         "scope": [""],
     }
 
+
+def test_load_token_for_user(app, db, blueprint, request):
+
+    class User(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(80))
+
+    class OAuth(db.Model, OAuthConsumerMixin):
+        user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+        user = db.relationship(User)
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    # set token storage
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
+
+    # make users and OAuth tokens for several people
+    alice = User(name="Alice")
+    alice_token = {"access_token": "alice123", "token_type": "bearer"}
+    alice_oauth = OAuth(user=alice, token=alice_token, provider="test-service")
+    bob = User(name="Bob")
+    bob_token = {"access_token": "bob456", "token_type": "bearer"}
+    bob_oauth = OAuth(user=bob, token=bob_token, provider="test-service")
+    sue = User(name="Sue")
+    sue_token = {"access_token": "sue789", "token_type": "bearer"}
+    sue_oauth = OAuth(user=sue, token=sue_token, provider="test-service")
+    db.session.add_all([alice, bob, sue, alice_oauth, bob_oauth, sue_oauth])
+    db.session.commit()
+
+    # by default, we should not have a token for anyone
+    sess = blueprint.session
+    assert not sess.token
+
+    # load token for various users
+    sess.load_token(alice)
+    assert sess.token == alice_token
+
+    sess.load_token(bob)
+    assert sess.token == bob_token
+
+    sess.load_token(alice)
+    assert sess.token == alice_token
+
+    sess.load_token(sue)
+    assert sess.token == sue_token
+
 def test_model_with_flask_login(app, db, blueprint, request):
     login_manager = LoginManager(app)
 

@@ -3,21 +3,38 @@ from __future__ import unicode_literals, print_function
 import flask
 from flask import request, url_for, redirect
 from urlobject import URLObject
-from requests_oauthlib import OAuth2Session
+from requests_oauthlib import OAuth2Session as BaseOAuth2Session
 from .base import BaseOAuthConsumerBlueprint, oauth_authorized
 
 
-class OAuth2SessionWithBaseURL(OAuth2Session):
-    def __init__(self, base_url=None, *args, **kwargs):
-        super(OAuth2SessionWithBaseURL, self).__init__(*args, **kwargs)
+class OAuth2Session(BaseOAuth2Session):
+    """
+    A :class:`requests.Session` subclass that can do some special things:
+
+    * handles OAuth2 authentication
+      (from :class:`requests_oauthlib.OAuth2Session` superclass)
+    * has a ``base_url`` property used for relative URL resolution
+    * proxies ``load_token`` requests along to the blueprint
+    """
+    def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
+        super(OAuth2Session, self).__init__(*args, **kwargs)
+        self.blueprint = blueprint
         self.base_url = URLObject(base_url)
 
     def request(self, method, url, data=None, headers=None, **kwargs):
         if self.base_url:
             url = self.base_url.relative(url)
-        return super(OAuth2SessionWithBaseURL, self).request(
+        return super(OAuth2Session, self).request(
             method=method, url=url, data=data, headers=headers, **kwargs
         )
+
+    def load_token(self, user):
+        if self.blueprint:
+            self.blueprint.user = user
+            self.blueprint.load_token()
+
+# backwards compatibility
+OAuth2SessionWithBaseURL = OAuth2Session
 
 
 class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
@@ -93,7 +110,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 redirected to the root path (``/``).
             session_class (class, optional): The class to use for creating a
                 Requests session. Defaults to
-                :class:`~flask_dance.consumer.oauth2.OAuth2SessionWithBaseURL`.
+                :class:`~flask_dance.consumer.oauth2.OAuth2Session`.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
@@ -106,7 +123,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorized_url=authorized_url,
         )
 
-        session_class = session_class or OAuth2SessionWithBaseURL
+        session_class = session_class or OAuth2Session
         self.session = session_class(
             client_id=client_id,
             client=client,
@@ -115,6 +132,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             scope=scope,
             state=state,
             token_updater=self.set_token,
+            blueprint=self,
             base_url=base_url,
             **kwargs
         )

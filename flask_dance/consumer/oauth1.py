@@ -3,21 +3,38 @@ from __future__ import unicode_literals, print_function
 import sys
 from flask import request, url_for, redirect
 from urlobject import URLObject
-from requests_oauthlib import OAuth1Session
+from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
 from .base import BaseOAuthConsumerBlueprint, oauth_authorized
 
 
-class OAuth1SessionWithBaseURL(OAuth1Session):
-    def __init__(self, base_url=None, *args, **kwargs):
-        super(OAuth1SessionWithBaseURL, self).__init__(*args, **kwargs)
+class OAuth1Session(BaseOAuth1Session):
+    """
+    A :class:`requests.Session` subclass that can do some special things:
+
+    * handles OAuth1 authentication
+      (from :class:`requests_oauthlib.OAuth1Session` superclass)
+    * has a ``base_url`` property used for relative URL resolution
+    * proxies ``load_token`` requests along to the blueprint
+    """
+    def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
+        super(OAuth1Session, self).__init__(*args, **kwargs)
+        self.blueprint = blueprint
         self.base_url = URLObject(base_url)
 
     def prepare_request(self, request):
         if self.base_url:
             request.url = self.base_url.relative(request.url)
-        return super(OAuth1SessionWithBaseURL, self).prepare_request(request)
+        return super(OAuth1Session, self).prepare_request(request)
+
+    def load_token(self, user):
+        if self.blueprint:
+            self.blueprint.user = user
+            self.blueprint.load_token()
+
+# backwards compatibility
+OAuth1SessionWithBaseURL = OAuth1Session
 
 
 class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
@@ -99,7 +116,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 redirected to the root path (``/``).
             session_class (class, optional): The class to use for creating a
                 Requests session. Defaults to
-                :class:`~flask_dance.consumer.oauth1.OAuth1SessionWithBaseURL`.
+                :class:`~flask_dance.consumer.oauth1.OAuth1Session`.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
@@ -112,7 +129,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorized_url=authorized_url,
         )
 
-        session_class = session_class or OAuth1SessionWithBaseURL
+        session_class = session_class or OAuth1Session
         self.session = session_class(
             client_key=client_key,
             client_secret=client_secret,
@@ -121,6 +138,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             rsa_key=rsa_key,
             client_class=client_class,
             force_include_body=force_include_body,
+            blueprint=self,
             base_url=base_url,
             **kwargs
         )

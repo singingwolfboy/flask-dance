@@ -45,7 +45,7 @@ def make_jira_blueprint(base_url, consumer_key=None, rsa_key=None,
             Defaults to ``/jira/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
-            :class:`~flask_dance.consumer.oauth1.OAuth1SessionWithBaseURL`.
+            :class:`~flask_dance.consumer.oauth1.OAuth1Session`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.

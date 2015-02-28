@@ -12,7 +12,7 @@ import responses
 from urlobject import URLObject
 import flask
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
-from flask_dance.consumer.oauth2 import OAuth2SessionWithBaseURL
+from flask_dance.consumer.oauth2 import OAuth2Session
 
 
 def make_app(login_url=None):
@@ -288,7 +288,7 @@ def test_signal_sender_oauth_authorized():
     assert len(calls) == 1  # unchanged
 
 
-class CustomOAuth2Session(OAuth2SessionWithBaseURL):
+class CustomOAuth2Session(OAuth2Session):
     my_attr = "foobar"
 
 

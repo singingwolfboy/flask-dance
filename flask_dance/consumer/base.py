@@ -1,10 +1,9 @@
 from __future__ import unicode_literals, print_function
 
-import types
 from distutils.version import StrictVersion
 import flask
 from flask.signals import Namespace
-from flask_dance.utils import proxy_property, FakeCache, getattrd
+from flask_dance.utils import proxy_property, FakeCache, first, getattrd
 
 
 _signals = Namespace()
@@ -47,6 +46,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             view_func=self.authorized,
         )
 
+        self.user = None
         self.set_token_storage_session()
         self.logged_in_funcs = []
         self.from_config = {}
@@ -163,17 +163,21 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         from sqlalchemy.orm.exc import NoResultFound
         if not cache:
             cache = FakeCache()
-        def make_cache_key(name=None):
-            u = _get_real_user(user)
+
+        bp = self
+        outer_user = user
+
+        def make_cache_key(name=None, user=None):
+            u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
             return "flask_dance_token|{name}|{user}".format(
                 name=self.name, user=getattr(u, "id", u),
             )
 
         @cache.memoize()
-        def get_token():
+        def get_token(user=None):
             query = session.query(model).filter_by(provider=self.name)
             if hasattr(model, "user"):
-                u = _get_real_user(user)
+                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
                 query = query.filter_by(user=u)
             try:
                 return query.one().token
@@ -183,12 +187,12 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         self.token_getter(get_token)
 
         @self.token_setter
-        def set_token(token):
+        def set_token(token, user=None):
             has_user = hasattr(model, "user")
             # if there was an existing model, delete it
             existing_query = session.query(model).filter_by(provider=self.name)
             if has_user:
-                u = _get_real_user(user)
+                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
                 existing_query = existing_query.filter_by(user=u)
             existing_query.delete()
             # create a new model for this token
@@ -205,10 +209,10 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             cache.delete_memoized(self.get_token)
 
         @self.token_deleter
-        def delete_token():
+        def delete_token(user=None):
             query = session.query(model).filter_by(provider=self.name)
             if hasattr(model, "user"):
-                u = _get_real_user(user)
+                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
                 query = query.filter_by(user=u)
             query.delete()
             # invalidate cache

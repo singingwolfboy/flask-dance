@@ -53,6 +53,22 @@ class FakeCache(object):
         pass
 
 
+def first(iterable, default=None, key=None):
+    """
+    Return the first truthy value of an iterable.
+    Shamelessly stolen from https://github.com/hynek/first
+    """
+    if key is None:
+        for el in iterable:
+            if el:
+                return el
+    else:
+        for el in iterable:
+            if key(el):
+                return el
+    return default
+
+
 sentinel = object()
 
 def getattrd(obj, name, default=sentinel):

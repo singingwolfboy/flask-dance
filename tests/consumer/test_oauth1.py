@@ -11,7 +11,7 @@ import responses
 import flask
 from flask_dance.consumer import OAuth1ConsumerBlueprint, oauth_authorized
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
-from flask_dance.consumer.oauth1 import OAuth1SessionWithBaseURL
+from flask_dance.consumer.oauth1 import OAuth1Session
 
 
 def make_app(login_url=None):
@@ -264,7 +264,7 @@ def test_signal_sender_oauth_authorized():
     assert len(calls) == 1  # unchanged
 
 
-class CustomOAuth1Session(OAuth1SessionWithBaseURL):
+class CustomOAuth1Session(OAuth1Session):
     my_attr = "foobar"
 
 

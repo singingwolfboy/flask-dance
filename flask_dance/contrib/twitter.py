@@ -36,7 +36,7 @@ def make_twitter_blueprint(api_key=None, api_secret=None,
             Defaults to ``/twitter/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
-            :class:`~flask_dance.consumer.oauth1.OAuth1SessionWithBaseURL`.
+            :class:`~flask_dance.consumer.oauth1.OAuth1Session`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.

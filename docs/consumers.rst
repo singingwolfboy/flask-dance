@@ -49,6 +49,6 @@ be easier!
     print("Hi, @{login}!".format(login=resp.json()["login"]))
 
 The :attr:`~OAuth2ConsumerBlueprint.session` object attached to the blueprint
-is a ``requests.Session`` object that is already properly configured
+is a :class:`requests.Session` object that is already properly configured
 with your OAuth credentials. The fact that you are using OAuth is
 completely transparent -- you don't even have to think about it!

@@ -37,7 +37,7 @@ def make_github_blueprint(client_id=None, client_secret=None, scope=None,
             Defaults to ``/github/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
-            :class:`~flask_dance.consumer.oauth2.OAuth2SessionWithBaseURL`.
+            :class:`~flask_dance.consumer.oauth2.OAuth2Session`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
