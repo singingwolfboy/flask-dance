@@ -47,7 +47,9 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         )
 
         self.user = None
+        self.user_id = None
         self.set_token_storage_session()
+
         self.logged_in_funcs = []
         self.from_config = {}
         self.before_app_request(self.load_config)
@@ -134,7 +136,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         def delete_token():
             del flask.session[key]
 
-    def set_token_storage_sqlalchemy(self, model, session, user=None, cache=None):
+    def set_token_storage_sqlalchemy(self, model, session,
+                                     user=None, user_id=None, cache=None):
         """
         A helper method to set up the blueprint to store and retrieve OAuth
         tokens using SQLAlchemy. This will overwrite any custom token
@@ -154,6 +157,9 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
                 in user. This argument is optional; if not provided,
                 OAuth tokens will not be associated with specific users in
                 your application.
+            user_id: The ID of the current logged in user, if any. This argument
+                is optional, and is used in the same way as the ``user`` argument.
+                You do not need to specify both.
             cache: An instance of `Flask-Cache`_. This is optional, but highly
                 recommended for performance reasons.
 
@@ -166,19 +172,29 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
 
         bp = self
         outer_user = user
+        outer_user_id = user_id
 
-        def make_cache_key(name=None, user=None):
-            u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
-            return "flask_dance_token|{name}|{user}".format(
-                name=self.name, user=getattr(u, "id", u),
+        def make_cache_key(name=None, user=None, user_id=None):
+            uid = first([user_id, outer_user_id, bp.user_id])
+            if not uid:
+                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
+                uid = getattr(u, "id", u)
+            return "flask_dance_token|{name}|{user_id}".format(
+                name=self.name, user_id=uid,
             )
 
         @cache.memoize()
-        def get_token(user=None):
+        def get_token(user=None, user_id=None):
             query = session.query(model).filter_by(provider=self.name)
-            if hasattr(model, "user"):
-                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
+            # check for user ID
+            uid = first([user_id, outer_user_id, bp.user_id])
+            if hasattr(model, "user_id") and uid:
+                query = query.filter_by(user_id=uid)
+            # check for user (relationship property)
+            u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
+            if hasattr(model, "user") and u:
                 query = query.filter_by(user=u)
+            # run query
             try:
                 return query.one().token
             except NoResultFound:
@@ -187,20 +203,31 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         self.token_getter(get_token)
 
         @self.token_setter
-        def set_token(token, user=None):
-            has_user = hasattr(model, "user")
+        def set_token(token, user=None, user_id=None):
             # if there was an existing model, delete it
             existing_query = session.query(model).filter_by(provider=self.name)
+            # check for user ID
+            has_user_id = hasattr(model, "user_id")
+            if has_user_id:
+                uid = first([user_id, outer_user_id, bp.user_id])
+                if uid:
+                    existing_query = existing_query.filter_by(user_id=uid)
+            # check for user (relationship property)
+            has_user = hasattr(model, "user")
             if has_user:
                 u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
-                existing_query = existing_query.filter_by(user=u)
+                if u:
+                    existing_query = existing_query.filter_by(user=u)
+            # queue up delete query -- won't be run until commit()
             existing_query.delete()
             # create a new model for this token
             kwargs = {
                 "provider": self.name,
                 "token": token,
             }
-            if has_user:
+            if has_user_id and uid:
+                kwargs["user_id"] = uid
+            if has_user and u:
                 kwargs["user"] = u
             session.add(model(**kwargs))
             # commit to delete and add simultaneously
@@ -209,12 +236,21 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             cache.delete_memoized(self.get_token)
 
         @self.token_deleter
-        def delete_token(user=None):
+        def delete_token(user=None, user_id=None):
             query = session.query(model).filter_by(provider=self.name)
+            # check for user ID
+            if hasattr(model, "user_id"):
+                uid = first([user_id, outer_user_id, bp.user_id])
+                if uid:
+                    query = query.filter_by(user_id=uid)
+            # check for user (relationship property)
             if hasattr(model, "user"):
                 u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
-                query = query.filter_by(user=u)
+                if u:
+                    query = query.filter_by(user=u)
+            # run query
             query.delete()
+            session.commit()
             # invalidate cache
             cache.delete_memoized(self.get_token)
 

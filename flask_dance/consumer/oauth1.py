@@ -28,9 +28,10 @@ class OAuth1Session(BaseOAuth1Session):
             request.url = self.base_url.relative(request.url)
         return super(OAuth1Session, self).prepare_request(request)
 
-    def load_token(self, user):
+    def load_token(self, user=None, user_id=None):
         if self.blueprint:
             self.blueprint.user = user
+            self.blueprint.user_id = user_id
             self.blueprint.load_token()
 
 # backwards compatibility

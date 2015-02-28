@@ -28,9 +28,10 @@ class OAuth2Session(BaseOAuth2Session):
             method=method, url=url, data=data, headers=headers, **kwargs
         )
 
-    def load_token(self, user):
+    def load_token(self, user=None, user_id=None):
         if self.blueprint:
             self.blueprint.user = user
+            self.blueprint.user_id = user_id
             self.blueprint.load_token()
 
 # backwards compatibility

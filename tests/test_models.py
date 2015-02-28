@@ -243,6 +243,10 @@ def test_load_token_for_user(app, db, blueprint, request):
     sess.load_token(sue)
     assert sess.token == sue_token
 
+    # load for user ID as well
+    sess.load_token(user_id=bob.id)
+    assert sess.token == bob_token
+
 def test_model_with_flask_login(app, db, blueprint, request):
     login_manager = LoginManager(app)
 
