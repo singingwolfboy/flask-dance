@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import functools
 
 class proxy_property(object):
     def __init__(self, name, pass_self=True, doc=None):
@@ -77,7 +78,7 @@ def getattrd(obj, name, default=sentinel):
     Source: http://stackoverflow.com/a/14324459
     """
     try:
-        return reduce(getattr, name.split("."), obj)
+        return functools.reduce(getattr, name.split("."), obj)
     except AttributeError as e:
         if default is not sentinel:
             return default
