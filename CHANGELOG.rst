@@ -5,6 +5,18 @@ unreleased
 ----------
 Nothing yet
 
+0.4.1 (2015-02-28)
+------------------
+* ``OAuth1SessionWithBaseURL`` has been renamed to ``OAuth1Session``. The old
+  name still exists as an alias, for backwards compatibility.
+* ``OAuth2SessionWithBaseURL`` has been renamed to ``OAuth2Session``. The old
+  name still exists as an alias, for backwards compatibility.
+* You can now pass a ``user`` or ``user_id`` object to ``blueprint.load_token``.
+* ``OAuth1Session`` and ``OAuth2Session`` now store a reference to the blueprint,
+  so that you can also call ``session.load_token``, which is proxied to the
+  blueprint. This method also takes ``user`` or ``user_id`` arguments.
+
+
 0.4.0 (2015-02-12)
 ------------------
 * Renamed ``assign_token_to_session`` to ``load_token``
