@@ -4,6 +4,10 @@ from distutils.version import StrictVersion
 import flask
 from flask.signals import Namespace
 from flask_dance.utils import proxy_property, FakeCache, first, getattrd
+try:
+    from flask_login import AnonymousUserMixin
+except ImportError:
+    AnonymousUserMixin = None
 
 
 _signals = Namespace()
@@ -137,7 +141,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             del flask.session[key]
 
     def set_token_storage_sqlalchemy(self, model, session,
-                                     user=None, user_id=None, cache=None):
+                                     user=None, user_id=None, anon_user=None,
+                                     cache=None):
         """
         A helper method to set up the blueprint to store and retrieve OAuth
         tokens using SQLAlchemy. This will overwrite any custom token
@@ -156,19 +161,25 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
                 This can also be a function that returns the current logged
                 in user. This argument is optional; if not provided,
                 OAuth tokens will not be associated with specific users in
-                your application.
+                your application. If you're using `Flask-Login`_, this is
+                ``current_user``.
             user_id: The ID of the current logged in user, if any. This argument
                 is optional, and is used in the same way as the ``user`` argument.
                 You do not need to specify both.
+            anon_user: A class that specifies an anonymous user, as opposed to
+                an actual logged-in user. This defaults to
+                :class:`flask_login.AnonymousUserMixin` if Flask-Login is installed.
             cache: An instance of `Flask-Cache`_. This is optional, but highly
                 recommended for performance reasons.
 
         .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
+        .. _Flask-Login: https://flask-login.readthedocs.org/en/latest/
         .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
         """
         from sqlalchemy.orm.exc import NoResultFound
         if not cache:
             cache = FakeCache()
+        anon_user = anon_user or AnonymousUserMixin
 
         bp = self
         outer_user = user
@@ -177,7 +188,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         def make_cache_key(name=None, user=None, user_id=None):
             uid = first([user_id, outer_user_id, bp.user_id])
             if not uid:
-                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
+                u = first(_get_real_user(ref, anon_user)
+                          for ref in (user, outer_user, bp.user))
                 uid = getattr(u, "id", u)
             return "flask_dance_token|{name}|{user_id}".format(
                 name=self.name, user_id=uid,
@@ -186,14 +198,18 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         @cache.memoize()
         def get_token(user=None, user_id=None):
             query = session.query(model).filter_by(provider=self.name)
-            # check for user ID
             uid = first([user_id, outer_user_id, bp.user_id])
+            u = first(_get_real_user(ref, anon_user)
+                      for ref in (user, outer_user, bp.user))
+            # check for user ID
             if hasattr(model, "user_id") and uid:
                 query = query.filter_by(user_id=uid)
             # check for user (relationship property)
-            u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
-            if hasattr(model, "user") and u:
+            elif hasattr(model, "user") and u:
                 query = query.filter_by(user=u)
+            # if we have the property, but not value, filter by None
+            elif hasattr(model, "user_id"):
+                query = query.filter_by(user_id=None)
             # run query
             try:
                 return query.one().token
@@ -215,7 +231,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             # check for user (relationship property)
             has_user = hasattr(model, "user")
             if has_user:
-                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
+                u = first(_get_real_user(ref, anon_user)
+                          for ref in (user, outer_user, bp.user))
                 if u:
                     existing_query = existing_query.filter_by(user=u)
             # queue up delete query -- won't be run until commit()
@@ -238,16 +255,18 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
         @self.token_deleter
         def delete_token(user=None, user_id=None):
             query = session.query(model).filter_by(provider=self.name)
+            uid = first([user_id, outer_user_id, bp.user_id])
+            u = first(_get_real_user(ref, anon_user)
+                      for ref in (user, outer_user, bp.user))
             # check for user ID
-            if hasattr(model, "user_id"):
-                uid = first([user_id, outer_user_id, bp.user_id])
-                if uid:
-                    query = query.filter_by(user_id=uid)
+            if hasattr(model, "user_id") and uid:
+                query = query.filter_by(user_id=uid)
             # check for user (relationship property)
-            if hasattr(model, "user"):
-                u = first(_get_real_user(ref) for ref in (user, outer_user, bp.user))
-                if u:
-                    query = query.filter_by(user=u)
+            elif hasattr(model, "user") and u:
+                query = query.filter_by(user=u)
+            # if we have the property, but not value, filter by None
+            elif hasattr(model, "user_id"):
+                query = query.filter_by(user_id=None)
             # run query
             query.delete()
             session.commit()
@@ -255,7 +274,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint):
             cache.delete_memoized(self.get_token)
 
 
-def _get_real_user(user):
+def _get_real_user(user, anon_user=None):
     """
     set_token_storage_sqlalchemy() has a user parameter that can be called with:
 
@@ -271,4 +290,6 @@ def _get_real_user(user):
     if callable(user):
         # this is a function
         user = user()
+    if anon_user and isinstance(user, anon_user):
+        return None
     return user

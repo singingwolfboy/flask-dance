@@ -205,9 +205,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
     def load_token(self):
         token = self.token
+        # This really, really violates the Law of Demeter, but
+        # I don't see a better way to set these parameters. :(
+        self.session.token = token
+        self.session._client.token = token
         if token:
-            # This really, really violates the Law of Demeter, but
-            # I don't see a better way to set these parameters. :(
-            self.session.token = token
-            self.session._client.token = token
             self.session._client._populate_attributes(token)

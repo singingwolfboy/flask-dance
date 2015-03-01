@@ -270,6 +270,7 @@ texinfo_documents = [
 intersphinx_mapping = {
     'python': ('http://docs.python.org/', None),
     'flask': ('http://flask.pocoo.org/docs/', None),
+    'flask_login': ('https://flask-login.readthedocs.org/en/latest/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'requests': ('http://docs.python-requests.org/en/latest/', None),
     'requests_oauthlib': ('http://requests-oauthlib.readthedocs.org/en/latest/', None),

@@ -207,3 +207,6 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             # I don't see a better way to set these parameters. :(
             self.session.auth.client.resource_owner_key = to_unicode(token["oauth_token"])
             self.session.auth.client.resource_owner_secret = to_unicode(token["oauth_token_secret"])
+        else:
+            self.session.auth.client.resource_owner_key = None
+            self.session.auth.client.resource_owner_secret = None
