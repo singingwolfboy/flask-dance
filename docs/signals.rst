@@ -43,12 +43,12 @@ The following signals exist in Flask-Dance:
 
     If you're using OAuth 2, the user may grant you different scopes from the
     ones you requested: check the ``scope`` key in the *token* dict to
-    determine what scopes were actually granted. By the time this signal is
-    sent, the *token* will already be :doc:`stored <token-storage>`, so if there
-    is a problem with the token and you want the user to re-authenticate,
-    you'll need to delete the token from storage. To do that, simply delete
-    the :data:`~OAuth2ConsumerBlueprint.token` property from the blueprint,
-    which will call the :attr:`~OAuth2ConsumerBlueprint.token_deleter` function.
+    determine what scopes were actually granted. If you don't want the *token*
+    to be :doc:`stored <token-storage>`, simply return ``False`` from one of your
+    signal receiver functions -- this can be useful if the user has declined
+    to authorize your OAuth request, has granted insufficient scopes, or in some
+    other way has given you a token that you don't want.
+
 
 .. _flash a message: http://flask.pocoo.org/docs/latest/patterns/flashing/
 .. _blinker: http://pythonhosted.org/blinker/

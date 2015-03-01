@@ -3,7 +3,12 @@ Change Log
 
 unreleased
 ----------
-Nothing yet
+* Added ``anon_user`` argument to ``set_token_storage_sqlalchemy()`` method
+* Fire ``oauth_authorized`` signal before setting token, so that a signal
+  handler can set the logged-in user
+* You can now indicate that an OAuth token should not be stored by returning
+  ``False`` from any receiver function that is connected to the
+  ``oauth_authorized`` signal
 
 0.4.1 (2015-02-28)
 ------------------

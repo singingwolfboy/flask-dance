@@ -200,7 +200,7 @@ def test_redirect_fallback():
         assert resp.headers["Location"] == "https://a.b.c/"
 
 
-def test_signal_oauth_authorized():
+def test_signal_oauth_authorized(request):
     app, bp = make_app()
     bp.session.fetch_access_token = mock.Mock(return_value="test-token")
 
@@ -209,17 +209,43 @@ def test_signal_oauth_authorized():
         calls.append((args, kwargs))
 
     oauth_authorized.connect(callback)
+    request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
 
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
         )
+        # check that we stored the token
+        assert flask.session["test-service_oauth_token"] == "test-token"
 
     assert len(calls), 1
     assert calls[0][0] == (bp,)
     assert calls[0][1] == {"token": "test-token"}
 
-def test_signal_sender_oauth_authorized():
+def test_signal_oauth_authorized_abort(request):
+    app, bp = make_app()
+    bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+        return False
+
+    oauth_authorized.connect(callback)
+    request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
+        )
+        # check that we did NOT store the token
+        assert "test-token_oauth_token" not in flask.session
+
+    # the callback should still have been called
+    assert len(calls) == 1
+
+
+def test_signal_sender_oauth_authorized(request):
     app, bp = make_app()
     bp.session.fetch_access_token = mock.Mock(return_value="test-token")
     bp2 = OAuth1ConsumerBlueprint("test2", __name__,
@@ -239,6 +265,7 @@ def test_signal_sender_oauth_authorized():
         calls.append((args, kwargs))
 
     oauth_authorized.connect(callback, sender=bp)
+    request.addfinalizer(lambda: oauth_authorized.disconnect(callback, sender=bp))
 
     with app.test_client() as client:
         resp = client.get(

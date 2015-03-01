@@ -196,8 +196,9 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             next_url = "/"
         self.session.parse_authorization_response(request.url)
         token = self.session.fetch_access_token(self.access_token_url)
-        self.token = token
-        oauth_authorized.send(self, token=token)
+        results = oauth_authorized.send(self, token=token)
+        if not any(ret == False for func, ret in results):
+            self.token = token
         return redirect(next_url)
 
     def load_token(self):
