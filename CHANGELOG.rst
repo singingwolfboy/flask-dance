@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.4.2 (2015-03-01)
+------------------
 * Added ``anon_user`` argument to ``set_token_storage_sqlalchemy()`` method
 * Fire ``oauth_authorized`` signal before setting token, so that a signal
   handler can set the logged-in user
