@@ -7,7 +7,7 @@ from sqlalchemy import event
 from sqlalchemy.orm.exc import NoResultFound
 from flask_cache import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user
-from flask_dance.consumer import OAuth2ConsumerBlueprint
+from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
 from flask_dance.models import OAuthConsumerMixin
 
 pytestmark = [
@@ -340,6 +340,85 @@ def test_model_set_token_with_flask_login(app, db, blueprint, request):
     }
     u3_oauth = OAuth.query.filter_by(user=u3).all()
     assert len(u3_oauth) == 0
+
+
+def test_model_set_token_with_flask_login_anon_to_authed(app, db, blueprint, request):
+    login_manager = LoginManager(app)
+
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(80))
+
+    class OAuth(db.Model, OAuthConsumerMixin):
+        user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+        user = db.relationship(User)
+
+    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user)
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    # configure login manager
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.get(userid)
+
+    # create a user object when OAuth succeeds
+    def logged_in(sender, token):
+        assert token
+        assert blueprint == sender
+        resp = sender.session.get("/user")
+        user = User(name=resp.json()["name"])
+        login_user(user)
+        db.session.add(user)
+        db.session.commit()
+        flask.flash("Signed in successfully")
+
+    oauth_authorized.connect(logged_in, blueprint)
+    request.addfinalizer(lambda: oauth_authorized.disconnect(logged_in, blueprint))
+
+    # mock out the `/user` API call
+    responses.add(
+        responses.GET,
+        "https://example.com/user",
+        body='{"name":"josephine"}',
+    )
+
+    with record_queries(db.engine) as queries:
+        with app.test_client() as client:
+            with client.session_transaction() as sess:
+                sess["test-service_oauth_state"] = "random-string"
+            # make the request
+            resp = client.get(
+                "/login/test-service/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that we redirected the client
+            assert resp.status_code == 302
+            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    assert len(queries) == 5
+
+    # check the database
+    users = User.query.all()
+    assert len(users) == 1
+    user = users[0]
+    assert user.name == "josephine"
+
+    authorizations = OAuth.query.all()
+    assert len(authorizations) == 1
+    oauth = authorizations[0]
+    assert oauth.provider == "test-service"
+    assert oauth.token == {
+        "access_token": "foobar",
+        "token_type": "bearer",
+        "scope": [""],
+    }
+    assert oauth.user_id == user.id
+
 
 def test_model_get_token_with_flask_login(app, db, blueprint, request):
     login_manager = LoginManager(app)

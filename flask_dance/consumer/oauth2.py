@@ -199,8 +199,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorization_response=url,
             client_secret=self.client_secret,
         )
-        self.token = token
         oauth_authorized.send(self, token=token)
+        self.token = token
         return redirect(next_url)
 
     def load_token(self):
