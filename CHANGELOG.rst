@@ -3,7 +3,11 @@ Change Log
 
 unreleased
 ----------
-Nothing yet
+* ``OAuth2ConsumerBlueprint`` now accepts two new arguments to its constructor:
+  ``authorization_url_params`` and ``token_url_params``
+* When using the Google pre-set configuration, you can now request offline
+  access for your OAuth token by passing ``offline=True`` to the
+  ``make_google_blueprint`` function
 
 0.4.2 (2015-03-01)
 ------------------

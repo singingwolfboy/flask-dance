@@ -81,3 +81,21 @@ def test_context_local():
         google.get("https://google.com")
         request = responses.calls[1].request
         assert request.headers["Authorization"] == "Bearer app2"
+
+
+def test_offline():
+    app = Flask(__name__)
+    app.secret_key = "backups"
+    goog_bp = make_google_blueprint("foo", "bar", offline=True)
+    app.register_blueprint(goog_bp)
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/google",
+            base_url="https://a.b.c",
+            follow_redirects=False,
+        )
+    # check that there is a `access_type=offline` query param in the redirect URL
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.query_dict["access_type"] == "offline"

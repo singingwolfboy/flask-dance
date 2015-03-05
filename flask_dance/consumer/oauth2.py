@@ -58,7 +58,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorized_url=None,
             base_url=None,
             authorization_url=None,
+            authorization_url_params=None,
             token_url=None,
+            token_url_params=None,
             redirect_url=None,
             redirect_to=None,
             session_class=None,
@@ -85,11 +87,19 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 `authorization grant <http://tools.ietf.org/html/rfc6749#section-1.3>`_.
                 This can be an fully-qualified URL, or a path that is
                 resolved relative to the ``base_url``.
+            authorization_url_params (dict, optional): A dict of extra
+                key-value pairs to include in the query string of the
+                ``authorization_url``, beyond those necessary for a standard
+                OAuth 2 authorization grant request.
             token_url (str): The URL specified by the OAuth provider for
                 obtaining an
                 `access token <http://tools.ietf.org/html/rfc6749#section-1.4>`_.
                 This can be an fully-qualified URL, or a path that is
                 resolved relative to the ``base_url``.
+            token_url_params (dict, optional): A dict of extra
+                key-value pairs to include in the query string of the
+                ``token_url``, beyond those necessary for a standard
+                OAuth 2 access token request.
             login_url (str, optional): The URL route for the ``login`` view that kicks off
                 the OAuth dance. This string will be
                 :ref:`formatted <python:formatstrings>`
@@ -142,7 +152,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.state = state
 
         self.authorization_url = authorization_url
+        self.authorization_url_params = authorization_url_params or {}
         self.token_url = token_url
+        self.token_url_params = token_url_params or {}
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
 
@@ -173,6 +185,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         )
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state,
+            **self.authorization_url_params
         )
         state_key = "{bp.name}_oauth_state".format(bp=self)
         flask.session[state_key] = state
@@ -198,6 +211,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             self.token_url,
             authorization_response=url,
             client_secret=self.client_secret,
+            **self.token_url_params
         )
         results = oauth_authorized.send(self, token=token)
         if not any(ret == False for func, ret in results):

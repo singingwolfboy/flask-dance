@@ -13,6 +13,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_google_blueprint(client_id=None, client_secret=None, scope=None,
+                          offline=False,
                           redirect_url=None, redirect_to=None,
                           login_url=None, authorized_url=None,
                           session_class=None):
@@ -27,6 +28,9 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
         client_secret (str): The client secret for your application on Github
         scope (str, optional): comma-separated list of scopes for the OAuth token.
             Defaults to the "profile" scope.
+        offline (bool): Whether to request ``offline access
+            <https://developers.google.com/accounts/docs/OAuth2WebServer#offline>``
+            for the OAuth token. Defaults to False
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
@@ -44,6 +48,9 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["profile"]
+    authorization_url_params = {}
+    if offline:
+        authorization_url_params["access_type"] = "offline"
     google_bp = OAuth2ConsumerBlueprint("google", __name__,
         client_id=client_id,
         client_secret=client_secret,
@@ -55,6 +62,7 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
+        authorization_url_params=authorization_url_params,
         session_class=session_class,
     )
     google_bp.from_config["client_id"] = "GOOGLE_OAUTH_CLIENT_ID"
