@@ -28,8 +28,8 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
         client_secret (str): The client secret for your application on Github
         scope (str, optional): comma-separated list of scopes for the OAuth token.
             Defaults to the "profile" scope.
-        offline (bool): Whether to request ``offline access
-            <https://developers.google.com/accounts/docs/OAuth2WebServer#offline>``
+        offline (bool): Whether to request `offline access
+            <https://developers.google.com/accounts/docs/OAuth2WebServer#offline>`_
             for the OAuth token. Defaults to False
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
