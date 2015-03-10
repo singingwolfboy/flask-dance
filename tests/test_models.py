@@ -9,6 +9,11 @@ from flask_cache import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
 from flask_dance.models import OAuthConsumerMixin
+try:
+    import blinker
+except ImportError:
+    blinker = None
+requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
 pytestmark = [
     pytest.mark.usefixtures("responses"),
@@ -342,6 +347,7 @@ def test_model_set_token_with_flask_login(app, db, blueprint, request):
     assert len(u3_oauth) == 0
 
 
+@requires_blinker
 def test_model_set_token_with_flask_login_anon_to_authed(app, db, blueprint, request):
     login_manager = LoginManager(app)
 

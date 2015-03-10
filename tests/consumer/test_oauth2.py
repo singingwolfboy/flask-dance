@@ -6,13 +6,19 @@ try:
 except ImportError:
     from urllib import quote_plus
     from urlparse import parse_qsl
-
+import pytest
 import mock
 import responses
 from urlobject import URLObject
 import flask
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
 from flask_dance.consumer.oauth2 import OAuth2Session
+
+try:
+    import blinker
+except ImportError:
+    blinker = None
+requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
 
 def make_app(login_url=None):
@@ -210,6 +216,7 @@ def test_redirect_fallback():
         assert resp.headers["Location"] == "https://a.b.c/"
 
 
+@requires_blinker
 def test_signal_oauth_authorized(request):
     app, bp = make_app()
     bp.session.fetch_token = mock.Mock(return_value="test-token")
@@ -236,6 +243,7 @@ def test_signal_oauth_authorized(request):
     assert calls[0][1] == {"token": "test-token"}
 
 
+@requires_blinker
 def test_signal_oauth_authorized_abort(request):
     app, bp = make_app()
     bp.session.fetch_token = mock.Mock(return_value="test-token")
@@ -262,6 +270,7 @@ def test_signal_oauth_authorized_abort(request):
     assert len(calls) == 1
 
 
+@requires_blinker
 def test_signal_sender_oauth_authorized(request):
     app, bp = make_app()
     bp.session.fetch_token = mock.Mock(return_value="test-token")

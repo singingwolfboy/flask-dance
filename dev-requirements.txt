@@ -4,8 +4,6 @@ sphinxcontrib-napoleon
 # testing tools
 mock
 responses
-# testing signals
-blinker
 # testing sqlalchemy support
 sqlalchemy>=0.9
 sqlalchemy_utils

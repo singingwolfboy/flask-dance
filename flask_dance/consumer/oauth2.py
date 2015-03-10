@@ -213,7 +213,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             client_secret=self.client_secret,
             **self.token_url_params
         )
-        results = oauth_authorized.send(self, token=token)
+        results = oauth_authorized.send(self, token=token) or []
         if not any(ret == False for func, ret in results):
             self.token = token
         return redirect(next_url)
