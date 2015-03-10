@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+nothing yet
+
+0.4.3 (2015-03-09)
+------------------
 * ``OAuth2ConsumerBlueprint`` now accepts two new arguments to its constructor:
   ``authorization_url_params`` and ``token_url_params``
 * When using the Google pre-set configuration, you can now request offline
