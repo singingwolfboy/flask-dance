@@ -5,6 +5,7 @@ from flask import request, url_for, redirect
 from urlobject import URLObject
 from requests_oauthlib import OAuth2Session as BaseOAuth2Session
 from .base import BaseOAuthConsumerBlueprint, oauth_authorized
+from flask_dance.exceptions import ProviderError
 
 
 class OAuth2Session(BaseOAuth2Session):
@@ -192,6 +193,15 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         return redirect(url)
 
     def authorized(self):
+        # check for error in request args
+        provider_error = request.args.get("error")
+        if provider_error:
+            provider_error_desc = request.args.get("error_description")
+            provider_error_uri = request.args.get("error_uri")
+            err = ProviderError(provider_error_desc, code=provider_error,
+                                uri=provider_error_uri)
+            raise err
+
         if "next" in request.args:
             next_url = request.args["next"]
         elif self.redirect_url:
