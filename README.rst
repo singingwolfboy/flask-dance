@@ -36,7 +36,6 @@ example, to authenticate with Github, just do the following:
     blueprint = make_github_blueprint(
         client_id="my-key-here",
         client_secret="my-secret-here",
-        redirect_to="index",
     )
     app.register_blueprint(blueprint, url_prefix="/login")
 

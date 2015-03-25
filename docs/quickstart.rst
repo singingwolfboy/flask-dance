@@ -11,7 +11,6 @@ For a few popular services, Flask-Dance provides :doc:`pre-set configurations
         client_id="my-key-here",
         client_secret="my-secret-here",
         scope="user:email",
-        redirect_to="index",
     )
     app.register_blueprint(github_blueprint, url_prefix="/login")
 
