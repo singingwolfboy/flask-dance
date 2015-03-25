@@ -19,6 +19,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   how-oauth-works
    quickstart
    contrib
    consumers
