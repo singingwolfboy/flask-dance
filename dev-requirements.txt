@@ -1,6 +1,5 @@
 # documentation tools
-sphinx
-sphinxcontrib-napoleon
+sphinx>=1.3
 # sphinxcontrib-aafig
 # until https://bitbucket.org/birkenfeld/sphinx-contrib/pull-request/64 merges,
 # we need to use a version on bitbucket
