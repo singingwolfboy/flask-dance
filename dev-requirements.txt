@@ -4,7 +4,7 @@ sphinxcontrib-napoleon
 # sphinxcontrib-aafig
 # until https://bitbucket.org/birkenfeld/sphinx-contrib/pull-request/64 merges,
 # we need to use a version on bitbucket
--e hg+https://bitbucket.org/espd/sphinx-contrib#egg=sphinxcontrib-aafig&subdirectory=aafig
+-e hg+https://bitbucket.org/espd/sphinx-contrib#egg=sphinxcontrib_aafig&subdirectory=aafig
 # testing tools
 mock
 responses
