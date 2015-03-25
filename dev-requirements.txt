@@ -1,8 +1,9 @@
 # documentation tools
 sphinx>=1.3
-# sphinxcontrib-aafig
+# sphinxcontrib-aafig:
 # until https://bitbucket.org/birkenfeld/sphinx-contrib/pull-request/64 merges,
 # we need to use a version on bitbucket
+pip==6.0.8
 -e hg+https://bitbucket.org/espd/sphinx-contrib#egg=sphinxcontrib_aafig&subdirectory=aafig
 # testing tools
 mock
