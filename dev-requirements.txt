@@ -6,7 +6,7 @@ sphinxcontrib-napoleon
 # we need to use a custom wheel
 --find-links https://singingwolfboy.github.io/python-wheelhouse/
 --use-wheel
-sphinxcontrib-aafig
+sphinxcontrib-aafig==1.0.dev20150325
 # testing tools
 mock
 responses
