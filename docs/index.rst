@@ -20,7 +20,7 @@ Contents:
    :maxdepth: 2
 
    how-oauth-works
-   quickstart
+   quickstarts/index
    contrib
    consumers
    token-storage
