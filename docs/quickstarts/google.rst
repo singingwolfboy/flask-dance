@@ -42,13 +42,13 @@ Code
 
 .. note::
     You must replace ``my-key-here`` and ``my-secret-here`` with the client ID
-    and client secret that you got from your GitHub application.
+    and client secret that you got from your Google application.
 
-When you run this code, you must set the :envvar:`OAUTHLIB_INSECURE_TRANSPORT`
-environment variable for it to work. You also must set the
-:envvar:`OAUTHLIB_RELAX_TOKEN_SCOPE` environment variable to account for
-Google changing the requested OAuth scopes on you. For example, if you put
-this code in a file named ``google.py``, you could run:
+When you run this code locally, you must set the
+:envvar:`OAUTHLIB_INSECURE_TRANSPORT` environment variable for it to work.
+You also must set the :envvar:`OAUTHLIB_RELAX_TOKEN_SCOPE` environment variable
+to account for Google changing the requested OAuth scopes on you.
+For example, if you put this code in a file named ``google.py``, you could run:
 
 .. code-block:: bash
 
@@ -66,6 +66,9 @@ immediately.
     this variable allows you to use insecure ``http`` for OAuth communication.
     However, for security, all OAuth interactions must occur over secure
     ``https`` when running in production.
+
+    However, you can (and probably should) set
+    :envvar:`OAUTHLIB_RELAX_TOKEN_SCOPE` when running in production.
 
 Explanation
 -----------
