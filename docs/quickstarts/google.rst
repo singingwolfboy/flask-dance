@@ -46,7 +46,7 @@ Code
 
 When you run this code, you must set the :envvar:`OAUTHLIB_INSECURE_TRANSPORT`
 environment variable for it to work. You also must set the
-:envvar: OAUTHLIB_RELAX_TOKEN_SCOPE` environment variable to account for
+:envvar:`OAUTHLIB_RELAX_TOKEN_SCOPE` environment variable to account for
 Google changing the requested OAuth scopes on you. For example, if you put
 this code in a file named ``google.py``, you could run:
 
