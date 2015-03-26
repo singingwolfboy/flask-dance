@@ -61,6 +61,12 @@ immediately.
 
 .. _localhost:5000: http://localhost:5000/
 
+.. warning::
+    Do *NOT* set :envvar:`OAUTHLIB_INSECURE_TRANSPORT` in production. Setting
+    this variable allows you to use insecure ``http`` for OAuth communication.
+    However, for security, all OAuth interactions must occur over secure
+    ``https`` when running in production.
+
 Explanation
 -----------
 This code makes a :ref:`blueprint <flask:blueprints>` that implements the views
