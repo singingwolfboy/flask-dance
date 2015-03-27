@@ -3,7 +3,11 @@ Change Log
 
 unreleased
 ----------
-nothing yet
+* Added ``oauth_error`` signal
+* If there is an error with the OAuth 2 authorization process, Flask-Dance
+  will now redirect the user anyway rather than letting the error bubble up
+  and cause a 500 status code. The ``oauth_error`` signal will be fired
+  with information about the error.
 
 0.4.3 (2015-03-09)
 ------------------

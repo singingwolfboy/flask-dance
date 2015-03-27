@@ -12,6 +12,7 @@ except ImportError:
 
 _signals = Namespace()
 oauth_authorized = _signals.signal('oauth-authorized')
+oauth_error = _signals.signal('oauth-error')
 
 
 class BaseOAuthConsumerBlueprint(flask.Blueprint):

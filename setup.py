@@ -23,6 +23,7 @@ def is_requirement(line):
     # Skip blank lines, comments, and editable installs
     return not (
         line == '' or
+        line.startswith('--') or
         line.startswith('-r') or
         line.startswith('#') or
         line.startswith('-e') or

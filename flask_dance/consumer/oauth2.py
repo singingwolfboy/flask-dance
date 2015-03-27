@@ -1,11 +1,15 @@
 from __future__ import unicode_literals, print_function
 
+import logging
 import flask
 from flask import request, url_for, redirect
 from urlobject import URLObject
 from requests_oauthlib import OAuth2Session as BaseOAuth2Session
-from .base import BaseOAuthConsumerBlueprint, oauth_authorized
-from flask_dance.exceptions import ProviderError
+from .base import (
+    BaseOAuthConsumerBlueprint, oauth_authorized, oauth_error
+)
+
+log = logging.getLogger(__name__)
 
 
 class OAuth2Session(BaseOAuth2Session):
@@ -193,15 +197,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         return redirect(url)
 
     def authorized(self):
-        # check for error in request args
-        provider_error = request.args.get("error")
-        if provider_error:
-            provider_error_desc = request.args.get("error_description")
-            provider_error_uri = request.args.get("error_uri")
-            err = ProviderError(provider_error_desc, code=provider_error,
-                                uri=provider_error_uri)
-            raise err
-
         if "next" in request.args:
             next_url = request.args["next"]
         elif self.redirect_url:
@@ -210,6 +205,21 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             next_url = url_for(self.redirect_to)
         else:
             next_url = "/"
+
+        # check for error in request args
+        error = request.args.get("error")
+        if error:
+            error_desc = request.args.get("error_description")
+            error_uri = request.args.get("error_uri")
+            log.warning(
+                "OAuth 2 authorization error: %s description: %s uri: %s",
+                error, error_desc, error_uri,
+            )
+            oauth_error.send(self,
+                error=error, error_description=error_desc, error_uri=error_uri,
+            )
+            return redirect(next_url)
+
         state_key = "{bp.name}_oauth_state".format(bp=self)
         self.session._state = flask.session[state_key]
         del flask.session[state_key]

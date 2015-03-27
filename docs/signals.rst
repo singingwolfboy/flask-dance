@@ -49,6 +49,13 @@ The following signals exist in Flask-Dance:
     to authorize your OAuth request, has granted insufficient scopes, or in some
     other way has given you a token that you don't want.
 
+.. data:: oauth_error
+
+    This signal is sent when the OAuth provider indicates that there was an
+    error with the OAuth dance. This can happen if your application is
+    misconfigured somehow. The user will be redirected to the ``redirect_url``
+    anyway, so it is your responsibility to hook into this signal and inform
+    the user that there was an error.
 
 .. _flash a message: http://flask.pocoo.org/docs/latest/patterns/flashing/
 .. _blinker: http://pythonhosted.org/blinker/

@@ -11,7 +11,9 @@ import mock
 import responses
 from urlobject import URLObject
 import flask
-from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
+from flask_dance.consumer import (
+    OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
+)
 from flask_dance.consumer.oauth2 import OAuth2Session
 
 try:
@@ -105,6 +107,25 @@ def test_authorized_url():
             flask.session["test-service_oauth_token"] ==
             {'access_token': 'foobar', 'scope': ['admin'], 'token_type': 'bearer'}
         )
+
+
+@responses.activate
+def test_provider_error():
+    app, _ = make_app()
+    with app.test_client() as client:
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?"
+            "error=invalid_redirect&"
+            "error_description=Invalid+redirect_URI&"
+            "error_uri=https%3a%2f%2fexample.com%2fdocs%2fhelp",
+            base_url="https://a.b.c",
+        )
+        # even though there was an error, we should still redirect the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/"
+        # shouldn't even try getting an access token, though
+        assert len(responses.calls) == 0
 
 
 @responses.activate
@@ -325,6 +346,35 @@ def test_signal_sender_oauth_authorized(request):
         )
 
     assert len(calls) == 1  # unchanged
+
+
+@requires_blinker
+def test_signal_oauth_error(request):
+    app, bp = make_app()
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_error.connect(callback)
+    request.addfinalizer(lambda: oauth_error.disconnect(callback))
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?"
+            "error=unauthorized_client&"
+            "error_description=Invalid+redirect+URI&"
+            "error_uri=https%3a%2f%2fexample.com%2fdocs%2fhelp",
+            base_url="https://a.b.c",
+        )
+
+    assert len(calls) == 1
+    assert calls[0][0] == (bp,)
+    assert calls[0][1] == {
+        "error": "unauthorized_client",
+        "error_description": "Invalid redirect URI",
+        "error_uri": "https://example.com/docs/help",
+    }
 
 
 class CustomOAuth2Session(OAuth2Session):
