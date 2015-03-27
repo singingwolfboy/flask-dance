@@ -78,6 +78,23 @@ def test_login_url():
     assert location.query_dict["scope"] == "admin"
     assert location.query_dict["state"] == "random-string"
 
+
+@responses.activate
+def test_login_url_forwarded_proto():
+    app, _ = make_app()
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service",
+            base_url="http://a.b.c",
+            headers={"X-Forwarded-Proto": "https"},
+            follow_redirects=False,
+        )
+    # check that we redirected the client with a https redirect_uri
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.query_dict["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+
+
 @responses.activate
 def test_authorized_url():
     responses.add(

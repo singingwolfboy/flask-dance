@@ -81,6 +81,27 @@ def test_login_url():
     assert resp.headers["Location"] == "https://example.com/oauth/authorize?oauth_token=foobar"
 
 @responses.activate
+def test_login_url_forwarded_proto():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/request_token",
+        body="oauth_token=foobar&oauth_token_secret=bazqux",
+    )
+    app, _ = make_app()
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service",
+            base_url="http://a.b.c",
+            headers={"X-Forwarded-Proto": "https"},
+            follow_redirects=False,
+        )
+    auth_header = dict(parse_authorization_header(
+        responses.calls[0].request.headers['Authorization'].decode('utf-8')
+    ))
+    # this should be https
+    assert auth_header["oauth_callback"] == quote_plus("https://a.b.c/login/test-service/authorized")
+
+@responses.activate
 def test_authorized_url():
     responses.add(
         responses.POST,
