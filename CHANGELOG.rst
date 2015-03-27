@@ -3,6 +3,8 @@ Change Log
 
 unreleased
 ----------
+* Added documentation about OAuth protocol
+* Added ``reprompt_consent`` parameter to Google pre-set configuration
 * Added ``oauth_error`` signal
 * If there is an error with the OAuth 2 authorization process, Flask-Dance
   will now redirect the user anyway rather than letting the error bubble up
