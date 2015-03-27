@@ -33,7 +33,70 @@ and not some other website trying to intercept the communication.
 
 After the consumer has registered an application with the provider and gotten
 a client secret, the consumer can do the "OAuth dance" to get consent from a
-user to share information with the consumer. The dance has five steps:
+user to share information with the consumer. There are two different versions
+of the dance: OAuth 1, which is the original version; and OAuth 2, the successor
+to OAuth 1 which is more flexible and more widely used today.
+
+OAuth 2
+-------
+
+.. aafig::
+    :proportional:
+
+    +---------+                  +-----------+               +----------+
+    |  Client |                  |  Consumer |               | Provider |
+    +----+----+                  +-----+-----+               +----+-----+
+         | start dance                 |                          |
+         |---------------------------->|                          |
+         | redirect to provider, with  |                          |
+         | secret, scopes, & state     |                          |
+         |<----------------------------|                          |
+         | "follow redirect"           |                          |
+         |------------------------------------------------------->| user
+         |  redirect to consumer, with authorization code & state | grants
+         |<-------------------------------------------------------| consent
+         | "follow redirect"           |                          |
+         |---------------------------->| send secret & auth code  |
+         |                             |------------------------->|
+         |                             | "send access token"      |
+         |                             |<-------------------------|
+
+1.  The client visits the consumer at a special URL, indicating that they
+    want to connect to the provider with OAuth. Typically, there is a button
+    on the consumer's website labelled "Log In with Google" or similar, which
+    takes the user to this special URL.
+
+2.  The consumer decides how much of the user's data they want to access,
+    using specfic keywords called "scopes". The consumer also makes up a random
+    string of letters and numbers, called a "state" token. The consumer crafts
+    a special URL that points to the provider, but has the client secret,
+    the scopes, the state token embedded in it. The consumer asks the client
+    to visit the provider using this special URL.
+
+3.  When the client visits the provider at that URL, the provider notices the
+    client secret, and looks up the consumer that it belongs to.
+    The provider also notices the scopes that the consumer is requesting.
+    The provider displays a page informing the user what information the
+    consumer wants access to -- it may be all of the user's information, or
+    just some of the user's information. The user gets to decide if this is
+    OK or not. If the user decides that this is not OK, the dance is over.
+
+4.  If the user grants consent, the provider makes up a new secret, called
+    the "authorization code". The provider crafts a special URL that points to
+    the consumer, but has the authorization code and the state token
+    embedded in it. The provider asks the client to visit the consumer
+    using this special URL.
+
+5.  When the client visits the consumer at that URL, the consumer first checks
+    the state token to be sure that it hasn't changed, just to verify that
+    no one has tampered with the request. Then, the consumer makes a separate
+    request to the provider, passing along the client secret and the
+    authorization code. If everything looks good to the provider, the provider
+    makes up one final secret, called the "access token", and sends it back
+    to the consumer. This completes the dance.
+
+OAuth 1
+-------
 
 .. aafig::
    :proportional:
@@ -42,14 +105,14 @@ user to share information with the consumer. The dance has five steps:
    |  Client |             |  Consumer |               | Provider |
    +----+----+             +-----+-----+               +----+-----+
         | start dance            |                          |
-        |----------------------->| send secret & state      |
+        |----------------------->| send client secret       |
         |                        |------------------------->|
-        | redirect, with         | send authorization grant |
-        | authorization grant    |<-------------------------|
+        | redirect, with         | send request token       |
+        | request token          |<-------------------------|
         |<-----------------------|                          |
         | "follow redirect"      |                          |
         |-------------------------------------------------->| user
-        |         redirect, with authorization code & state | grants
+        |                 redirect, with authorization code | grants
         |<--------------------------------------------------| consent
         | "follow redirect"      |                          |
         |----------------------->| send secret & auth code  |
@@ -57,36 +120,41 @@ user to share information with the consumer. The dance has five steps:
         |                        | "send access token"      |
         |                        |<-------------------------|
 
-1. The consumer tells the provider that they're about to do the OAuth dance.
-   The consumer gives the provider the client secret, to verify that everything's
-   cool. The consumer also makes up a new secret, called the "state",
-   and passes that to the provider. The provider checks the OAuth secret, and
-   if it looks good, the provider makes up a new secret called an
-   "authorization grant", and gives it to the consumer.
+1.  The client visits the consumer at a special URL, indicating that they
+    want to connect to the provider with OAuth. Typically, there is a button
+    on the consumer's website labelled "Log In with Twitter" or similar, which
+    takes the user to this special URL.
 
-2. The consumer crafts a special URL that points to the provider, but has the
-   authorization grant embedded in the URL. The consumer asks the client
-   to go visit that URL.
+1.  The consumer tells the provider that they're about to do the OAuth dance.
+    The consumer gives the provider the client secret, to verify that
+    everything's cool. The provider checks the OAuth secret, and if it
+    looks good, the provider makes up a new secret called a
+    "request token", and gives it to the consumer.
 
-3. When the client visits the provider at that URL, the provider notices the
-   authorization grant, and looks up the consumer that it belongs to.
-   The provider tells the user that this consumer wants to access some or all
-   of the user's information. The user gets to decide if this is OK or not.
-   If the user decides that this is not OK, the dance is over.
+2.  The consumer crafts a special URL that points to the provider, but has the
+    client secret and request token embedded in it. The consumer asks the client
+    to visit the provider using this special URL.
 
-4. If the user grants consent, the provider makes up another new secret, called
-   the "authorization code". The provider crafts a special URL that points to
-   the consumer, which has two secrets embedded in it: the authorization code
-   (that the provider made up) and the state (that the consumer made up).
-   The provider asks the client to go visit that URL.
+3.  When the client visits the provider at that URL, the provider notices the
+    request token, and looks up the consumer that it belongs to.
+    The provider tells the user that this consumer wants to access some or all
+    of the user's information. The user gets to decide if this is OK or not.
+    If the user decides that this is not OK, the dance is over.
 
-5. When the client visits the consumer at that URL, the consumer notices the
-   two secrets in the URL. As a security measure, the consumer checks the
-   state secret, to be sure it matches what the consumer said it should be.
-   The consumer then sends the authorization code and the client secret back
-   to the provider. If everything looks good to the provider, the provider
-   makes up one final secret, called the "access token", and sends it back
-   to the consumer. This completes the dance.
+4.  If the user grants consent, the provider makes up another new secret, called
+    the "authorization code". The provider crafts a special URL that points to
+    the consumer, but has the authorization code embedded in it.
+    The provider asks the client to go visit the consumer at that special URL.
+
+5.  When the client visits the consumer at that URL, the consumer notices the
+    authorization code. The consumer makes another request to the provider,
+    passing along the client secret and the authorization code.
+    If everything looks good to the provider, the provider makes up one
+    final secret, called the "access token", and sends it back to the consumer.
+    This completes the dance.
+
+Dance Complete
+--------------
 
 Phew, that was complicated! But the end result is, the consumer has an access
 token, which proves that the user has given consent for the provider to give
