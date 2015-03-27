@@ -43,23 +43,23 @@ OAuth 2
 .. aafig::
     :proportional:
 
-    +---------+                  +-----------+               +----------+
-    |  Client |                  |  Consumer |               | Provider |
-    +----+----+                  +-----+-----+               +----+-----+
-         | start dance                 |                          |
-         |---------------------------->|                          |
-         | redirect to provider, with  |                          |
-         | secret, scopes, & state     |                          |
-         |<----------------------------|                          |
-         | "follow redirect"           |                          |
-         |------------------------------------------------------->| user
-         |  redirect to consumer, with authorization code & state | grants
-         |<-------------------------------------------------------| consent
-         | "follow redirect"           |                          |
-         |---------------------------->| send secret & auth code  |
-         |                             |------------------------->|
-         |                             | "send access token"      |
-         |                             |<-------------------------|
+    +---------+                    +-----------+               +----------+
+    |  Client |                    |  Consumer |               | Provider |
+    +----+----+                    +-----+-----+               +----+-----+
+         | start dance                   |                          |
+         |------------------------------>|                          |
+         | "redirect to provider, with"  |                          |
+         | "secret, scopes, & state"     |                          |
+         |<------------------------------|                          |
+         | "follow redirect"             |                          |
+         |--------------------------------------------------------->| user
+         | "redirect to consumer, with authorization code & state"  | grants
+         |<---------------------------------------------------------| consent
+         | "follow redirect"             |                          |
+         |------------------------------>| send secret & auth code  |
+         |                               |------------------------->|
+         |                               | "send access token"      |
+         |                               |<-------------------------|
 
 1.  The client visits the consumer at a special URL, indicating that they
     want to connect to the provider with OAuth. Typically, there is a button
@@ -107,8 +107,8 @@ OAuth 1
         | start dance            |                          |
         |----------------------->| send client secret       |
         |                        |------------------------->|
-        | redirect, with         | send request token       |
-        | request token          |<-------------------------|
+        | "redirect, with"       | send request token       |
+        | "request token"        |<-------------------------|
         |<-----------------------|                          |
         | "follow redirect"      |                          |
         |-------------------------------------------------->| user
