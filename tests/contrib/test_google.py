@@ -99,3 +99,23 @@ def test_offline():
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
+
+
+def test_offline_reprompt():
+    app = Flask(__name__)
+    app.secret_key = "backups"
+    goog_bp = make_google_blueprint(
+        "foo", "bar", offline=True, reprompt_consent=True,
+    )
+    app.register_blueprint(goog_bp)
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/google",
+            base_url="https://a.b.c",
+            follow_redirects=False,
+        )
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.query_dict["access_type"] == "offline"
+    assert location.query_dict["approval_prompt"] == "force"

@@ -13,7 +13,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_google_blueprint(client_id=None, client_secret=None, scope=None,
-                          offline=False,
+                          offline=False, reprompt_consent=False,
                           redirect_url=None, redirect_to=None,
                           login_url=None, authorized_url=None,
                           session_class=None):
@@ -31,6 +31,9 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
         offline (bool): Whether to request `offline access
             <https://developers.google.com/accounts/docs/OAuth2WebServer#offline>`_
             for the OAuth token. Defaults to False
+        reprompt_consent (bool): If True, force Google to re-prompt the user
+            for their consent, even if the user has already given their
+            consent. Defaults to False
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
@@ -51,6 +54,8 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
     authorization_url_params = {}
     if offline:
         authorization_url_params["access_type"] = "offline"
+    if reprompt_consent:
+        authorization_url_params["approval_prompt"] = "force"
     google_bp = OAuth2ConsumerBlueprint("google", __name__,
         client_id=client_id,
         client_secret=client_secret,
