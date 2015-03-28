@@ -39,9 +39,6 @@ class OAuth2Session(BaseOAuth2Session):
             self.blueprint.user_id = user_id
             self.blueprint.load_token()
 
-# backwards compatibility
-OAuth2SessionWithBaseURL = OAuth2Session
-
 
 class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     """
