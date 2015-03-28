@@ -15,11 +15,11 @@ Just the basics:
 
     $ pip install Flask-Dance
 
-Or if you're planning on using the built-in `SQLAlchemy`_ support:
+Or if you're planning on using the `SQLAlchemy`_ token storage backend:
 
 .. code-block:: bash
 
-    $ pip install Flask-Dance[models]
+    $ pip install Flask-Dance[sqla]
 
 Quickstart
 ==========
@@ -76,16 +76,15 @@ Token Storage
 =============
 By default, OAuth access tokens are stored in Flask's session object. This means
 that if the user ever clears their browser cookies, they will have to go through
-the OAuth flow again, which is not good. You're better off storing access tokens
-in a database or some other persistent store. If you're using `SQLAlchemy`_,
-it's easy: just pass your database model and session to the blueprint.
-Flask-Dance even comes with a mixin to help you define your database model,
-and it works with User models, too!
+the OAuth dance again, which is not good. You're better off storing access tokens
+in a database or some other persistent store, and Flask-Dance has support for
+modular token storage backends. For example, if you're using `SQLAlchemy`_,
+just set it up like this:
 
 .. code-block:: python
 
     from flask_sqlalchemy import SQLAlchemy
-    from flask_dance.models import OAuthConsumerMixin
+    from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
 
     db = SQLAlchemy()
 
@@ -98,15 +97,11 @@ and it works with User models, too!
         user = db.relationship(User)
 
     # get_current_user() is a function that returns the current logged in user
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=get_current_user)
+    storage = SQLAlchemyStorage(blueprint, OAuth, db.session, user=get_current_user)
+    blueprint.token_storage = storage
 
-Flask-Dance can seamlessly integrate with `Flask-SQLAlchemy`_ for database
-integration, `Flask-Login`_ for user management, and `Flask-Cache`_ for caching.
-However, none of these other extensions are required. You don't even have to
-use `SQLAlchemy`_ at all; if you'd prefer to use a different storage system,
-writing a custom integration is easy. `See the documentation for how to
-use other token storage systems.
-<http://flask-dance.readthedocs.org/en/latest/token-storage.html#custom-storage>`_
+The SQLAlchemy backend seamlessly integrates with `Flask-SQLAlchemy`_,
+as well as `Flask-Login`_ for user management, and `Flask-Cache`_ for caching.
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/

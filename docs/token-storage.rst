@@ -1,36 +1,48 @@
-.. module:: flask_dance.consumer
+.. module:: flask_dance.consumer.storage
 
-Token Storage
-=============
-By default, OAuth access tokens are stored in the
-:ref:`Flask session <flask:sessions>`. This means that if the user ever
-clears their browser cookies, they will have to go through the OAuth flow again,
-which is not good. You're better off storing access tokens
-in a database or some other persistent store.
+Token Storage Backends
+======================
+A Flask-Dance blueprint has a "storage backend" associated with it, which is
+simply an object that knows how to store and retrieve OAuth tokens. The storage
+backend can access the blueprint, so that it can use the request context
+(logged in user, etc) to determine *which* token needs to be retrieved.
+The default storage backend uses the :ref:`Flask session <flask:sessions>`,
+which is simple and requires no configuration. However, when the user closes
+their browser, the OAuth token will be lost, so its not a good choice for
+production usage. Fortunately, Flask-Dance comes with some other options for
+storage backends.
 
+.. _sqlalchemy-token-storage-backend:
 
 SQLAlchemy
 ----------
 
-.. versionadded:: 0.2
-
-If you're using `SQLAlchemy`_, you've got a leg up: Flask-Dance has built-in
-support for this common use case. First, define your model with a ``token``
+SQLAlchemy is the "standard" database for Flask applications, and Flask-Dance
+has great support for it. First, define your database model with a ``token``
 column and a ``provider`` column. Flask-Dance includes a
-:class:`~flask_dance.models.OAuthConsumerMixin` class to make this easier::
+:class:`~flask_dance.consumer.storage.sqla.OAuthConsumerMixin` class to make this easier::
 
     from flask_sqlalchemy import SQLAlchemy
-    from flask_dance.models import OAuthConsumerMixin
+    from flask_dance.consumer.storage.sqla import OAuthConsumerMixin
 
     db = SQLAlchemy()
     class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
-If you have a User model in your application, you can also set up a
-:class:`~sqlalchemy.schema.ForeignKey` to your User model::
+Next, create an instance of the SQLAlchemy token storage backend and assign
+it to your blueprint::
+
+    from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
+
+    storage = SQLAlchemyStorage(blueprint, OAuth, db.session)
+    blueprint.token_storage = storage
+
+And that's all you need -- if you don't have user accounts in your application.
+If you do, it's slightly more complicated::
 
     from flask_sqlalchemy import SQLAlchemy
-    from flask_dance.models import OAuthConsumerMixin
+    from flask_login import current_user
+    from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
 
     db = SQLAlchemy()
 
@@ -42,67 +54,68 @@ If you have a User model in your application, you can also set up a
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-Then just pass your OAuth model and your SQLAlchemy session to your blueprint
-using the :meth:`~OAuth2ConsumerBlueprint.set_token_storage_sqlalchemy` method::
+    storage = SQLAlchemyStorage(blueprint, OAuth, db.session, user=current_user)
+    blueprint.token_storage = storage
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
+There are two things to notice here. One, the model that you use for storing
+OAuth tokens must have a `user` relationship to the user that it is associated
+with. Two, you must pass a reference to the currently logged-in user (if any)
+to :class:`~flask_dance.consumer.storage.sqla.SQLAlchemyStorage`.
+If you're using `Flask-Login`_, the :attr:`current_user` proxy works great,
+but you could instead pass a function that returns the current
+user, if you want.
 
-Or if you're using a User model, pass along a reference to the current user so
-that Flask-Dance can associate users with OAuth tokens. `Flask-Login`_ provides
-a ``current_user`` proxy that should work great::
+You also probably want to use a caching system for your database, so that it
+is more performant under heavy load. The SQLAlchemy token storage backend
+also integrates with `Flask-Cache`_ if you just pass an Flask-Cache instance
+to the backend, like this::
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user)
-
-And you should be all set! However, it's also highly recommended that you use
-some kind of caching system, to prevent unnecessary load on your database.
-Since Flask-Dance will automatically load the user's OAuth token at the start
-of every request, and since those tokens rarely change, they are prime
-candidates to be cached. Fortunately, Flask-Dance also integrates with
-`Flask-Cache`_, which makes caching OAuth tokens trivial. Just pass the
-``cache`` object along to the
-:meth:`~OAuth2ConsumerBlueprint.set_token_storage_sqlalchemy` method, as well::
-
+    from flask import Flask
     from flask_cache import Cache
+
+    app = Flask(__name__)
     cache = Cache(app)
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, cache=cache)
+    # setup Flask-Dance with SQLAlchemy models...
 
-And of course, it can also be combined with a User model::
+    storage = SQLAlchemyStorage(blueprint, OAuth, db.session, cache=cache)
+    blueprint.token_storage = storage
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user, cache=cache)
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-Login: https://flask-login.readthedocs.org/
 .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
 
-Custom Storage
---------------
+Custom
+------
 Of course, you don't have to use `SQLAlchemy`_, you're free to use whatever
-storage system you want. To use something else, just write custom
-get, set, and delete functions, and attach them to the Blueprint object using the
-:obj:`~OAuth2ConsumerBlueprint.token_getter`,
-:obj:`~OAuth2ConsumerBlueprint.token_setter`, and
-:obj:`~OAuth2ConsumerBlueprint.token_deleter` decorators::
+storage system you want. Writing a custom token storage backend is easy:
+just subclass :class:`flask_dance.consumer.storage.BaseTokenStorage` and
+override the `get`, `set`, and `delete` methods. For example, here's a
+backend that uses a file on disk::
 
-    @blueprint.token_getter
-    def get_token():
-        user = get_current_user()
-        return user.token
+    import os
+    import os.path
+    import json
+    from flask_dance.consumer.storage import BaseTokenStorage
 
-    @blueprint.token_setter
-    def set_token(token):
-        user = get_current_user()
-        user.token = token
-        user.save()
+    class FileStorage(BaseTokenStorage):
+        def __init__(self, blueprint, filepath):
+            super(FileStorage, self).__init__(blueprint)
+            self.filepath = filepath
 
-    @blueprint.token_deleter
-    def delete_token():
-        user = get_current_user()
-        del user.token
-        user.save()
+        def get(self):
+            if not os.path.exists(self.filepath):
+                return None
+            with open(self.filepath) as f:
+                return json.load(f)
 
-Once you set those three functions, you'll be able to forget about them and just
-reference :data:`~OAuth2ConsumerBlueprint.token`: the functions will be called
-automatically as needed. Note that Flask-Dance does *not* handle caching
-automatically, so you should integrating caching into your custom storage
-functions! `Flask-Cache`_ is very useful for that.
+        def set(self, token):
+            with open(self.filepath, "w") as f:
+                json.dump(f)
+
+        def delete(self):
+            os.remove(self.filepath)
+
+Then, just create an instance of your storage system and assign it to the
+:attr:`token_storage` attribute of your blueprint, and Flask-Dance will use it.

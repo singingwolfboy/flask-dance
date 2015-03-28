@@ -21,13 +21,14 @@ of the user.
       automatically loads credentials for the OAuth provider (if the user has
       already gone through the OAuth dance).
 
-   .. automethod:: token_getter
-   .. automethod:: token_setter
-   .. automethod:: token_deleter
-   .. autoattribute:: token
+   .. attribute:: token_storage
 
-   .. automethod:: set_token_storage_session
-   .. automethod:: set_token_storage_sqlalchemy
+      The :doc:`token storage backend <token-storage>` that this blueprint
+      uses.
+
+   .. attribute:: token
+
+      A dynamic reference to the stored OAuth token.
 
 .. autoclass:: OAuth2ConsumerBlueprint(...)
 
@@ -39,17 +40,24 @@ of the user.
       automatically loads credentials for the OAuth provider (if the user has
       already gone through the OAuth dance).
 
-   .. automethod:: token_getter
-   .. automethod:: token_setter
-   .. automethod:: token_deleter
-   .. autoattribute:: token
+   .. attribute:: token_storage
 
-   .. automethod:: set_token_storage_session
-   .. automethod:: set_token_storage_sqlalchemy
+      The :doc:`token storage backend <token-storage>` that this blueprint
+      uses.
 
-Models
-------
+   .. attribute:: token
 
-.. currentmodule:: flask_dance.models
+      A dynamic reference to the stored OAuth token.
 
-.. autoclass:: OAuthConsumerMixin
+Storage Backends
+----------------
+
+.. autoclass:: flask_dance.consumer.storage.session.SessionStorage(...)
+   :members:
+   :special-members:
+
+
+.. autoclass:: flask_dance.consumer.storage.sqla.SQLAlchemyStorage(...)
+   :members:
+   :special-members:
+

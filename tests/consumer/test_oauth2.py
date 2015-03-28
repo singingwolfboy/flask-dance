@@ -14,7 +14,7 @@ import flask
 from flask_dance.consumer import (
     OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
 )
-from flask_dance.consumer.oauth2 import OAuth2Session
+from flask_dance.consumer.requests import OAuth2Session
 
 try:
     import blinker
@@ -257,7 +257,6 @@ def test_redirect_fallback():
 @requires_blinker
 def test_signal_oauth_authorized(request):
     app, bp = make_app()
-    bp.session.fetch_token = mock.Mock(return_value="test-token")
 
     calls = []
     def callback(*args, **kwargs):
@@ -270,6 +269,7 @@ def test_signal_oauth_authorized(request):
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
+        bp.session.fetch_token = mock.Mock(return_value="test-token")
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
         )
@@ -284,7 +284,6 @@ def test_signal_oauth_authorized(request):
 @requires_blinker
 def test_signal_oauth_authorized_abort(request):
     app, bp = make_app()
-    bp.session.fetch_token = mock.Mock(return_value="test-token")
 
     calls = []
     def callback(*args, **kwargs):
@@ -297,6 +296,8 @@ def test_signal_oauth_authorized_abort(request):
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
+
+        bp.session.fetch_token = mock.Mock(return_value="test-token")
 
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -311,7 +312,6 @@ def test_signal_oauth_authorized_abort(request):
 @requires_blinker
 def test_signal_sender_oauth_authorized(request):
     app, bp = make_app()
-    bp.session.fetch_token = mock.Mock(return_value="test-token")
     bp2 = OAuth2ConsumerBlueprint("test2", __name__,
         client_id="client_id",
         client_secret="client_secret",
@@ -322,7 +322,6 @@ def test_signal_sender_oauth_authorized(request):
         token_url="https://example.com/oauth/access_token",
         redirect_to="index",
     )
-    bp2.session.fetch_token = mock.Mock(return_value="test2-token")
     app.register_blueprint(bp2, url_prefix="/login")
 
     calls = []
@@ -336,6 +335,9 @@ def test_signal_sender_oauth_authorized(request):
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
+        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp2.session.fetch_token = mock.Mock(return_value="test2-token")
+
         resp = client.get(
             "/login/test2/authorized?code=secret-code&state=random-string",
         )
@@ -345,6 +347,9 @@ def test_signal_sender_oauth_authorized(request):
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
+
+        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp2.session.fetch_token = mock.Mock(return_value="test2-token")
 
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -357,6 +362,9 @@ def test_signal_sender_oauth_authorized(request):
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
+
+        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp2.session.fetch_token = mock.Mock(return_value="test2-token")
 
         resp = client.get(
             "/login/test2/authorized?code=secret-code&state=random-string",
