@@ -8,3 +8,4 @@ Contents:
 
    github
    google
+   sqla-multiuser
