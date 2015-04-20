@@ -3,7 +3,7 @@ SQLAlchemy Multi-User Quickstart
 
 This quickstart will help you get started with a multi-user application where
 OAuth tokens are stored using the
-:ref:`SQLAlchemy backend <sqlalchemy-token-storage-backend>`. You should already
+:ref:`SQLAlchemy backend <sqlalchemy-backend>`. You should already
 be familiar with setting up a single-use Flask-Dance application -- you can
 consult some of the other quickstarts for that.
 
@@ -19,7 +19,7 @@ Create a file called ``multi.py`` with the following contents:
     from flask_sqlalchemy import SQLAlchemy
     from sqlalchemy.orm.exc import NoResultFound
     from flask_dance.contrib.github import make_github_blueprint, github
-    from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
+    from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
     from flask_dance.consumer import oauth_authorized, oauth_error
     from flask_login import (
         LoginManager, UserMixin, current_user,
@@ -56,9 +56,8 @@ Create a file called ``multi.py`` with the following contents:
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    # setup token storage backend
-    storage = SQLAlchemyStorage(blueprint, OAuth, db.session, user=current_user)
-    blueprint.token_storage = storage
+    # setup SQLAlchemy backend
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
     # create/login local user on successful OAuth login
     @oauth_authorized.connect_via(blueprint)
@@ -115,9 +114,10 @@ Create a file called ``multi.py`` with the following contents:
 
     if __name__ == "__main__":
         if "--setup" in sys.argv:
-            db.create_all()
-            db.session.commit()
-            print("Database tables created")
+            with app.app_context():
+                db.create_all()
+                db.session.commit()
+                print("Database tables created")
         else:
             app.run(debug=True)
 
@@ -220,12 +220,11 @@ try to access views that are login-protected.
 
 .. code-block:: python
 
-    # setup token storage backend
-    storage = SQLAlchemyStorage(blueprint, OAuth, db.session, user=current_user)
-    blueprint.token_storage = storage
+    # setup SQLAlchemy backend
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
 This code hooks up the
-:class:`~flask_dance.consumer.storage.sqla.SQLAlchemyStorage` backend
+:class:`~flask_dance.consumer.backend.sqla.SQLAlchemyBackend` backend
 to Flask-Dance, so that it can store OAuth tokens in the database.
 Notice that we also pass ``user=current_user``, where :attr:`current_user`
 is a proxy provided by `Flask-Login`_. This will ensure that OAuth tokens
@@ -324,9 +323,10 @@ they've been fully configured. This is called the
 
     if __name__ == "__main__":
         if "--setup" in sys.argv:
-            db.create_all()
-            db.session.commit()
-            print("Database tables created")
+            with app.app_context():
+                db.create_all()
+                db.session.commit()
+                print("Database tables created")
         else:
             app.run(debug=True)
 

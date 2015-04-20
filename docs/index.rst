@@ -1,8 +1,3 @@
-.. Flask-Dance documentation master file, created by
-   sphinx-quickstart on Sat Sep 27 09:47:52 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Flask-Dance
 ===========
 
@@ -14,17 +9,20 @@ easily support OAuth providers in the future, as well.
 .. _requests: http://python-requests.org/
 .. _oauthlib: https://oauthlib.readthedocs.org/
 
-Contents:
+User Guide:
 
 .. toctree::
    :maxdepth: 2
 
-   how-oauth-works
    quickstarts/index
-   contrib
-   consumers
-   token-storage
+   providers
+   backends
    signals
+
+Advanced Topics:
+
+.. toctree::
+   how-oauth-works
    api
 
 

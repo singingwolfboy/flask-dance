@@ -1,6 +1,9 @@
 How OAuth Works
 ===============
 
+Definitions
+-----------
+
 OAuth uses a series of specially-crafted HTTP views and redirects to allow
 websites to share information with each other securely, and with the user's
 consent [#oauth-user]_. There are four roles in an OAuth interaction:
