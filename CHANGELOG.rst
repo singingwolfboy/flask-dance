@@ -1,9 +1,15 @@
 Change Log
 ==========
 
-unreleased
-----------
+0.5.0 (2015-04-20)
+------------------
 * Redesigned token storage backend system: it now uses objects
+
+.. warning::
+   This release is not backwards-compatible, due to the changes to how backends
+   work. If you are using the SQLAlchemy backend, read the documentation to see
+   how it works now!
+
 * Added documentation about OAuth protocol
 * Added quickstarts for Google, and for a multi-user SQLAlchemy system
 * Added ``reprompt_consent`` parameter to Google pre-set configuration
