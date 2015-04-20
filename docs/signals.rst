@@ -18,9 +18,7 @@ The following signals exist in Flask-Dance:
 .. data:: oauth_authorized
 
     This signal is sent when a user completes the OAuth dance by receiving a
-    response from the OAuth provider's authorize URL. This signal is sent
-    regardless of whether the authorization was successful: the user may
-    have declined the authorization request, for example. The signal is invoked
+    response from the OAuth provider's authorize URL. The signal is invoked
     with the blueprint instance as the first argument (the *sender*), and with
     a dict of the OAuth provider's response (the *token*).
 
@@ -31,13 +29,9 @@ The following signals exist in Flask-Dance:
 
         @oauth_authorized.connect
         def logged_in(blueprint, token):
-            if "error" in token:
-                flash("You denied the request to sign in. Please try again.")
-                del blueprint.token
-            else:
-                flash("Signed in successfully with {name}!".format(
-                    name=blueprint.name.capitalize()
-                ))
+            flash("Signed in successfully with {name}!".format(
+                name=blueprint.name.capitalize()
+            ))
 
     If you're using OAuth 2, the user may grant you different scopes from the
     ones you requested: check the ``scope`` key in the *token* dict to
