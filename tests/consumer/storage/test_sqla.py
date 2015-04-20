@@ -1,5 +1,7 @@
-import os
 import pytest
+sa = pytest.importorskip("sqlalchemy")
+
+import os
 import responses
 import flask
 from lazy import lazy
