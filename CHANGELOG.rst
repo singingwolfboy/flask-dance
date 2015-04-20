@@ -3,6 +3,7 @@ Change Log
 
 unreleased
 ----------
+* Redesigned token storage backend system: it now uses objects
 * Added documentation about OAuth protocol
 * Added quickstarts for Google, and for a multi-user SQLAlchemy system
 * Added ``reprompt_consent`` parameter to Google pre-set configuration

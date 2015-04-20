@@ -12,11 +12,11 @@ except ImportError:
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
-def make_google_blueprint(client_id=None, client_secret=None, scope=None,
-                          offline=False, reprompt_consent=False,
-                          redirect_url=None, redirect_to=None,
-                          login_url=None, authorized_url=None,
-                          session_class=None):
+def make_google_blueprint(
+        client_id=None, client_secret=None, scope=None,
+        offline=False, reprompt_consent=False,
+        redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
+        session_class=None, backend=None):
     """
     Make a blueprint for authenticating with Google using OAuth 2. This requires
     a client ID and client secret from Google. You should either pass them to
@@ -46,6 +46,9 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.oauth2.OAuth2Session`.
+        backend: A storage backend class, or an instance of a storage
+                backend class, to use for this blueprint. Defaults to
+                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -69,6 +72,7 @@ def make_google_blueprint(client_id=None, client_secret=None, scope=None,
         authorized_url=authorized_url,
         authorization_url_params=authorization_url_params,
         session_class=session_class,
+        backend=backend,
     )
     google_bp.from_config["client_id"] = "GOOGLE_OAUTH_CLIENT_ID"
     google_bp.from_config["client_secret"] = "GOOGLE_OAUTH_CLIENT_SECRET"

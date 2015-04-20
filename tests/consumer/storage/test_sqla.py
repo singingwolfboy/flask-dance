@@ -1,14 +1,17 @@
-import os
 import pytest
+sa = pytest.importorskip("sqlalchemy")
+
+import os
 import responses
 import flask
+from lazy import lazy
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.orm.exc import NoResultFound
 from flask_cache import Cache
-from flask_login import LoginManager, UserMixin, current_user, login_user
+from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
-from flask_dance.models import OAuthConsumerMixin
+from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
 try:
     import blinker
 except ImportError:
@@ -80,12 +83,12 @@ class record_queries(object):
         event.remove(self.target, self.identifier, self.record_query)
 
 
-def test_model(app, db, blueprint, request):
+def test_sqla_backend_without_user(app, db, blueprint, request):
 
     class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
 
     db.create_all()
     def done():
@@ -122,7 +125,7 @@ def test_model(app, db, blueprint, request):
     }
 
 
-def test_model_repr(app, db, request):
+def test_sqla_model_repr(app, db, request):
     class MyAwesomeOAuth(db.Model, OAuthConsumerMixin):
         pass
 
@@ -145,7 +148,7 @@ def test_model_repr(app, db, request):
     assert "secret" not in repr(o)
 
 
-def test_model_with_user(app, db, blueprint, request):
+def test_sqla_backend(app, db, blueprint, request):
 
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -165,8 +168,10 @@ def test_model_with_user(app, db, blueprint, request):
     alice = User(name="Alice")
     db.session.add(alice)
     db.session.commit()
+    # load alice's ID -- this issues a database query
+    alice.id
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=alice)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=alice)
 
     with record_queries(db.engine) as queries:
         with app.test_client() as client:
@@ -199,7 +204,7 @@ def test_model_with_user(app, db, blueprint, request):
     }
 
 
-def test_load_token_for_user(app, db, blueprint, request):
+def test_sqla_load_token_for_user(app, db, blueprint, request):
 
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -216,7 +221,7 @@ def test_load_token_for_user(app, db, blueprint, request):
     request.addfinalizer(done)
 
     # set token storage
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
 
     # make users and OAuth tokens for several people
     alice = User(name="Alice")
@@ -234,25 +239,42 @@ def test_load_token_for_user(app, db, blueprint, request):
     # by default, we should not have a token for anyone
     sess = blueprint.session
     assert not sess.token
+    assert not blueprint.token
 
     # load token for various users
-    sess.load_token(alice)
+    blueprint.config["user"] = alice
     assert sess.token == alice_token
+    assert blueprint.token == alice_token
 
-    sess.load_token(bob)
+    blueprint.config["user"] = bob
     assert sess.token == bob_token
+    assert blueprint.token == bob_token
 
-    sess.load_token(alice)
+    blueprint.config["user"] = alice
     assert sess.token == alice_token
+    assert blueprint.token == alice_token
 
-    sess.load_token(sue)
+    blueprint.config["user"] = sue
     assert sess.token == sue_token
+    assert blueprint.token == sue_token
 
     # load for user ID as well
-    sess.load_token(user_id=bob.id)
+    del blueprint.config["user"]
+    blueprint.config["user_id"] = bob.id
     assert sess.token == bob_token
+    assert blueprint.token == bob_token
 
-def test_model_set_token_with_flask_login(app, db, blueprint, request):
+    # try deleting user tokens
+    del blueprint.token
+    assert sess.token == None
+    assert blueprint.token == None
+
+    # shouldn't affect alice's token
+    blueprint.config["user_id"] = alice.id
+    assert sess.token == alice_token
+    assert blueprint.token == alice_token
+
+def test_sqla_flask_login(app, db, blueprint, request):
     login_manager = LoginManager(app)
 
     class User(db.Model, UserMixin):
@@ -263,7 +285,7 @@ def test_model_set_token_with_flask_login(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
     db.create_all()
     def done():
@@ -299,7 +321,7 @@ def test_model_set_token_with_flask_login(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 4
+    assert len(queries) == 5
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
     responses.reset()
@@ -324,7 +346,7 @@ def test_model_set_token_with_flask_login(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 4
+    assert len(queries) == 5
 
     # check the database
     authorizations = OAuth.query.all()
@@ -348,7 +370,7 @@ def test_model_set_token_with_flask_login(app, db, blueprint, request):
 
 
 @requires_blinker
-def test_model_set_token_with_flask_login_anon_to_authed(app, db, blueprint, request):
+def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
     login_manager = LoginManager(app)
 
     class User(db.Model, UserMixin):
@@ -359,7 +381,7 @@ def test_model_set_token_with_flask_login_anon_to_authed(app, db, blueprint, req
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
     db.create_all()
     def done():
@@ -406,7 +428,7 @@ def test_model_set_token_with_flask_login_anon_to_authed(app, db, blueprint, req
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # check the database
     users = User.query.all()
@@ -426,7 +448,13 @@ def test_model_set_token_with_flask_login_anon_to_authed(app, db, blueprint, req
     assert oauth.user_id == user.id
 
 
-def test_model_get_token_with_flask_login(app, db, blueprint, request):
+def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
+    # need a URL to hit, so that tokens will be loaded, but result is irrelevant
+    responses.add(
+        responses.GET,
+        "https://example.com/noop",
+    )
+
     login_manager = LoginManager(app)
 
     class User(db.Model, UserMixin):
@@ -437,7 +465,7 @@ def test_model_get_token_with_flask_login(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, user=current_user)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
     db.create_all()
     def done():
@@ -468,41 +496,75 @@ def test_model_get_token_with_flask_login(app, db, blueprint, request):
         return "success"
 
     with app.test_request_context("/"):
-        # set alice as the logged in user
-        flask.session["user_id"] = alice.id
-        # run `before_request` functions, including loading tokens
-        app.preprocess_request()
+        login_user(alice)
+        # hit /noop to load tokens
+        blueprint.session.get("/noop")
         # now the flask-dance session should have Alice's token loaded
         assert blueprint.session.token == alice_token
 
     with app.test_request_context("/"):
         # set bob as the logged in user
-        flask.session["user_id"] = bob.id
-        # run `before_request` functions, including loading tokens
-        app.preprocess_request()
+        login_user(bob)
+        # hit /noop to load tokens
+        blueprint.session.get("/noop")
         # now the flask-dance session should have Bob's token loaded
         assert blueprint.session.token == bob_token
 
     with app.test_request_context("/"):
         # now let's try chuck
-        flask.session["user_id"] = chuck.id
-        app.preprocess_request()
+        login_user(chuck)
+        blueprint.session.get("/noop")
         assert blueprint.session.token == None
 
     with app.test_request_context("/"):
         # no one is logged in -- this is an anonymous user
-        if "user_id" in flask.session:
-            del flask.session["user_id"]
-        app.preprocess_request()
+        logout_user()
+        blueprint.session.get("/noop")
         assert blueprint.session.token == None
 
 
-def test_model_repeated_token(app, db, blueprint, request):
+def test_sqla_delete_token(app, db, blueprint, request):
 
     class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    # Create an existing OAuth token for the service
+    existing = OAuth(
+        provider="test-service",
+        token={
+            "access_token": "something",
+            "token_type": "bearer",
+            "scope": ["blah"],
+        },
+    )
+    db.session.add(existing)
+    db.session.commit()
+    assert len(OAuth.query.all()) == 1
+
+    assert blueprint.token == {
+        "access_token": "something",
+        "token_type": "bearer",
+        "scope": ["blah"],
+    }
+    del blueprint.token
+    assert blueprint.token == None
+    assert len(OAuth.query.all()) == 0
+
+
+def test_sqla_overwrite_token(app, db, blueprint, request):
+
+    class OAuth(db.Model, OAuthConsumerMixin):
+        pass
+
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
 
     db.create_all()
     def done():
@@ -552,13 +614,13 @@ def test_model_repeated_token(app, db, blueprint, request):
     }
 
 
-def test_model_with_cache(app, db, blueprint, request):
+def test_sqla_cache(app, db, blueprint, request):
     cache = Cache(app)
 
     class OAuth(db.Model, OAuthConsumerMixin):
         pass
 
-    blueprint.set_token_storage_sqlalchemy(OAuth, db.session, cache=cache)
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, cache=cache)
 
     db.create_all()
     def done():
@@ -610,7 +672,4 @@ def test_model_with_cache(app, db, blueprint, request):
     # subsequent references should not generate SQL queries
     with record_queries(db.engine) as queries:
         assert blueprint.token == expected_token
-    assert len(queries) == 0
-    with record_queries(db.engine) as queries:
-        assert blueprint.get_token() == expected_token
     assert len(queries) == 0

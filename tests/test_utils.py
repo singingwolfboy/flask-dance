@@ -1,5 +1,5 @@
 import pytest
-from flask_dance.utils import proxy_property, FakeCache, first, getattrd
+from flask_dance.utils import FakeCache, first, getattrd
 
 def test_first():
     assert first([1, 2, 3]) == 1

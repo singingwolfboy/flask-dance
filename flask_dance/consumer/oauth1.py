@@ -1,41 +1,13 @@
 from __future__ import unicode_literals, print_function
 
-import sys
+from lazy import lazy
 from flask import request, url_for, redirect
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
 from .base import BaseOAuthConsumerBlueprint, oauth_authorized
-
-
-class OAuth1Session(BaseOAuth1Session):
-    """
-    A :class:`requests.Session` subclass that can do some special things:
-
-    * handles OAuth1 authentication
-      (from :class:`requests_oauthlib.OAuth1Session` superclass)
-    * has a ``base_url`` property used for relative URL resolution
-    * proxies ``load_token`` requests along to the blueprint
-    """
-    def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
-        super(OAuth1Session, self).__init__(*args, **kwargs)
-        self.blueprint = blueprint
-        self.base_url = URLObject(base_url)
-
-    def prepare_request(self, request):
-        if self.base_url:
-            request.url = self.base_url.relative(request.url)
-        return super(OAuth1Session, self).prepare_request(request)
-
-    def load_token(self, user=None, user_id=None):
-        if self.blueprint:
-            self.blueprint.user = user
-            self.blueprint.user_id = user_id
-            self.blueprint.load_token()
-
-# backwards compatibility
-OAuth1SessionWithBaseURL = OAuth1Session
+from .requests import OAuth1Session
 
 
 class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
@@ -63,6 +35,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             redirect_url=None,
             redirect_to=None,
             session_class=None,
+            backend=None,
 
             **kwargs):
         """
@@ -71,53 +44,52 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         :class:`requests_oauthlib.OAuth1Session` construtor, including
         ``**kwargs`` (which is forwarded to
         :class:`~requests_oauthlib.OAuth1Session`).
-        The only arguments that are specific to this class are
-        ``base_url``,
-        ``request_token_url``, ``authorization_url``, ``access_token_url``,
-        ``login_url``, ``authorized_url``,
-        ``redirect_url``, ``redirect_to``, and ``session_class``.
+        Only the arguments that are relevant to Flask-Dance are documented here.
 
         Args:
-            base_url (str, optional): The base URL of the OAuth provider.
+            base_url: The base URL of the OAuth provider.
                 If specified, all URLs passed to this instance will be
                 resolved relative to this URL.
-            request_token_url (str): The URL specified by the OAuth provider for
+            request_token_url: The URL specified by the OAuth provider for
                 obtaining a
                 `request token <http://oauth.net/core/1.0a/#auth_step1>`_.
                 This can be an fully-qualified URL, or a path that is
                 resolved relative to the ``base_url``.
-            authorization_url (str): The URL specified by the OAuth provider for
+            authorization_url: The URL specified by the OAuth provider for
                 the user to
                 `grant token authorization <http://oauth.net/core/1.0a/#auth_step2>`_.
                 This can be an fully-qualified URL, or a path that is
                 resolved relative to the ``base_url``.
-            access_token_url (str): The URL specified by the OAuth provider for
+            access_token_url: The URL specified by the OAuth provider for
                 obtaining an
                 `access token <http://oauth.net/core/1.0a/#auth_step3>`_.
                 This can be an fully-qualified URL, or a path that is
                 resolved relative to the ``base_url``.
-            login_url (str, optional): The URL route for the ``login`` view that kicks off
+            login_url: The URL route for the ``login`` view that kicks off
                 the OAuth dance. This string will be
                 :ref:`formatted <python:formatstrings>`
                 with the instance so that attributes can be interpolated.
                 Defaults to ``/{bp.name}``, so that the URL is based on the name
                 of the blueprint.
-            authorized_url (str, optional): The URL route for the ``authorized`` view that
+            authorized_url: The URL route for the ``authorized`` view that
                 completes the OAuth dance. This string will be
                 :ref:`formatted <python:formatstrings>`
                 with the instance so that attributes can be interpolated.
                 Defaults to ``/{bp.name}/authorized``, so that the URL is
                 based on the name of the blueprint.
-            redirect_url (str, optional): When the OAuth dance is complete,
+            redirect_url: When the OAuth dance is complete,
                 redirect the user to this URL.
-            redirect_to (str, optional): When the OAuth dance is complete,
+            redirect_to: When the OAuth dance is complete,
                 redirect the user to the URL obtained by calling
                 :func:`~flask.url_for` with this argument. If you do not specify
                 either ``redirect_url`` or ``redirect_to``, the user will be
                 redirected to the root path (``/``).
-            session_class (class, optional): The class to use for creating a
+            session_class: The class to use for creating a
                 Requests session. Defaults to
                 :class:`~flask_dance.consumer.oauth1.OAuth1Session`.
+            backend: A storage backend class, or an instance of a storage
+                backend class, to use for this blueprint. Defaults to
+                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
@@ -128,51 +100,48 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             url_defaults=url_defaults, root_path=root_path,
             login_url=login_url,
             authorized_url=authorized_url,
+            backend=backend,
         )
 
-        session_class = session_class or OAuth1Session
-        self.session = session_class(
-            client_key=client_key,
-            client_secret=client_secret,
-            signature_method=signature_method,
-            signature_type=signature_type,
-            rsa_key=rsa_key,
-            client_class=client_class,
-            force_include_body=force_include_body,
-            blueprint=self,
-            base_url=base_url,
-            **kwargs
-        )
+        self.base_url = base_url
+        self.session_class = session_class or OAuth1Session
 
+        # passed to OAuth1Session()
+        self.client_key = client_key
+        self.client_secret = client_secret
+        self.signature_method = signature_method
+        self.signature_type = signature_type
+        self.rsa_key = rsa_key
+        self.client_class = client_class
+        self.force_include_body = force_include_body
+        self.kwargs = kwargs
+
+        # used by view functions
         self.request_token_url = request_token_url
         self.authorization_url = authorization_url
         self.access_token_url = access_token_url
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
 
-    @property
-    def client_key(self):
-        return self.session._client.client.client_key
+        self.teardown_app_request(self.teardown_session)
 
-    @client_key.setter
-    def client_key(self, value):
-        self.session._client.client.client_key = to_unicode(value)
+    @lazy
+    def session(self):
+        return self.session_class(
+            client_key=self.client_key,
+            client_secret=self.client_secret,
+            signature_method=self.signature_method,
+            signature_type=self.signature_type,
+            rsa_key=self.rsa_key,
+            client_class=self.client_class,
+            force_include_body=self.force_include_body,
+            blueprint=self,
+            base_url=self.base_url,
+            **self.kwargs
+        )
 
-    @property
-    def client_secret(self):
-        return self.session._client.client.client_secret
-
-    @client_secret.setter
-    def client_secret(self, value):
-        self.session._client.client.client_secret = to_unicode(value)
-
-    @property
-    def rsa_key(self):
-        return self.session._client.client.rsa_key
-
-    @rsa_key.setter
-    def rsa_key(self, value):
-        self.session._client.client.rsa_key = to_unicode(value)
+    def teardown_session(self, exception=None):
+        lazy.invalidate(self, "session")
 
     def login(self):
         secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https"
@@ -200,14 +169,3 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         if not any(ret == False for func, ret in results):
             self.token = token
         return redirect(next_url)
-
-    def load_token(self):
-        token = self.token
-        if token and "oauth_token" in token and "oauth_token_secret" in token:
-            # This really, really violates the Law of Demeter, but
-            # I don't see a better way to set these parameters. :(
-            self.session.auth.client.resource_owner_key = to_unicode(token["oauth_token"])
-            self.session.auth.client.resource_owner_secret = to_unicode(token["oauth_token_secret"])
-        else:
-            self.session.auth.client.resource_owner_key = None
-            self.session.auth.client.resource_owner_secret = None

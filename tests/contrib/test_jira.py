@@ -74,12 +74,10 @@ def test_context_local():
     app1 = Flask(__name__)
     jbp1 = make_jira_blueprint("https://t1.atlassian.com", "foo1", "bar1", redirect_to="url1")
     app1.register_blueprint(jbp1)
-    jbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
 
     app2 = Flask(__name__)
     jbp2 = make_jira_blueprint("https://t2.atlassian.com", "foo2", "bar2", redirect_to="url2")
     app2.register_blueprint(jbp2)
-    jbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
 
 
     # outside of a request context, referencing functions on the `jira` object
@@ -90,6 +88,9 @@ def test_context_local():
     # inside of a request context, `jira` should be a proxy to the correct
     # blueprint session
     with app1.test_request_context("/"):
+        jbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
+        jbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
+
         app1.preprocess_request()
         jira.get("https://google.com")
         auth_header = dict(parse_authorization_header(
@@ -99,6 +100,9 @@ def test_context_local():
         assert auth_header["oauth_signature"] == "sig1"
 
     with app2.test_request_context("/"):
+        jbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
+        jbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
+
         app2.preprocess_request()
         jira.get("https://google.com")
         auth_header = dict(parse_authorization_header(

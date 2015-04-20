@@ -1,43 +1,6 @@
 from __future__ import unicode_literals
 import functools
-
-class proxy_property(object):
-    def __init__(self, name, pass_self=True, doc=None):
-        self.name = name
-        self.pass_self = pass_self
-        self.__doc__ = doc
-
-    def __get__(self, obj, objtype=None):
-        if obj is None:
-            return self
-        getter_name = "get_{name}".format(name=self.name)
-        getter_func = getattr(obj, getter_name, None)
-        if getter_func is None:
-            raise AttributeError("Undefined function {}".format(getter_name))
-        args = []
-        if self.pass_self:
-            args.insert(0, obj)
-        return getter_func(*args)
-
-    def __set__(self, obj, value):
-        setter_name = "set_{name}".format(name=self.name)
-        setter_func = getattr(obj, setter_name, None)
-        if setter_func is None:
-            raise AttributeError("Undefined function {}".format(setter_name))
-        args = [value]
-        if self.pass_self:
-            args.insert(0, obj)
-        return setter_func(*args)
-
-    def __delete__(self, obj):
-        deleter_name = "delete_{name}".format(name=self.name)
-        deleter_func = getattr(obj, deleter_name, None)
-        if deleter_func is None:
-            raise AttributeError("Undefined function {}".format(deleter_name))
-        args = []
-        if self.pass_self:
-            args.insert(0, obj)
-        return deleter_func(*args)
+from collections import MutableMapping
 
 
 class FakeCache(object):
@@ -45,13 +8,12 @@ class FakeCache(object):
     An object that mimics just enough of Flask-Cache's API to be compatible
     with our needs, but does nothing.
     """
-    def memoize(self, timeout=None, make_name=None, unless=None):
-        def decorator(func):
-            return func
-        return decorator
-
-    def delete_memoized(self, *args, **kwargs):
-        pass
+    def get(self, key):
+        return None
+    def set(self, key, value):
+        return None
+    def delete(self, key):
+        return None
 
 
 def first(iterable, default=None, key=None):
@@ -83,3 +45,50 @@ def getattrd(obj, name, default=sentinel):
         if default is not sentinel:
             return default
         raise
+
+class Dictective(MutableMapping):
+    """
+    A transparent proxy to a dict that detects changes, and runs a ``changed``
+    method automatically when the dict is changed.
+    """
+    def __init__(self, func, dict=None):
+        self._dict = dict or {}
+        self.func = func
+
+    def __getitem__(self, key):
+        return self._dict.__getitem__(key)
+
+    def __setitem__(self, key, value):
+        self._dict.__setitem__(key, value)
+        self.changed()
+
+    def __delitem__(self, key):
+        self._dict.__delitem__(key)
+        self.changed()
+
+    def __len__(self):
+        return self._dict.__len__()
+
+    def __iter__(self):
+        return self._dict.__iter__()
+
+    def __repr__(self):
+        return "{name}(dict={dict})".format(
+            name=self.__class__.__name__, dict=self._dict,
+        )
+
+    def setdefault(self, key, value):
+        result = self._dict.setdefault(key, value)
+        self.changed()
+        return result
+
+    def update(self, *a, **kw):
+        self._dict.update(*a, **kw)
+        self.changed()
+
+    def clear(self):
+        self._dict.clear()
+        self.changed()
+
+    def changed(self):
+        self.func(self._dict)

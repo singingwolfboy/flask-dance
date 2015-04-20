@@ -15,10 +15,10 @@ except ImportError:
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
-def make_jira_blueprint(base_url, consumer_key=None, rsa_key=None,
-                        redirect_url=None, redirect_to=None,
-                        login_url=None, authorized_url=None,
-                        session_class=None):
+def make_jira_blueprint(
+        base_url, consumer_key=None, rsa_key=None,
+        redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
+        session_class=None, backend=None):
     """
     Make a blueprint for authenticating with JIRA using OAuth 1. This requires
     a consumer key and RSA key for the JIRA appication link. You should either
@@ -46,6 +46,9 @@ def make_jira_blueprint(base_url, consumer_key=None, rsa_key=None,
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.oauth1.OAuth1Session`.
+        backend: A storage backend class, or an instance of a storage
+                backend class, to use for this blueprint. Defaults to
+                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -68,6 +71,7 @@ def make_jira_blueprint(base_url, consumer_key=None, rsa_key=None,
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
+        backend=backend,
     )
     jira_bp.session.headers["Content-Type"] = "application/json"
     jira_bp.from_config["client_key"] = "JIRA_OAUTH_CONSUMER_KEY"

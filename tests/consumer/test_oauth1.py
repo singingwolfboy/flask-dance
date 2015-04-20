@@ -11,7 +11,7 @@ import responses
 import flask
 from flask_dance.consumer import OAuth1ConsumerBlueprint, oauth_authorized
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
-from flask_dance.consumer.oauth1 import OAuth1Session
+from flask_dance.consumer.requests import OAuth1Session
 
 try:
     import blinker
@@ -278,7 +278,6 @@ def test_signal_oauth_authorized_abort(request):
 @requires_blinker
 def test_signal_sender_oauth_authorized(request):
     app, bp = make_app()
-    bp.session.fetch_access_token = mock.Mock(return_value="test-token")
     bp2 = OAuth1ConsumerBlueprint("test2", __name__,
         client_key="client_key",
         client_secret="client_secret",
@@ -288,7 +287,6 @@ def test_signal_sender_oauth_authorized(request):
         authorization_url="https://example.com/oauth/authorize",
         redirect_to="index",
     )
-    bp2.session.fetch_access_token = mock.Mock(return_value="test2-token")
     app.register_blueprint(bp2, url_prefix="/login")
 
     calls = []
@@ -299,6 +297,8 @@ def test_signal_sender_oauth_authorized(request):
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback, sender=bp))
 
     with app.test_client() as client:
+        bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+        bp2.session.fetch_access_token = mock.Mock(return_value="test2-token")
         resp = client.get(
             "/login/test2/authorized?oauth_token=foobar&oauth_verifier=xyz",
         )
@@ -306,6 +306,8 @@ def test_signal_sender_oauth_authorized(request):
     assert len(calls) == 0
 
     with app.test_client() as client:
+        bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+        bp2.session.fetch_access_token = mock.Mock(return_value="test2-token")
         resp = client.get(
             "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
         )
@@ -315,6 +317,8 @@ def test_signal_sender_oauth_authorized(request):
     assert calls[0][1] == {"token": "test-token"}
 
     with app.test_client() as client:
+        bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+        bp2.session.fetch_access_token = mock.Mock(return_value="test2-token")
         resp = client.get(
             "/login/test2/authorized?oauth_token=foobar&oauth_verifier=xyz",
         )

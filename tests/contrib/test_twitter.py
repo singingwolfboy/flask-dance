@@ -53,22 +53,25 @@ def test_context_local():
     app1 = Flask(__name__)
     tbp1 = make_twitter_blueprint("foo1", "bar1", redirect_to="url1")
     app1.register_blueprint(tbp1)
-    tbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
+    #tbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
 
     app2 = Flask(__name__)
     tbp2 = make_twitter_blueprint("foo2", "bar2", redirect_to="url2")
     app2.register_blueprint(tbp2)
-    tbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
+    #tbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
 
 
-    # outside of a request context, referencing functions on the `jira` object
+    # outside of a request context, referencing functions on the `twitter` object
     # will raise an exception
     with pytest.raises(RuntimeError):
         twitter.get("https://google.com")
 
-    # inside of a request context, `jira` should be a proxy to the correct
+    # inside of a request context, `twitter` should be a proxy to the correct
     # blueprint session
     with app1.test_request_context("/"):
+        tbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
+        tbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
+
         app1.preprocess_request()
         twitter.get("https://google.com")
         auth_header = dict(parse_authorization_header(
@@ -78,6 +81,9 @@ def test_context_local():
         assert auth_header["oauth_signature"] == "sig1"
 
     with app2.test_request_context("/"):
+        tbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
+        tbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
+
         app2.preprocess_request()
         twitter.get("https://google.com")
         auth_header = dict(parse_authorization_header(

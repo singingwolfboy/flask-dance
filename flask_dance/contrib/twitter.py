@@ -12,10 +12,10 @@ except ImportError:
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
-def make_twitter_blueprint(api_key=None, api_secret=None,
-                           redirect_url=None, redirect_to=None,
-                           login_url=None, authorized_url=None,
-                           session_class=None):
+def make_twitter_blueprint(
+        api_key=None, api_secret=None,
+        redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
+        session_class=None, backend=None):
     """
     Make a blueprint for authenticating with Twitter using OAuth 1. This requires
     an API key and API secret from Twitter. You should either pass them to
@@ -37,6 +37,9 @@ def make_twitter_blueprint(api_key=None, api_secret=None,
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.oauth1.OAuth1Session`.
+        backend: A storage backend class, or an instance of a storage
+                backend class, to use for this blueprint. Defaults to
+                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -53,6 +56,7 @@ def make_twitter_blueprint(api_key=None, api_secret=None,
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
+        backend=backend,
     )
     twitter_bp.from_config["client_key"] = "TWITTER_OAUTH_API_KEY"
     twitter_bp.from_config["client_secret"] = "TWITTER_OAUTH_API_SECRET"
