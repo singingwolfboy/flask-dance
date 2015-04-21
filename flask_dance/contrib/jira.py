@@ -28,7 +28,7 @@ def make_jira_blueprint(
 
     Args:
         base_url (str): The base URL of your JIRA installation. For example,
-            for Atlassian's hosted OnDemand JIRA, the base_url would be
+            for Atlassian's hosted Cloud JIRA, the base_url would be
             ``https://jira.atlassian.com``
         consumer_key (str): The consumer key for your Application Link on JIRA
         rsa_key (str or path): The RSA private key for your Application Link
