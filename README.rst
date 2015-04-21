@@ -67,7 +67,7 @@ it just like you would use the ``requests`` module.
 
 You can also use Flask-Dance with any OAuth provider you'd like, not just the
 pre-set configurations. `See the documentation for how to use other OAuth
-providers. <http://flask-dance.readthedocs.org/en/latest/consumers.html>`_
+providers. <http://flask-dance.readthedocs.org/en/latest/providers.html>`_
 
 .. _a few popular OAuth providers: http://flask-dance.readthedocs.org/en/latest/providers.html
 .. _context local: http://flask.pocoo.org/docs/latest/quickstart/#context-locals
