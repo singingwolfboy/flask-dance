@@ -104,8 +104,8 @@ as well as `Flask-Login`_ for user management, and `Flask-Cache`_ for caching.
 
 Full Documentation
 ==================
-This README provides just a taste of what Flask-Dance is capable of. To see
-more, `read the documentation on ReadTheDocs <http://flask-dance.readthedocs.org/>`.
+This README provides just a taste of what Flask-Dance is capable of. To see more,
+`read the documentation on ReadTheDocs <http://flask-dance.readthedocs.org/>`_.
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
