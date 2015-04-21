@@ -24,8 +24,8 @@ def make_google_blueprint(
     them, using the variables GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET.
 
     Args:
-        client_id (str): The client ID for your application on Github
-        client_secret (str): The client secret for your application on Github
+        client_id (str): The client ID for your application on Google
+        client_secret (str): The client secret for your application on Google
         scope (str, optional): comma-separated list of scopes for the OAuth token.
             Defaults to the "profile" scope.
         offline (bool): Whether to request `offline access

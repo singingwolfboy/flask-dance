@@ -78,7 +78,7 @@ Create a file called ``multi.py`` with the following contents:
                 db.session.add(user)
                 db.session.commit()
             login_user(user)
-            flash("Successfully signed in with Github")
+            flash("Successfully signed in with GitHub")
         else:
             msg = "Failed to fetch user info from {name}".format(name=blueprint.name)
             flash(msg, category="error")
@@ -251,7 +251,7 @@ are scoped to individual users.
                 db.session.add(user)
                 db.session.commit()
             login_user(user)
-            flash("Successfully signed in with Github")
+            flash("Successfully signed in with GitHub")
         else:
             msg = "Failed to fetch user info from {name}".format(name=blueprint.name)
             flash(msg, category="error")

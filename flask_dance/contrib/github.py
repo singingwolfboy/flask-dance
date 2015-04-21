@@ -17,14 +17,14 @@ def make_github_blueprint(
         redirect_to=None, login_url=None, authorized_url=None,
         session_class=None, backend=None):
     """
-    Make a blueprint for authenticating with Github using OAuth 2. This requires
-    a client ID and client secret from Github. You should either pass them to
+    Make a blueprint for authenticating with GitHub using OAuth 2. This requires
+    a client ID and client secret from GitHub. You should either pass them to
     this constructor, or make sure that your Flask application config defines
     them, using the variables GITHUB_OAUTH_CLIENT_ID and GITHUB_OAUTH_CLIENT_SECRET.
 
     Args:
-        client_id (str): The client ID for your application on Github.
-        client_secret (str): The client secret for your application on Github
+        client_id (str): The client ID for your application on GitHub.
+        client_secret (str): The client secret for your application on GitHub
         scope (str, optional): comma-separated list of scopes for the OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete

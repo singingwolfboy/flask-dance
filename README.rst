@@ -24,7 +24,7 @@ Or if you're planning on using the `SQLAlchemy`_ backend:
 Quickstart
 ==========
 For `a few popular OAuth providers`_, Flask-Dance provides pre-set configurations. For
-example, to authenticate with Github, just do the following:
+example, to authenticate with GitHub, just do the following:
 
 .. code-block:: python
 
@@ -45,18 +45,18 @@ example, to authenticate with Github, just do the following:
             return redirect(url_for("github.login"))
         resp = github.get("/user")
         assert resp.ok
-        return "You are @{login} on Github".format(login=resp.json()["login"])
+        return "You are @{login} on GitHub".format(login=resp.json()["login"])
 
     if __name__ == "__main__":
         app.run()
 
 **NOTE:** For this example to work, you must first `register an application on
-Github`_ to get a ``client_id`` and ``client_secret``. The application's
+GitHub`_ to get a ``client_id`` and ``client_secret``. The application's
 authorization callback URL must be ``http://localhost:5000/login/github/authorized``.
 You'll also need to set the `OAUTHLIB_INSECURE_TRANSPORT`_ environment variable,
 so that oauthlib allows you to use HTTP rather than HTTPS.
 
-.. _register an application on Github: https://github.com/settings/applications/new
+.. _register an application on GitHub: https://github.com/settings/applications/new
 .. _OAUTHLIB_INSECURE_TRANSPORT: http://oauthlib.readthedocs.org/en/latest/oauth2/security.html#envvar-OAUTHLIB_INSECURE_TRANSPORT
 
 The ``github`` object is a `context local`_, just like ``flask.request``. That means

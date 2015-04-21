@@ -4,7 +4,7 @@ GitHub Quickstart
 Setup Application
 -----------------
 Visit https://github.com/settings/applications/new
-to register an application on Github. The application's "authorization
+to register an application on GitHub. The application's "authorization
 callback URL" must be ``http://localhost:5000/login/github/authorized``.
 Take note of the "Client ID" and "Client Secret" for the application.
 
@@ -29,7 +29,7 @@ Code
             return redirect(url_for("github.login"))
         resp = github.get("/user")
         assert resp.ok
-        return "You are @{login} on Github".format(login=resp.json()["login"])
+        return "You are @{login} on GitHub".format(login=resp.json()["login"])
 
     if __name__ == "__main__":
         app.run()

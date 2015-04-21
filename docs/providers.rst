@@ -11,7 +11,7 @@ to Flask-Dance!
    :local:
    :backlinks: none
 
-Github
+GitHub
 ------
 .. module:: flask_dance.contrib.github
 
@@ -20,8 +20,8 @@ Github
 .. data:: github
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Github authentication token loaded (assuming that the user
-    has authenticated with Github at some point in the past).
+    already has the GitHub authentication token loaded (assuming that the user
+    has authenticated with GitHub at some point in the past).
 
 Google
 ------
