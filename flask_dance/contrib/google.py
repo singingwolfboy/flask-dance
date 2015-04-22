@@ -45,7 +45,7 @@ def make_google_blueprint(
             Defaults to ``/google/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
-            :class:`~flask_dance.consumer.oauth2.OAuth2Session`.
+            :class:`~flask_dance.consumer.requests.OAuth2Session`.
         backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.

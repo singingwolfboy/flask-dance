@@ -45,7 +45,7 @@ def make_jira_blueprint(
             Defaults to ``/jira/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
-            :class:`~flask_dance.consumer.oauth1.OAuth1Session`.
+            :class:`~flask_dance.consumer.requests.OAuth1Session`.
         backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
