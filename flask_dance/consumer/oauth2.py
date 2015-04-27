@@ -142,6 +142,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             auto_refresh_kwargs=self.auto_refresh_kwargs,
             scope=self.scope,
             state=self.state,
+            token=self.token,
             blueprint=self,
             base_url=self.base_url,
             **self.kwargs
