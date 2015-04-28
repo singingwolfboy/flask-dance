@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+unreleased
+----------
+* Make the ``authorized`` property on both ``OAuth1Session`` and ``OAuth2Session``
+  dynamically load the token from the backend
+
 0.5.0 (2015-04-20)
 ------------------
 * Redesigned token storage backend system: it now uses objects
