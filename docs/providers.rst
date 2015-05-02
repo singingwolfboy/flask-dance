@@ -80,10 +80,10 @@ We could then build the blueprint like this:
     app = Flask(__name__)
     example_blueprint = OAuth2ConsumerBlueprint(
         "oauth-example", __name__,
-        client_key="my-key-here",
+        client_id="my-key-here",
         client_secret="my-secret-here",
         base_url="https://oauth-example.com",
-        access_token_url="https://oauth-example.com/login/access_token",
+        token_url="https://oauth-example.com/login/access_token",
         authorize_url="https://oauth-example.com/login/authorize",
     )
     app.register_blueprint(example_blueprint, url_prefix="/login")
