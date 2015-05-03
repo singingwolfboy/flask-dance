@@ -12,21 +12,20 @@ except ImportError:
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
-def make_dropbox_blueprint(
-        app_key=None, app_secret=None, scope=None,
-        force_reapprove=False, disable_signup=False,
-        redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
+def make_meetup_blueprint(
+        key=None, secret=None, scope=None,
+        redirect_url=None, redirect_to=None,
+        login_url=None, authorized_url=None,
         session_class=None, backend=None):
     """
-    Make a blueprint for authenticating with Dropbox using OAuth 2. This requires
-    a client ID and client secret from Dropbox. You should either pass them to
+    Make a blueprint for authenticating with Meetup using OAuth 2. This requires
+    an OAuth consumer from Meetup. You should either pass the key and secret to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables DROPBOX_OAUTH_APP_KEY and DROPBOX_OAUTH_APP_SECRET.
+    them, using the variables MEETUP_OAUTH_KEY and MEETUP_OAUTH_SECRET.
 
     Args:
-        app_key (str): The client ID for your application on Dropbox.
-        app_secret (str): The client secret for your application on Dropbox
+        key (str): The OAuth consumer key for your application on Meetup
+        secret (str): The OAuth consumer secret for your application on Meetup
         scope (str, optional): comma-separated list of scopes for the OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
@@ -47,35 +46,29 @@ def make_dropbox_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    authorization_url_params = {}
-    if force_reapprove:
-        authorization_url_params["force_reapprove"] = "true"
-    if disable_signup:
-        authorization_url_params["disable_signup"] = "true"
-
-    dropbox_bp = OAuth2ConsumerBlueprint("dropbox", __name__,
-        client_id=app_key,
-        client_secret=app_secret,
+    scope = scope or ["basic"]
+    meetup_bp = OAuth2ConsumerBlueprint("meetup", __name__,
+        client_id=key,
+        client_secret=secret,
         scope=scope,
-        base_url="https://api.dropbox.com/1/",
-        authorization_url="https://www.dropbox.com/1/oauth2/authorize",
-        token_url="https://api.dropbox.com/1/oauth2/token",
+        base_url="https://api.meetup.com/2/",
+        authorization_url="https://secure.meetup.com/oauth2/authorize",
+        token_url="https://secure.meetup.com/oauth2/access",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
-        authorization_url_params=authorization_url_params,
         session_class=session_class,
         backend=backend,
     )
-    dropbox_bp.from_config["client_id"] = "DROPBOX_OAUTH_APP_KEY"
-    dropbox_bp.from_config["client_secret"] = "DROPBOX_OAUTH_APP_SECRET"
+    meetup_bp.from_config["client_id"] = "MEETUP_OAUTH_KEY"
+    meetup_bp.from_config["client_secret"] = "MEETUP_OAUTH_SECRET"
 
-    @dropbox_bp.before_app_request
+    @meetup_bp.before_app_request
     def set_applocal_session():
         ctx = stack.top
-        ctx.dropbox_oauth = dropbox_bp.session
+        ctx.meetup_oauth = meetup_bp.session
 
-    return dropbox_bp
+    return meetup_bp
 
-dropbox = LocalProxy(partial(_lookup_app_object, "dropbox_oauth"))
+meetup = LocalProxy(partial(_lookup_app_object, "meetup_oauth"))

@@ -71,6 +71,18 @@ Dropbox
     already has the Dropbox authentication token loaded (assuming that the user
     has authenticated with Dropbox at some point in the past).
 
+Meetup
+------
+.. module:: flask_dance.contrib.meetup
+
+.. autofunction:: make_meetup_blueprint
+
+.. data:: meetup
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Meetup authentication token loaded (assuming that the user
+    has authenticated with Meetup at some point in the past).
+
 .. _custom-provider:
 
 Custom

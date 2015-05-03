@@ -9,4 +9,5 @@ Contents:
    github
    google
    dropbox
+   meetup
    sqla-multiuser
