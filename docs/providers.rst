@@ -59,6 +59,18 @@ JIRA
     already has the JIRA authentication token loaded (assuming that the user
     has authenticated with JIRA at some point in the past).
 
+Dropbox
+-------
+.. module:: flask_dance.contrib.dropbox
+
+.. autofunction:: make_dropbox_blueprint
+
+.. data:: dropbox
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Dropbox authentication token loaded (assuming that the user
+    has authenticated with Dropbox at some point in the past).
+
 .. _custom-provider:
 
 Custom

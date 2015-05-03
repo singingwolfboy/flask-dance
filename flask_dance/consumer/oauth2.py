@@ -196,6 +196,12 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session._state = flask.session[state_key]
         del flask.session[state_key]
 
+        secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https"
+        self.session.redirect_uri = url_for(
+            ".authorized", next=request.args.get('next'), _external=True,
+            _scheme="https" if secure else "http",
+        )
+
         url = URLObject(request.url)
         if request.headers.get("X-Forwarded-Proto", "http") == "https":
             url = url.with_scheme("https")

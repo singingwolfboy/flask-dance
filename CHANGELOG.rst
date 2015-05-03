@@ -3,7 +3,9 @@ Change Log
 
 unreleased
 ----------
-nothing yet
+* Added the Dropbox pre-set configuration
+* Flask-Dance now always passes the optional ``redirect_uri`` parameter to
+  the OAuth 2 authorization request, since Dropbox requires it.
 
 0.5.1 (2015-04-28)
 ------------------

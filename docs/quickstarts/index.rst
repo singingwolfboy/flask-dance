@@ -8,4 +8,5 @@ Contents:
 
    github
    google
+   dropbox
    sqla-multiuser
