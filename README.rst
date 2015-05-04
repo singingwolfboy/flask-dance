@@ -1,5 +1,5 @@
-Flask-Dance |build-status| |coverage-status| |pypi| |docs|
-==========================================================
+Flask-Dance |build-status| |coverage-status| |docs|
+===================================================
 Doing the OAuth dance with style using Flask, requests, and oauthlib. Currently,
 only OAuth consumers are supported, but this project could easily support
 OAuth providers in the future, as well. The `full documentation for this project
@@ -118,9 +118,6 @@ This README provides just a taste of what Flask-Dance is capable of. To see more
 .. |coverage-status| image:: https://img.shields.io/coveralls/singingwolfboy/flask-dance.svg?style=flat
    :target: https://coveralls.io/r/singingwolfboy/flask-dance?branch=master
    :alt: Test coverage
-.. |pypi| image:: https://pypip.in/version/Flask-Dance/badge.svg?style=flat
-   :target: https://pypi.python.org/pypi/Flask-Dance/
-   :alt: Latest Version
 .. |docs| image:: https://readthedocs.org/projects/flask-dance/badge/?version=latest&style=flat
    :target: http://flask-dance.readthedocs.org/
    :alt: Documentation
