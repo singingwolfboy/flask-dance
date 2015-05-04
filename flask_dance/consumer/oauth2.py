@@ -154,12 +154,15 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     def teardown_session(self, exception=None):
         lazy.invalidate(self, "session")
 
-    def login(self):
+    def set_redirect_uri(self):
         secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https"
         self.session.redirect_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
             _scheme="https" if secure else "http",
         )
+
+    def login(self):
+        self.set_redirect_uri()
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state,
             **self.authorization_url_params
@@ -169,6 +172,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         return redirect(url)
 
     def authorized(self):
+        self.set_redirect_uri()
         if "next" in request.args:
             next_url = request.args["next"]
         elif self.redirect_url:
