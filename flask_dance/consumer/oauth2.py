@@ -1,9 +1,11 @@
 from __future__ import unicode_literals, print_function
+import json
 
 import logging
 from lazy import lazy
 import flask
 from flask import request, url_for, redirect
+from oauthlib.oauth2 import MissingCodeError
 from urlobject import URLObject
 from .base import (
     BaseOAuthConsumerBlueprint, oauth_authorized, oauth_error
@@ -205,12 +207,21 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         url = URLObject(request.url)
         if request.headers.get("X-Forwarded-Proto", "http") == "https":
             url = url.with_scheme("https")
-        token = self.session.fetch_token(
-            self.token_url,
-            authorization_response=url,
-            client_secret=self.client_secret,
-            **self.token_url_params
-        )
+        try:
+            token = self.session.fetch_token(
+                self.token_url,
+                authorization_response=url,
+                client_secret=self.client_secret,
+                **self.token_url_params
+            )
+        except MissingCodeError as e:
+            e.args = (
+                e.args[0],
+                "The redirect request did not contain the expected parameters. Instead I got: {}".format(
+                    json.dumps(request.args)
+                )
+            )
+            raise
         results = oauth_authorized.send(self, token=token) or []
         if not any(ret == False for func, ret in results):
             self.token = token

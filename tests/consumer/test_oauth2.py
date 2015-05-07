@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+import json
+import re
+from oauthlib.oauth2 import MissingCodeError
 
 try:
     from urllib.parse import quote_plus, parse_qsl
@@ -23,7 +26,7 @@ except ImportError:
 requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
 
-def make_app(login_url=None):
+def make_app(login_url=None, debug=False):
     blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
         client_id="client_id",
         client_secret="client_secret",
@@ -38,6 +41,7 @@ def make_app(login_url=None):
     app = flask.Flask(__name__)
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
+    app.debug = debug
 
     @app.route("/")
     def index():
@@ -125,6 +129,23 @@ def test_authorized_url():
             flask.session["test-service_oauth_token"] ==
             {'access_token': 'foobar', 'scope': ['admin'], 'token_type': 'bearer'}
         )
+
+
+def test_authorized_url_invalid_response():
+    app, _ = make_app(debug=True)
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        with pytest.raises(MissingCodeError) as missingError:
+            client.get(
+                "/login/test-service/authorized?error_code=1349048&error_message=IMUSEFUL",
+                base_url="https://a.b.c",
+            )
+        match = re.search(r"{[^}]*}", str(missingError.value))
+        err_dict = json.loads(match.group(0))
+        assert err_dict == {"error_message": "IMUSEFUL", "error_code": "1349048"}
 
 
 @responses.activate
