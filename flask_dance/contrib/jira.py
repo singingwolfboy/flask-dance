@@ -4,6 +4,7 @@ import os.path
 from urlobject import URLObject
 from oauthlib.oauth1 import SIGNATURE_RSA
 from flask_dance.consumer import OAuth1ConsumerBlueprint
+from flask_dance.consumer.requests import OAuth1Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 try:
@@ -13,6 +14,12 @@ except ImportError:
 
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
+
+
+class JsonOAuth1Session(OAuth1Session):
+    def __init__(self, *args, **kwargs):
+        super(JsonOAuth1Session, self).__init__(*args, **kwargs)
+        self.headers["Content-Type"] = "application/json"
 
 
 def make_jira_blueprint(
@@ -45,7 +52,7 @@ def make_jira_blueprint(
             Defaults to ``/jira/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
-            :class:`~flask_dance.consumer.requests.OAuth1Session`.
+            :class:`~flask_dance.contrib.jira.JsonOAuth1Session`.
         backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
@@ -70,12 +77,11 @@ def make_jira_blueprint(
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
-        session_class=session_class,
+        session_class=session_class or JsonOAuth1Session,
         backend=backend,
     )
     jira_bp.from_config["client_key"] = "JIRA_OAUTH_CONSUMER_KEY"
     jira_bp.from_config["rsa_key"] = "JIRA_OAUTH_RSA_KEY"
-    jira_bp.session.headers["Content-Type"] = "application/json"
 
     @jira_bp.before_app_request
     def set_applocal_session():
