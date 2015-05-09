@@ -22,12 +22,11 @@ def test_blueprint_factory():
     assert dropbox_bp.token_url == "https://api.dropbox.com/1/oauth2/token"
 
 
-@pytest.mark.xfail  # remove when https://github.com/requests/requests-oauthlib/pull/172 is released
 def test_load_from_config():
     app = Flask(__name__)
     app.secret_key = "anything"
-    app.config["DROPBOX_OAUTH_CLIENT_ID"] = "foo"
-    app.config["DROPBOX_OAUTH_CLIENT_SECRET"] = "bar"
+    app.config["DROPBOX_OAUTH_APP_KEY"] = "foo"
+    app.config["DROPBOX_OAUTH_APP_SECRET"] = "bar"
     dropbox_bp = make_dropbox_blueprint()
     app.register_blueprint(dropbox_bp)
 

@@ -73,9 +73,9 @@ def make_jira_blueprint(
         session_class=session_class,
         backend=backend,
     )
-    jira_bp.session.headers["Content-Type"] = "application/json"
     jira_bp.from_config["client_key"] = "JIRA_OAUTH_CONSUMER_KEY"
     jira_bp.from_config["rsa_key"] = "JIRA_OAUTH_RSA_KEY"
+    jira_bp.session.headers["Content-Type"] = "application/json"
 
     @jira_bp.before_app_request
     def set_applocal_session():

@@ -42,7 +42,6 @@ def test_rsa_key_file():
     os.remove(key_file_path)
 
 
-@pytest.mark.xfail  # remove when https://github.com/idan/oauthlib/pull/314 is released
 @responses.activate
 @mock.patch("oauthlib.oauth1.rfc5849.signature.sign_rsa_sha1", return_value="fakesig")
 def test_load_from_config(sign_func):

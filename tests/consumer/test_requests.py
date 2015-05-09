@@ -7,9 +7,9 @@ from distutils.version import StrictVersion
 import requests_oauthlib
 from flask_dance.consumer.requests import OAuth1Session, OAuth2Session
 
-requires_requests_oauthlib_043 = pytest.mark.skipif(
-    StrictVersion(requests_oauthlib.__version__) < StrictVersion('0.4.3'),
-    reason="requires requests_oauthlib at version 0.4.3 or higher",
+requires_requests_oauthlib_05 = pytest.mark.skipif(
+    StrictVersion(requests_oauthlib.__version__) < StrictVersion('0.5'),
+    reason="requires requests_oauthlib at version 0.5 or higher",
 )
 
 
@@ -24,14 +24,14 @@ FAKE_OAUTH2_TOKEN = {
 }
 
 
-@requires_requests_oauthlib_043
+@requires_requests_oauthlib_05
 def test_oauth1session_authorized():
     bp = mock.Mock(token=FAKE_OAUTH1_TOKEN)
     sess = OAuth1Session(client_key="ckey", client_secret="csec", blueprint=bp)
     assert sess.authorized == True
 
 
-@requires_requests_oauthlib_043
+@requires_requests_oauthlib_05
 def test_oauth1session_not_authorized():
     bp = mock.Mock(token=None)
     sess = OAuth1Session(client_key="ckey", client_secret="csec", blueprint=bp)
