@@ -65,6 +65,7 @@ def test_load_from_config(sign_func):
     assert sign_func.call_args[0][1] == "bar"
 
 
+@pytest.mark.xfail  # remove when https://github.com/idan/oauthlib/pull/314 is released
 @responses.activate
 @mock.patch("oauthlib.oauth1.rfc5849.signature.sign_rsa_sha1", return_value="fakesig")
 def test_content_type(sign_func):
@@ -114,7 +115,7 @@ def test_context_local():
 
     # outside of a request context, referencing functions on the `jira` object
     # will raise an exception
-    with pytest.raises(RuntimeError):
+    with pytest.raises(AttributeError):
         jira.get("https://google.com")
 
     # inside of a request context, `jira` should be a proxy to the correct
