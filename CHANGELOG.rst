@@ -5,6 +5,7 @@ unreleased
 ----------
 * Added the Dropbox pre-set configuration
 * Added the Meetup pre-set configuration
+* Added the Facebook pre-set configuration
 * Flask-Dance now always passes the optional ``redirect_uri`` parameter to
   the OAuth 2 authorization request, since Dropbox requires it.
 * Make Flask-Dance provide additional information in errors when providers fail
