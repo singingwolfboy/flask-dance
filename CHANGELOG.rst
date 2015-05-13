@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet.
+
+0.6.0 (2015-05-12)
+------------------
 * Added the Dropbox pre-set configuration
 * Added the Meetup pre-set configuration
 * Added the Facebook pre-set configuration
