@@ -25,7 +25,6 @@ def test_blueprint_factory():
     assert github_bp.token_url == "https://github.com/login/oauth/access_token"
 
 
-@pytest.mark.xfail  # remove when https://github.com/requests/requests-oauthlib/pull/172 is released
 def test_load_from_config():
     app = Flask(__name__)
     app.secret_key = "anything"
