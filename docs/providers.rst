@@ -11,6 +11,18 @@ to Flask-Dance!
    :local:
    :backlinks: none
 
+Facebook
+--------
+.. module:: flask_dance.contrib.facebook
+
+.. autofunction:: make_facebook_blueprint
+
+.. data:: facebook
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Facebook authentication token loaded (assuming that the user
+    has authenticated with Facebook at some point in the past).
+
 GitHub
 ------
 .. module:: flask_dance.contrib.github
