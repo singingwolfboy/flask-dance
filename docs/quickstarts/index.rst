@@ -8,6 +8,7 @@ Contents:
 
    github
    google
+   twitter
    dropbox
    meetup
    sqla-multiuser
