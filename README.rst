@@ -115,8 +115,8 @@ This README provides just a taste of what Flask-Dance is capable of. To see more
 .. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master&style=flat
    :target: https://travis-ci.org/singingwolfboy/flask-dance
    :alt: Build status
-.. |coverage-status| image:: https://img.shields.io/coveralls/singingwolfboy/flask-dance.svg?style=flat
-   :target: https://coveralls.io/r/singingwolfboy/flask-dance?branch=master
+.. |coverage-status| image:: http://codecov.io/github/singingwolfboy/flask-misaka/coverage.svg?branch=master&style=flat
+   :target: http://codecov.io/github/singingwolfboy/flask-misaka?branch=master
    :alt: Test coverage
 .. |docs| image:: https://readthedocs.org/projects/flask-dance/badge/?version=latest&style=flat
    :target: http://flask-dance.readthedocs.org/
