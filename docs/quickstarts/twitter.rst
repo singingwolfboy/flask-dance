@@ -30,7 +30,7 @@ Code
             return redirect(url_for("twitter.login"))
         resp = twitter.get("account/settings.json")
         assert resp.ok
-        return "You are @{screen_name} on Twitter".format(email=resp.json()["screen_name"])
+        return "You are @{screen_name} on Twitter".format(screen_name=resp.json()["screen_name"])
 
     if __name__ == "__main__":
         app.run()
