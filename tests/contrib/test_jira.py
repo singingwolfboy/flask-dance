@@ -96,7 +96,7 @@ def test_content_type(sign_func):
     resp = app.test_client().get("/test")
     headers = responses.calls[0].request.headers
     assert "Content-Type" in headers
-    assert headers["Content-Type"] == "application/json"
+    assert headers["Content-Type"] == "application/json".encode('utf-8')
 
 
 @responses.activate
