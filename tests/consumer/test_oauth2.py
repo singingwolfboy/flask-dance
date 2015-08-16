@@ -422,6 +422,7 @@ def test_signal_oauth_error(request):
         "error_description": "Invalid redirect URI",
         "error_uri": "https://example.com/docs/help",
     }
+    assert resp.status_code == 302
 
 
 class CustomOAuth2Session(OAuth2Session):

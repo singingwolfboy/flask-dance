@@ -9,7 +9,9 @@ import pytest
 import mock
 import responses
 import flask
-from flask_dance.consumer import OAuth1ConsumerBlueprint, oauth_authorized
+from flask_dance.consumer import (
+    OAuth1ConsumerBlueprint, oauth_authorized, oauth_error
+)
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 from flask_dance.consumer.requests import OAuth1Session
 
@@ -324,6 +326,41 @@ def test_signal_sender_oauth_authorized(request):
         )
 
     assert len(calls) == 1  # unchanged
+
+
+@requires_blinker
+@responses.activate
+def test_signal_oauth_error(request):
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body="Invalid request token.", status=401,
+    )
+    app, bp = make_app()
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_error.connect(callback)
+    request.addfinalizer(lambda: oauth_error.disconnect(callback))
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?"
+            "oauth_token=faketoken&"
+            "oauth_token_secret=fakesecret&"
+            "oauth_verifier=fakeverifier",
+            base_url="https://a.b.c",
+        )
+
+    assert len(calls) == 1
+    assert calls[0][0] == (bp,)
+    assert calls[0][1] == {
+        "message": "Token request failed with code 401, response was 'Invalid request token.'.",
+        "response": None, # should be updated when https://github.com/requests/requests-oauthlib/pull/188 is released
+    }
+    assert resp.status_code == 302
 
 
 class CustomOAuth1Session(OAuth1Session):
