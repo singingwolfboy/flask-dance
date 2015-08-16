@@ -1,5 +1,5 @@
 Twitter Quickstart
-=================
+==================
 
 Setup Application
 -----------------

@@ -14,6 +14,7 @@ import mock
 import responses
 from urlobject import URLObject
 import flask
+from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.consumer import (
     OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
 )
@@ -86,6 +87,7 @@ def test_login_url():
 @responses.activate
 def test_login_url_forwarded_proto():
     app, _ = make_app()
+    app.wsgi_app = ProxyFix(app.wsgi_app)
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service",
