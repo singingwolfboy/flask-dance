@@ -9,6 +9,7 @@ import pytest
 import mock
 import responses
 import flask
+from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.consumer import (
     OAuth1ConsumerBlueprint, oauth_authorized, oauth_error
 )
@@ -90,6 +91,7 @@ def test_login_url_forwarded_proto():
         body="oauth_token=foobar&oauth_token_secret=bazqux",
     )
     app, _ = make_app()
+    app.wsgi_app = ProxyFix(app.wsgi_app)
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service",
