@@ -1,12 +1,7 @@
 # documentation tools
 sphinx
 sphinxcontrib-napoleon
-# sphinxcontrib-aafig:
-# until https://bitbucket.org/birkenfeld/sphinx-contrib/pull-request/64 merges,
-# we need to use a custom wheel
---find-links https://singingwolfboy.github.io/python-wheelhouse/
---use-wheel
-sphinxcontrib-aafig==1.0.dev20150325
+sphinxcontrib-aafig
 # testing tools
 mock
 responses
