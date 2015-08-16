@@ -17,6 +17,7 @@ User Guide:
    quickstarts/index
    providers
    backends
+   proxies
    signals
 
 Advanced Topics:
