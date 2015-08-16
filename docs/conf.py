@@ -34,7 +34,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'sphinxcontrib.napoleon',
-    'sphinxcontrib.aafig',
+    'sphinxcontrib.seqdiag',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -279,3 +279,11 @@ intersphinx_mapping = {
 }
 
 autodoc_member_order = "bysource"
+
+seqdiag_antialias = True
+seqdiag_fontpath = [
+    "/usr/share/fonts/Arial Unicode.ttf",
+    "/usr/share/fonts/Arial.ttf",
+    "/Library/Fonts/Arial Unicode.ttf",
+    "/Library/Fonts/Arial.ttf",
+]

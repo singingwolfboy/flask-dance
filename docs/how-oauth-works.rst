@@ -43,26 +43,18 @@ to OAuth 1 which is more flexible and more widely used today.
 OAuth 2
 -------
 
-.. aafig::
-    :proportional:
+.. seqdiag::
 
-    +---------+                    +-----------+               +----------+
-    |  Client |                    |  Consumer |               | Provider |
-    +----+----+                    +-----+-----+               +----+-----+
-         | start dance                   |                          |
-         |------------------------------>|                          |
-         | "redirect to provider, with"  |                          |
-         | "secret, scopes, & state"     |                          |
-         |<------------------------------|                          |
-         | "follow redirect"             |                          |
-         |--------------------------------------------------------->| user
-         | "redirect to consumer, with authorization code & state"  | grants
-         |<---------------------------------------------------------| consent
-         | "follow redirect"             |                          |
-         |------------------------------>| send secret & auth code  |
-         |                               |------------------------->|
-         |                               | "send access token"      |
-         |                               |<-------------------------|
+    seqdiag {
+        Client -> Consumer [label = "start dance"];
+        Client <- Consumer [label = "redirect to provider,\nwith secret, scopes, & state"];
+        Client -> Provider [label = "follow redirect", rightnote="user\ngrants\n consent"];
+        Client <- Provider [label = "redirect to consumer, with authorization code and state"];
+        Client -> Consumer [label = "follow redirect"];
+        Consumer --> Provider [label = "send secret and\nauthorization code"];
+        Consumer <-- Provider [label = "return access token"];
+        Client <-- Consumer [label = "render page or redirect"];
+    }
 
 1.  The client visits the consumer at a special URL, indicating that they
     want to connect to the provider with OAuth. Typically, there is a button
@@ -101,27 +93,20 @@ OAuth 2
 OAuth 1
 -------
 
-.. aafig::
-   :proportional:
+.. seqdiag::
 
-   +---------+             +-----------+               +----------+
-   |  Client |             |  Consumer |               | Provider |
-   +----+----+             +-----+-----+               +----+-----+
-        | start dance            |                          |
-        |----------------------->| send client secret       |
-        |                        |------------------------->|
-        | "redirect, with"       | send request token       |
-        | "request token"        |<-------------------------|
-        |<-----------------------|                          |
-        | "follow redirect"      |                          |
-        |-------------------------------------------------->| user
-        |                 redirect, with authorization code | grants
-        |<--------------------------------------------------| consent
-        | "follow redirect"      |                          |
-        |----------------------->| send secret & auth code  |
-        |                        |------------------------->|
-        |                        | "send access token"      |
-        |                        |<-------------------------|
+    seqdiag {
+        Client -> Consumer [label = "start dance"];
+        Consumer --> Provider [label = "send client secret"];
+        Consumer <-- Provider [label = "return request token"];
+        Client <- Consumer [label = "redirect, with request token"];
+        Client -> Provider [label = "follow redirect", rightnote="user\ngrants\nconsent"];
+        Client <- Provider [label = "redirect, with authorization code"];
+        Client -> Consumer [label = "follow redirect"];
+        Consumer --> Provider [label = "send client secret\n& authorization code"];
+        Consumer <-- Provider [label = "return access token"];
+        Client <-- Consumer [label = "render page or redirect"];
+    }
 
 1.  The client visits the consumer at a special URL, indicating that they
     want to connect to the provider with OAuth. Typically, there is a button
