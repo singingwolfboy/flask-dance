@@ -1,13 +1,16 @@
 from __future__ import unicode_literals, print_function
 
+import logging
 from lazy import lazy
 from flask import request, url_for, redirect
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
-from .base import BaseOAuthConsumerBlueprint, oauth_authorized
+from .base import BaseOAuthConsumerBlueprint, oauth_authorized, oauth_error
 from .requests import OAuth1Session
+
+log = logging.getLogger(__name__)
 
 
 class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
@@ -164,7 +167,17 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         else:
             next_url = "/"
         self.session.parse_authorization_response(request.url)
-        token = self.session.fetch_access_token(self.access_token_url)
+
+        try:
+            token = self.session.fetch_access_token(self.access_token_url)
+        except ValueError as err:
+            # can't proceed with OAuth, have to just redirect to next_url
+            message = err.args[0]
+            response = getattr(err, "response", None)
+            log.warning("OAuth 1 access token error: %s", message)
+            oauth_error.send(self, message=message, response=response)
+            return redirect(next_url)
+
         results = oauth_authorized.send(self, token=token) or []
         if not any(ret == False for func, ret in results):
             self.token = token
