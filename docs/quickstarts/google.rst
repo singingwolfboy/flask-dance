@@ -44,6 +44,10 @@ Code
     You must replace ``my-key-here`` and ``my-secret-here`` with the client ID
     and client secret that you got from your Google application.
 
+.. note::
+    If you are running this code on Heroku, you'll need to use the
+    :class:`werkzeug.contrib.fixers.ProxyFix` middleware. See :doc:`proxies`.
+
 When you run this code locally, you must set the
 :envvar:`OAUTHLIB_INSECURE_TRANSPORT` environment variable for it to work.
 You also must set the :envvar:`OAUTHLIB_RELAX_TOKEN_SCOPE` environment variable

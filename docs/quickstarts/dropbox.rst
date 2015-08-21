@@ -41,6 +41,10 @@ Code
     You must replace ``my-key-here`` and ``my-secret-here`` with the client ID
     and client secret that you got from your Dropbox application.
 
+.. note::
+    If you are running this code on Heroku, you'll need to use the
+    :class:`werkzeug.contrib.fixers.ProxyFix` middleware. See :doc:`proxies`.
+
 When you run this code locally, you must set the
 :envvar:`OAUTHLIB_INSECURE_TRANSPORT` environment variable for it to work.
 For example, if you put this code in a file named ``dropbox.py``, you could run:
