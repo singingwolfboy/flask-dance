@@ -23,15 +23,28 @@ Or if you're planning on using the `SQLAlchemy`_ backend:
 
 Quickstart
 ==========
-For `a few popular OAuth providers`_, Flask-Dance provides pre-set configurations. For
-example, to authenticate with GitHub, just do the following:
+Flask-Dance currently provides pre-set OAuth configurations for the following
+popular websites:
+
+* Facebook
+* GitHub
+* Google
+* Twitter
+* JIRA
+* Dropbox
+* Meetup
+
+If you want your users to be able to log in to your app from any of these
+websites, you've got it easy. Here's an example using GitHub:
 
 .. code-block:: python
 
     from flask import Flask, redirect, url_for
+    from werkzeug.contrib.fixers import ProxyFix
     from flask_dance.contrib.github import make_github_blueprint, github
 
     app = Flask(__name__)
+    app.wsgi_app = ProxyFix(app.wsgi_app)
     app.secret_key = "supersekrit"
     blueprint = make_github_blueprint(
         client_id="my-key-here",
@@ -50,14 +63,8 @@ example, to authenticate with GitHub, just do the following:
     if __name__ == "__main__":
         app.run()
 
-**NOTE:** For this example to work, you must first `register an application on
-GitHub`_ to get a ``client_id`` and ``client_secret``. The application's
-authorization callback URL must be ``http://localhost:5000/login/github/authorized``.
-You'll also need to set the `OAUTHLIB_INSECURE_TRANSPORT`_ environment variable,
-so that oauthlib allows you to use HTTP rather than HTTPS.
-
-.. _register an application on GitHub: https://github.com/settings/applications/new
-.. _OAUTHLIB_INSECURE_TRANSPORT: http://oauthlib.readthedocs.org/en/latest/oauth2/security.html#envvar-OAUTHLIB_INSECURE_TRANSPORT
+If you're itching to try it out, check out the `flask-dance-github`_ example
+repository, with details instructions for how to run this code.
 
 The ``github`` object is a `context local`_, just like ``flask.request``. That means
 that you can import it in any Python file you want, and use it in the context
@@ -69,7 +76,7 @@ You can also use Flask-Dance with any OAuth provider you'd like, not just the
 pre-set configurations. `See the documentation for how to use other OAuth
 providers. <http://flask-dance.readthedocs.org/en/latest/providers.html>`_
 
-.. _a few popular OAuth providers: http://flask-dance.readthedocs.org/en/latest/providers.html
+.. _flask-dance-github: https://github.com/singingwolfboy/flask-dance-github
 .. _context local: http://flask.pocoo.org/docs/latest/quickstart/#context-locals
 
 Backends
