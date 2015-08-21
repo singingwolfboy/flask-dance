@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.7.0 (2015-08-21)
+------------------
 * Flask-Dance no longer checks for the existence of a ``X-Forwarded-Proto``
   header to determine if generated URLs should use a ``https://`` scheme.
   If you are running your application behind a TLS termination proxy,
