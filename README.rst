@@ -6,6 +6,17 @@ OAuth providers in the future, as well. The `full documentation for this project
 is hosted on ReadTheDocs <http://flask-dance.readthedocs.org/>`_, but this
 README will give you a taste of the features.
 
+Flask-Dance currently provides pre-set OAuth configurations for the following
+popular websites:
+
+* Facebook
+* GitHub
+* Google
+* Twitter
+* JIRA
+* Dropbox
+* Meetup
+
 Installation
 ============
 
@@ -23,19 +34,8 @@ Or if you're planning on using the `SQLAlchemy`_ backend:
 
 Quickstart
 ==========
-Flask-Dance currently provides pre-set OAuth configurations for the following
-popular websites:
-
-* Facebook
-* GitHub
-* Google
-* Twitter
-* JIRA
-* Dropbox
-* Meetup
-
-If you want your users to be able to log in to your app from any of these
-websites, you've got it easy. Here's an example using GitHub:
+If you want your users to be able to log in to your app from any of the websites
+listed above, you've got it easy. Here's an example using GitHub:
 
 .. code-block:: python
 
