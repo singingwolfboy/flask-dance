@@ -7,6 +7,7 @@ Contents:
    :maxdepth: 1
 
    github
+   bitbucket
    google
    twitter
    dropbox
