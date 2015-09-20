@@ -6,7 +6,6 @@ from lazy import lazy
 import flask
 from flask import request, url_for, redirect
 from oauthlib.oauth2 import MissingCodeError
-from urlobject import URLObject
 from .base import (
     BaseOAuthConsumerBlueprint, oauth_authorized, oauth_error
 )
@@ -200,13 +199,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             ".authorized", next=request.args.get('next'), _external=True,
         )
 
-        url = URLObject(request.url)
-        if request.headers.get("X-Forwarded-Proto", "http") == "https":
-            url = url.with_scheme("https")
         try:
             token = self.session.fetch_token(
                 self.token_url,
-                authorization_response=url,
+                authorization_response=request.url,
                 client_secret=self.client_secret,
                 **self.token_url_params
             )

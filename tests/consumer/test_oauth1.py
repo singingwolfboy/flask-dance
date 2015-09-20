@@ -105,6 +105,7 @@ def test_login_url_forwarded_proto():
     # this should be https
     assert auth_header["oauth_callback"] == quote_plus("https://a.b.c/login/test-service/authorized")
 
+
 @responses.activate
 def test_authorized_url():
     responses.add(

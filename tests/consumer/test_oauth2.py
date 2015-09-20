@@ -133,6 +133,30 @@ def test_authorized_url():
         )
 
 
+@responses.activate
+def test_authorized_url_behind_proxy():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+    )
+    app, _ = make_app()
+    app.wsgi_app = ProxyFix(app.wsgi_app)
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="http://a.b.c",
+            headers={"X-Forwarded-Proto": "https"},
+        )
+        request_data = dict(parse_qsl(responses.calls[0].request.body))
+        # this should be https
+        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+
+
 def test_authorized_url_invalid_response():
     app, _ = make_app(debug=True)
     with app.test_client() as client:
