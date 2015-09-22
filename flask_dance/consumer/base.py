@@ -4,10 +4,11 @@ import six
 from lazy import lazy
 from abc import ABCMeta, abstractmethod, abstractproperty
 from distutils.version import StrictVersion
+from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
 from flask_dance.consumer.backend.session import SessionBackend
-from flask_dance.utils import Dictective, getattrd
+from flask_dance.utils import getattrd
 
 
 _signals = Namespace()
@@ -60,7 +61,8 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
 
         self.logged_in_funcs = []
         self.from_config = {}
-        self.config = Dictective(lambda d: lazy.invalidate(self.session, "token"))
+        invalidate_token = lambda d: lazy.invalidate(self.session, "token")
+        self.config = CallbackDict(on_update=invalidate_token)
         self.before_app_request(self.load_config)
 
     def load_config(self):
