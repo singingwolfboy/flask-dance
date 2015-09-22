@@ -25,7 +25,7 @@ Code
     blueprint = make_google_blueprint(
         client_id="my-key-here",
         client_secret="my-secret-here",
-        scopes=["profile", "email"]
+        scope=["profile", "email"]
     )
     app.register_blueprint(blueprint, url_prefix="/login")
 
@@ -34,8 +34,8 @@ Code
         if not google.authorized:
             return redirect(url_for("google.login"))
         resp = google.get("/plus/v1/people/me")
-        assert resp.ok
-        return "You are @{email} on Google".format(email=resp.json()["emails"][0]["value"])
+        assert resp.ok, resp.text
+        return "You are {email} on Google".format(email=resp.json()["emails"][0]["value"])
 
     if __name__ == "__main__":
         app.run()
