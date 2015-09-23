@@ -32,7 +32,7 @@ After you define your Flask application, usually stored in a variable called
 :class:`~werkzeug.contrib.fixers.ProxyFix` middleware. This will teach
 Flask how to determine whether the request actually came in via HTTP or
 HTTPS, so that any part of your website that uses that information (including
-Flask-Dance) and work correctly.
+Flask-Dance) can work correctly.
 
 .. _TLS termination proxy: https://en.wikipedia.org/wiki/TLS_termination_proxy
 .. _Heroku: https://www.heroku.com/
