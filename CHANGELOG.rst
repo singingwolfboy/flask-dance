@@ -3,7 +3,9 @@ Change Log
 
 unreleased
 ----------
-Nothing yet
+* Removed the Dictective utility class, and replaced it with
+  ``werkzeug.datastructures.CallbackDict``. It does the same thing, but
+  it's better tested, and already a part of one of Flask-Dance's dependencies.
 
 0.7.0 (2015-08-21)
 ------------------
