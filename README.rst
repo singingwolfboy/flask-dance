@@ -64,7 +64,7 @@ listed above, you've got it easy. Here's an example using GitHub:
         app.run()
 
 If you're itching to try it out, check out the `flask-dance-github`_ example
-repository, with details instructions for how to run this code.
+repository, with detailed instructions for how to run this code.
 
 The ``github`` object is a `context local`_, just like ``flask.request``. That means
 that you can import it in any Python file you want, and use it in the context
