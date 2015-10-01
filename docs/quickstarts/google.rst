@@ -12,6 +12,7 @@ you'll see two new fields: "Authorized JavaScript origins" and
 "Authorized redirect URIs". Put ``http://localhost:5000/login/google/authorized``
 into "Authorized redirect URIs", and click "Create Client ID".
 Take note of the "Client ID" and "Client Secret" for the application.
+As a final step, in the "APIs" section, enable the "Google+ API".
 
 Code
 ----
