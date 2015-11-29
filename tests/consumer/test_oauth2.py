@@ -133,6 +133,21 @@ def test_authorized_url():
         )
 
 
+def test_authorized_url_no_state():
+    app, _ = make_app()
+    with app.test_client() as client:
+        # make the request, without resetting the session beforehand
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client back to login view
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/login/test-service"
+        # check that there's nothing in the session
+        assert "test-service_oauth_token" not in flask.session
+
+
 @responses.activate
 def test_authorized_url_behind_proxy():
     responses.add(
