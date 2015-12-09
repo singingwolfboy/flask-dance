@@ -192,6 +192,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             return redirect(next_url)
 
         state_key = "{bp.name}_oauth_state".format(bp=self)
+        if state_key not in flask.session:
+            # can't validate state, so redirect back to login view
+            return redirect(url_for(".login"))
+
         self.session._state = flask.session[state_key]
         del flask.session[state_key]
 

@@ -6,6 +6,10 @@ unreleased
 * Removed the Dictective utility class, and replaced it with
   ``werkzeug.datastructures.CallbackDict``. It does the same thing, but
   it's better tested, and already a part of one of Flask-Dance's dependencies.
+* If the user hits the ``authorized`` view without having a "state" variable
+  set in the browser cookies, Flask-Dance will now redirect the user back
+  to the ``login`` view to start the OAuth dance all over again, rather than
+  raising a ``KeyError``.
 
 0.7.0 (2015-08-21)
 ------------------
