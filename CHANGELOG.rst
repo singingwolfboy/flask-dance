@@ -8,6 +8,7 @@ unreleased
   library uses to create the redirect URL in the login step. ``client_id`` is
   now a dynamic property on ``OAuth2ConsumerBlueprint``, which sets the
   ``client_id`` property on the wrapped ``oauthlib`` client automatically.
+* Added some debug log statements to ``OAuth2ConsumerBlueprint``
 
 0.7.1 (2015-12-12)
 ------------------
