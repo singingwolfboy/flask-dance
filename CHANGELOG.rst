@@ -9,6 +9,9 @@ unreleased
   now a dynamic property on ``OAuth2ConsumerBlueprint``, which sets the
   ``client_id`` property on the wrapped ``oauthlib`` client automatically.
 * Added some debug log statements to ``OAuth2ConsumerBlueprint``
+* You can now set an ``auth`` property on an instance of
+  ``OAuth2ConsumerBlueprint``. If you do, it will be attached to the
+  ``session`` instance after it is created.
 
 0.7.1 (2015-12-12)
 ------------------
