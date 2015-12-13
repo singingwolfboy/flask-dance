@@ -166,6 +166,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         lazy.invalidate(self, "session")
 
     def login(self):
+        log.debug("client_id = %s", self.client_id)
         self.session.redirect_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
         )
@@ -175,6 +176,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         )
         state_key = "{bp.name}_oauth_state".format(bp=self)
         flask.session[state_key] = state
+        log.debug("state = %s", state)
+        log.debug("redirect URL = %s", url)
         return redirect(url)
 
     def authorized(self):
@@ -186,6 +189,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             next_url = url_for(self.redirect_to)
         else:
             next_url = "/"
+        log.debug("next_url = %s", next_url)
 
         # check for error in request args
         error = request.args.get("error")
@@ -204,15 +208,20 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         state_key = "{bp.name}_oauth_state".format(bp=self)
         if state_key not in flask.session:
             # can't validate state, so redirect back to login view
+            log.info("state not found, redirecting user to login")
             return redirect(url_for(".login"))
 
-        self.session._state = flask.session[state_key]
+        state = flask.session[state_key]
+        log.debug("state = %s", state)
+        self.session._state = state
         del flask.session[state_key]
 
         self.session.redirect_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
         )
 
+        log.debug("client_id = %s", self.client_id)
+        log.debug("client_secret = %s", self.client_secret)
         try:
             token = self.session.fetch_token(
                 self.token_url,
