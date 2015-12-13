@@ -155,7 +155,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             auto_refresh_kwargs=self.auto_refresh_kwargs,
             scope=self.scope,
             state=self.state,
-            auth=self.auth,
             blueprint=self,
             base_url=self.base_url,
             **self.kwargs
@@ -163,6 +162,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         def token_updater(token):
             self.token = token
         ret.token_updater = token_updater
+        ret.auth = self.auth
         return ret
 
     def teardown_session(self, exception=None):
