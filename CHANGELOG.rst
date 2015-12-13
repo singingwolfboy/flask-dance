@@ -3,7 +3,11 @@ Change Log
 
 unreleased
 ----------
-Nothing yet.
+* Fixed a subtle bug where setting the ``client_id`` property on an instance
+  of ``OAuth2ConsumerBlueprint`` did not update the value that the ``oauthlib``
+  library uses to create the redirect URL in the login step. ``client_id`` is
+  now a dynamic property on ``OAuth2ConsumerBlueprint``, which sets the
+  ``client_id`` property on the wrapped ``oauthlib`` client automatically.
 
 0.7.1 (2015-12-12)
 ------------------
