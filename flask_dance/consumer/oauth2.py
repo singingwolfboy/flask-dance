@@ -115,7 +115,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session_class = session_class or OAuth2Session
 
         # passed to OAuth2Session()
-        self.client_id = client_id
+        self._client_id = client_id
         self.client = client
         self.auto_refresh_url = auto_refresh_url
         self.auto_refresh_kwargs = auto_refresh_kwargs
@@ -134,10 +134,20 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
         self.teardown_app_request(self.teardown_session)
 
+    @property
+    def client_id(self):
+        return self.session.client_id
+
+    @client_id.setter
+    def client_id(self, value):
+        self.session.client_id = value
+        # due to a bug in requests-oauthlib, we need to set this manually
+        self.session._client.client_id = value
+
     @lazy
     def session(self):
         ret = self.session_class(
-            client_id=self.client_id,
+            client_id=self._client_id,
             client=self.client,
             auto_refresh_url=self.auto_refresh_url,
             auto_refresh_kwargs=self.auto_refresh_kwargs,
