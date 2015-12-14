@@ -95,6 +95,18 @@ Meetup
     already has the Meetup authentication token loaded (assuming that the user
     has authenticated with Meetup at some point in the past).
 
+Slack
+-----
+.. module:: flask_dance.contrib.slack
+
+.. autofunction:: make_slack_blueprint
+
+.. data:: slack
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Slack authentication token loaded (assuming that the user
+    has authenticated with Slack at some point in the past).
+
 .. _custom-provider:
 
 Custom

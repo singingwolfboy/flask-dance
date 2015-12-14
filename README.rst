@@ -16,6 +16,7 @@ popular websites:
 * JIRA
 * Dropbox
 * Meetup
+* Slack
 
 Installation
 ============
