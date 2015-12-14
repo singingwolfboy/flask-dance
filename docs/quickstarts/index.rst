@@ -11,4 +11,5 @@ Contents:
    twitter
    dropbox
    meetup
+   slack
    sqla-multiuser
