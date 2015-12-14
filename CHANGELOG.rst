@@ -3,6 +3,7 @@ Change Log
 
 unreleased
 ----------
+* Added the Slack pre-set configuration
 * Fixed a subtle bug where setting the ``client_id`` property on an instance
   of ``OAuth2ConsumerBlueprint`` did not update the value that the ``oauthlib``
   library uses to create the redirect URL in the login step. ``client_id`` is
