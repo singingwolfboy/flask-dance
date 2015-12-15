@@ -5,7 +5,7 @@ Setup Application
 -----------------
 Visit https://api.slack.com/applications/new
 to register an application on Slack. The application's "Redirect URI(s)"
-must contain ``http://localhost:5000/login/github/authorized``.
+must contain ``http://localhost:5000/login/slack/authorized``.
 Take note of the "Client ID" and "Client Secret" for the application.
 
 Code
