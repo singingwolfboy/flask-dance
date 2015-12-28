@@ -153,6 +153,8 @@ def test_auto_token_post_no_token():
     assert request_data["text"] == "ping"
     assert request_data["icon_emoji"] == ":robot_face:"
     assert "token" not in request_data
+    url = URLObject(resp.request.url)
+    assert "token" not in url.query_dict
 
 
 @responses.activate
@@ -179,6 +181,9 @@ def test_override_token_get():
     assert request_data["channel"] == "#general"
     assert request_data["text"] == "ping"
     assert request_data["icon_emoji"] == ":robot_face:"
+    # should not be present in URL
+    url = URLObject(resp.request.url)
+    assert "token" not in url.query_dict
 
 
 @responses.activate
@@ -205,3 +210,6 @@ def test_override_token_post():
     assert request_data["channel"] == "#general"
     assert request_data["text"] == "ping"
     assert request_data["icon_emoji"] == ":robot_face:"
+    # should not be present
+    url = URLObject(resp.request.url)
+    assert "token" not in url.query_dict

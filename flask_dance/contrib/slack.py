@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
+from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 from functools import partial
-from requests.auth import AuthBase
 from werkzeug.urls import url_encode, url_decode
 from urlobject import URLObject
 from flask.globals import LocalProxy, _lookup_app_object
@@ -15,30 +15,9 @@ except ImportError:
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
-class SlackOAuth(AuthBase):
-    """
-    Slack wants the access token to be passed in a `token` GET parameter or POST
-    parameter, rather than using the `Authorization: Bearer` header. This is
-    annoying, but we can make it work using this custom Auth object.
-    """
-    def __init__(self, blueprint):
-        self.blueprint = blueprint
-
-    def __call__(self, r):
-        if self.blueprint.token:
-            access_token = self.blueprint.token.get("access_token")
-        else:
-            access_token = None
-        if not access_token:
-            return r
-
-        if r.body:
-            args = url_decode(r.body)
-        else:
-            args = {}
-        args.setdefault("token", access_token)
-        r.body = url_encode(args)
-        return r
+class SlackBlueprint(OAuth2ConsumerBlueprint):
+    def session_created(self, session):
+        return slack_compliance_fix(session)
 
 
 def make_slack_blueprint(
@@ -75,7 +54,7 @@ def make_slack_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify", "chat:write:bot"]
-    slack_bp = OAuth2ConsumerBlueprint("slack", __name__,
+    slack_bp = SlackBlueprint("slack", __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
@@ -89,7 +68,6 @@ def make_slack_blueprint(
         session_class=session_class,
         backend=backend,
     )
-    slack_bp.auth = SlackOAuth(slack_bp)
     slack_bp.from_config["client_id"] = "SLACK_OAUTH_CLIENT_ID"
     slack_bp.from_config["client_secret"] = "SLLACK_OAUTH_CLIENT_SECRET"
 
