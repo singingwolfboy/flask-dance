@@ -3,6 +3,8 @@ sphinx
 sphinxcontrib-napoleon
 sphinxcontrib-seqdiag
 # testing tools
+pytest
+pytest-cov
 mock
 responses
 # testing sqlalchemy support

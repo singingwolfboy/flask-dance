@@ -20,6 +20,6 @@ install:
   - if [[ $DATABASE_URI == postgresql* ]]; then travis_retry pip install psycopg2; fi
   - travis_retry pip install codecov
 script:
-  - coverage run runtests.py
+  - py.test --cov=flask_dance
 after_success:
   - codecov
