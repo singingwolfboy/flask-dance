@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.8.1 (2015-12-28)
+------------------
 * Fixed a typo in the Slack configuration, where it would load the OAuth 2
   client secret from a config variable named "SLLACK_OAUTH_CLIENT_SECRET"
   instead of "SLACK_OAUTH_CLIENT_SECRET"
