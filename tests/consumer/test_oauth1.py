@@ -359,10 +359,7 @@ def test_signal_oauth_error(request):
 
     assert len(calls) == 1
     assert calls[0][0] == (bp,)
-    assert calls[0][1] == {
-        "message": "Token request failed with code 401, response was 'Invalid request token.'.",
-        "response": None, # should be updated when https://github.com/requests/requests-oauthlib/pull/188 is released
-    }
+    assert calls[0][1]["message"] == "Token request failed with code 401, response was 'Invalid request token.'."
     assert resp.status_code == 302
 
 

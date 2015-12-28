@@ -9,6 +9,12 @@ from flask_dance.contrib.slack import make_slack_blueprint, slack
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
 
+import requests_oauthlib
+requires_overridable_fixer = pytest.mark.skipif(
+    requests_oauthlib.__version__ <= '0.6.0',
+    reason="requires an overridable Slack fixer",
+)
+
 
 def test_blueprint_factory():
     slack_bp = make_slack_blueprint(
@@ -79,6 +85,7 @@ def test_context_local():
         assert request.headers["Authorization"] == "Bearer app2"
 
 
+@requires_overridable_fixer
 @responses.activate
 def test_auto_token_get():
     responses.add(responses.GET, "https://slack.com/api/chat.postMessage")
@@ -105,6 +112,7 @@ def test_auto_token_get():
     assert request_data["token"] == "abcde"
 
 
+@requires_overridable_fixer
 @responses.activate
 def test_auto_token_post():
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
@@ -153,8 +161,11 @@ def test_auto_token_post_no_token():
     assert request_data["text"] == "ping"
     assert request_data["icon_emoji"] == ":robot_face:"
     assert "token" not in request_data
+    url = URLObject(resp.request.url)
+    assert "token" not in url.query_dict
 
 
+@requires_overridable_fixer
 @responses.activate
 def test_override_token_get():
     responses.add(responses.GET, "https://slack.com/api/chat.postMessage")
@@ -179,8 +190,12 @@ def test_override_token_get():
     assert request_data["channel"] == "#general"
     assert request_data["text"] == "ping"
     assert request_data["icon_emoji"] == ":robot_face:"
+    # should not be present in URL
+    url = URLObject(resp.request.url)
+    assert "token" not in url.query_dict
 
 
+@requires_overridable_fixer
 @responses.activate
 def test_override_token_post():
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
@@ -205,3 +220,6 @@ def test_override_token_post():
     assert request_data["channel"] == "#general"
     assert request_data["text"] == "ping"
     assert request_data["icon_emoji"] == ":robot_face:"
+    # should not be present
+    url = URLObject(resp.request.url)
+    assert "token" not in url.query_dict
