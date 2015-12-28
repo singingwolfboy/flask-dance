@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.8.0 (2015-12-28)
+------------------
 * Added the Slack pre-set configuration
 * Fixed a subtle bug where setting the ``client_id`` property on an instance
   of ``OAuth2ConsumerBlueprint`` did not update the value that the ``oauthlib``
