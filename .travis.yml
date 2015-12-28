@@ -19,6 +19,7 @@ install:
   - if [[ $BLINKER == 1 ]]; then travis_retry pip install blinker; fi
   - if [[ $DATABASE_URI == postgresql* ]]; then travis_retry pip install psycopg2; fi
   - travis_retry pip install codecov
+  - pip install -e .
 script:
   - py.test --cov=flask_dance
 after_success:
