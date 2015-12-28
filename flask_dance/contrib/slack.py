@@ -69,7 +69,7 @@ def make_slack_blueprint(
         backend=backend,
     )
     slack_bp.from_config["client_id"] = "SLACK_OAUTH_CLIENT_ID"
-    slack_bp.from_config["client_secret"] = "SLLACK_OAUTH_CLIENT_SECRET"
+    slack_bp.from_config["client_secret"] = "SLACK_OAUTH_CLIENT_SECRET"
 
     @slack_bp.before_app_request
     def set_applocal_session():
