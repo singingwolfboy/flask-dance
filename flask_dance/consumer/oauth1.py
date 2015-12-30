@@ -5,6 +5,7 @@ from lazy import lazy
 from flask import request, url_for, redirect
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
+from requests_oauthlib.oauth1_session import TokenRequestDenied
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
 from .base import BaseOAuthConsumerBlueprint, oauth_authorized, oauth_error
@@ -151,7 +152,25 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             ".authorized", next=request.args.get('next'), _external=True,
         )
         self.session._client.client.callback_uri = to_unicode(callback_uri)
-        self.session.fetch_request_token(self.request_token_url)
+
+        try:
+            self.session.fetch_request_token(self.request_token_url)
+        except TokenRequestDenied as err:
+            message = err.args[0]
+            response = getattr(err, "response", None)
+            log.warning("OAuth 1 request token error: %s", message)
+            oauth_error.send(self, message=message, response=response)
+            # can't proceed with OAuth, have to just redirect to next_url
+            if "next" in request.args:
+                next_url = request.args["next"]
+            elif self.redirect_url:
+                next_url = self.redirect_url
+            elif self.redirect_to:
+                next_url = url_for(self.redirect_to)
+            else:
+                next_url = "/"
+            return redirect(next_url)
+
         url = self.session.authorization_url(self.authorization_url)
         return redirect(url)
 
