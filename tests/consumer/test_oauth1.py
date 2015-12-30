@@ -333,7 +333,38 @@ def test_signal_sender_oauth_authorized(request):
 
 @requires_blinker
 @responses.activate
-def test_signal_oauth_error(request):
+def test_signal_oauth_error_login(request):
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/request_token",
+        body="oauth_problem=nonce_used", status=401,
+    )
+    app, bp = make_app()
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_error.connect(callback)
+    request.addfinalizer(lambda: oauth_error.disconnect(callback))
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service",
+            base_url="https://a.b.c",
+        )
+
+    assert len(calls) == 1
+    assert calls[0][0] == (bp,)
+    assert calls[0][1]["message"] == "Token request failed with code 401, response was 'oauth_problem=nonce_used'."
+    assert resp.status_code == 302
+    location = resp.headers["Location"]
+    assert location == "https://a.b.c/"
+
+
+@requires_blinker
+@responses.activate
+def test_signal_oauth_error_authorized(request):
     responses.add(
         responses.POST,
         "https://example.com/oauth/access_token",

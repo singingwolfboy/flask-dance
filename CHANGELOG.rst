@@ -3,7 +3,9 @@ Change Log
 
 unreleased
 ----------
-Nothing yet
+* If the OAuth 1 token request is denied on accessing the login view,
+  Flask-Dance will now redirect the user and fire the ``oauth_error`` signal.
+  This matches the behavior of how Flask-Dance handles OAuth 2 errors.
 
 0.8.1 (2015-12-28)
 ------------------
