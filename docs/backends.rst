@@ -107,7 +107,7 @@ backend that uses a file on disk::
 
         def set(self, blueprint, token):
             with open(self.filepath, "w") as f:
-                json.dump(f)
+                json.dump(token, f)
 
         def delete(self, blueprint):
             os.remove(self.filepath)
