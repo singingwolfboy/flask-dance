@@ -140,7 +140,7 @@ a file called ``home.html`` with the following contents:
         </ul>
       {% endif %}
     {% endwith %}
-    {% if current_user.is_authenticated() %}
+    {% if current_user.is_authenticated %}
       You are logged in as {{ current_user.username }}!
       <a href="{{ url_for("logout") }}">Log out</a>
     {% else %}
