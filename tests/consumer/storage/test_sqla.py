@@ -110,7 +110,7 @@ def test_sqla_backend_without_user(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 3
+    assert len(queries) == 2
 
     # check the database
     authorizations = OAuth.query.all()
@@ -187,7 +187,7 @@ def test_sqla_backend(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 4
+    assert len(queries) == 3
 
     # check the database
     alice = User.query.first()
@@ -321,7 +321,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 5
+    assert len(queries) == 4
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
     responses.reset()
@@ -346,7 +346,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 5
+    assert len(queries) == 4
 
     # check the database
     authorizations = OAuth.query.all()
@@ -428,7 +428,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 6
+    assert len(queries) == 5
 
     # check the database
     users = User.query.all()
@@ -599,7 +599,7 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 3
+    assert len(queries) == 2
 
     # check that the database record was overwritten
     authorizations = OAuth.query.all()
@@ -642,7 +642,7 @@ def test_sqla_cache(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 3
+    assert len(queries) == 2
 
     expected_token = {
         "access_token": "foobar",
