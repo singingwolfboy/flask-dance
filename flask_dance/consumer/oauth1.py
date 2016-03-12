@@ -3,6 +3,7 @@ from __future__ import unicode_literals, print_function
 import logging
 from lazy import lazy
 from flask import request, url_for, redirect
+from flask import session as flask_session
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib.oauth1_session import TokenRequestDenied
@@ -153,8 +154,10 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         )
         self.session._client.client.callback_uri = to_unicode(callback_uri)
 
+        flask_session['request_token'] = None
         try:
-            self.session.fetch_request_token(self.request_token_url)
+            request_token = self.session.fetch_request_token(self.request_token_url)
+            flask_session['request_token'] = request_token
         except TokenRequestDenied as err:
             message = err.args[0]
             response = getattr(err, "response", None)
@@ -183,7 +186,13 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             next_url = url_for(self.redirect_to)
         else:
             next_url = "/"
-        self.session.parse_authorization_response(request.url)
+
+        request_token = self.session.parse_authorization_response(request.url)
+        
+        if (not request_token.get('oauth_token_secret', None)
+             and flask_session.get('request_token')):
+            request_token['oauth_token_secret'] = flask_session['request_token']['oauth_token_secret']
+            self.session._populate_attributes(request_token)
 
         try:
             token = self.session.fetch_access_token(self.access_token_url)
