@@ -3,7 +3,6 @@ from __future__ import unicode_literals, print_function
 import six
 from lazy import lazy
 from abc import ABCMeta, abstractmethod, abstractproperty
-from distutils.version import StrictVersion
 from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
@@ -33,8 +32,9 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
             url_defaults=url_defaults,
             root_path=root_path,
         )
-        # `root_path` didn't exist until 1.0
-        if StrictVersion(flask.__version__) < StrictVersion('1.0'):
+        # `root_path` didn't exist in 0.10, and will cause an error if it's
+        # passed in that version. Only pass `root_path` if it's set.
+        if bp_kwargs["root_path"] is None:
             del bp_kwargs["root_path"]
         flask.Blueprint.__init__(self, **bp_kwargs)
 

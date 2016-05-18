@@ -3,12 +3,12 @@ from __future__ import absolute_import, unicode_literals
 
 import pytest
 import mock
-from distutils.version import StrictVersion
+from pkg_resources import parse_version
 import requests_oauthlib
 from flask_dance.consumer.requests import OAuth1Session, OAuth2Session
 
 requires_requests_oauthlib_05 = pytest.mark.skipif(
-    StrictVersion(requests_oauthlib.__version__) < StrictVersion('0.5'),
+    parse_version(requests_oauthlib.__version__) < parse_version('0.5'),
     reason="requires requests_oauthlib at version 0.5 or higher",
 )
 
