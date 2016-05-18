@@ -3,7 +3,7 @@ from __future__ import unicode_literals, print_function
 import six
 from lazy import lazy
 from abc import ABCMeta, abstractmethod, abstractproperty
-from distutils.version import StrictVersion
+from pkg_resources import parse_version
 from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
@@ -34,7 +34,7 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
             root_path=root_path,
         )
         # `root_path` didn't exist until 1.0
-        if StrictVersion(flask.__version__) < StrictVersion('1.0'):
+        if parse_version(flask.__version__) < parse_version('1.0'):
             del bp_kwargs["root_path"]
         flask.Blueprint.__init__(self, **bp_kwargs)
 
