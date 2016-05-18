@@ -132,7 +132,7 @@ We could then build the blueprint like this:
         client_secret="my-secret-here",
         base_url="https://oauth-example.com",
         token_url="https://oauth-example.com/login/access_token",
-        authorize_url="https://oauth-example.com/login/authorize",
+        authorization_url="https://oauth-example.com/login/authorize",
     )
     app.register_blueprint(example_blueprint, url_prefix="/login")
 
