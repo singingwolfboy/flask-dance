@@ -5,6 +5,12 @@ unreleased
 ----------
 Nothing yet
 
+0.8.3 (2016-05-18)
+------------------
+* Fixed an error that occurred if you were running an unreleased version
+  of Flask, due to the version comparison code. See `issue 53`_.
+  Thanks, @ThiefMaster!
+
 0.8.2 (2015-12-30)
 ------------------
 * If the OAuth 1 token request is denied on accessing the login view,
@@ -160,3 +166,5 @@ Nothing yet
 0.1 (2014-09-15)
 ----------------
 * Initial release
+
+.. _issue 53: https://github.com/singingwolfboy/flask-dance/issues/53
