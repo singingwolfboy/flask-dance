@@ -39,18 +39,9 @@ def get_requirements(path):
     return [l.strip() for l in lines if is_requirement(l)]
 
 
-version = ''
-with open('flask_dance/__init__.py', 'r') as fd:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-                        fd.read(), re.MULTILINE).group(1)
-
-if not version:
-    raise RuntimeError('Cannot find version information')
-
-
 setup(
     name="Flask-Dance",
-    version=version,
+    version="0.8.4",
     description="Doing the OAuth dance with style using Flask, requests, and oauthlib",
     long_description=open('README.rst').read(),
     author="David Baumgold",
