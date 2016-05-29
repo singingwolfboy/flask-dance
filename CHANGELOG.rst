@@ -3,7 +3,7 @@ Change Log
 
 unreleased
 ----------
-Nothing yet
+* Changed how the application version is defined.
 
 0.8.3 (2016-05-18)
 ------------------
