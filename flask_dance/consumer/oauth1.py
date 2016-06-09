@@ -2,7 +2,8 @@ from __future__ import unicode_literals, print_function
 
 import logging
 from lazy import lazy
-from flask import request, url_for, redirect
+from flask import request, url_for, redirect, current_app
+from werkzeug.wrappers import Response
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib.oauth1_session import TokenRequestDenied
@@ -196,6 +197,13 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             return redirect(next_url)
 
         results = oauth_authorized.send(self, token=token) or []
-        if not any(ret == False for func, ret in results):
+        set_token = True
+        for func, ret in results:
+            if isinstance(ret, (Response, current_app.response_class)):
+                return ret
+            if ret == False:
+                set_token = False
+
+        if set_token:
             self.token = token
         return redirect(next_url)

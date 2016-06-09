@@ -4,7 +4,8 @@ import json
 import logging
 from lazy import lazy
 import flask
-from flask import request, url_for, redirect
+from flask import request, url_for, redirect, current_app
+from werkzeug.wrappers import Response
 from oauthlib.oauth2 import MissingCodeError
 from .base import (
     BaseOAuthConsumerBlueprint, oauth_authorized, oauth_error
@@ -240,7 +241,15 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 )
             )
             raise
+
         results = oauth_authorized.send(self, token=token) or []
-        if not any(ret == False for func, ret in results):
+        set_token = True
+        for func, ret in results:
+            if isinstance(ret, (Response, current_app.response_class)):
+                return ret
+            if ret == False:
+                set_token = False
+
+        if set_token:
             self.token = token
         return redirect(next_url)
