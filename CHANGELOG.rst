@@ -3,7 +3,8 @@ Change Log
 
 unreleased
 ----------
-Nothing yet
+* Allowed an ``oauth_authorized`` event handler to return a ``flask.Response``
+  instance. If so, that response will be sent to the requesting user.
 
 0.8.3 (2016-05-18)
 ------------------
