@@ -281,6 +281,32 @@ def test_signal_oauth_authorized_abort(request):
 
 
 @requires_blinker
+def test_signal_oauth_authorized_response(request):
+    app, bp = make_app()
+    bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+        return flask.redirect("/url")
+
+    oauth_authorized.connect(callback)
+    request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
+        )
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "http://localhost/url"
+        # check that we did NOT store the token
+        assert "test-token_oauth_token" not in flask.session
+
+    # the callback should still have been called
+    assert len(calls) == 1
+
+
+@requires_blinker
 def test_signal_sender_oauth_authorized(request):
     app, bp = make_app()
     bp2 = OAuth1ConsumerBlueprint("test2", __name__,

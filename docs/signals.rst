@@ -41,6 +41,16 @@ The following signals exist in Flask-Dance:
     to authorize your OAuth request, has granted insufficient scopes, or in some
     other way has given you a token that you don't want.
 
+    You can also return a :class:`~flask.Response` instance from an event
+    subscriber. If you do, that response will be returned to the user instead
+    of the normal redirect. For example::
+
+        from flask import redirect, url_for
+
+        @oauth_authorized.connect
+        def logged_in(blueprint, token):
+            return redirect(url_for("after_oauth"))
+
 .. data:: oauth_error
 
     This signal is sent when the OAuth provider indicates that there was an
