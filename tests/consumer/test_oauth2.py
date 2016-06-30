@@ -373,6 +373,36 @@ def test_signal_oauth_authorized_abort(request):
 
 
 @requires_blinker
+def test_signal_oauth_authorized_response(request):
+    app, bp = make_app()
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+        return flask.redirect("/url")
+
+    oauth_authorized.connect(callback)
+    request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+
+        bp.session.fetch_token = mock.Mock(return_value="test-token")
+
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+        )
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "http://localhost/url"
+        # check that we did NOT store the token
+        assert "test-service_oauth_token" not in flask.session
+
+    # callback still should have been called
+    assert len(calls) == 1
+
+
+@requires_blinker
 def test_signal_sender_oauth_authorized(request):
     app, bp = make_app()
     bp2 = OAuth2ConsumerBlueprint("test2", __name__,
