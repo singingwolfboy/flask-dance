@@ -327,21 +327,23 @@ def test_signal_oauth_authorized(request):
 
     oauth_authorized.connect(callback)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+    fake_token = {"access_token": "test-token"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
         )
+        assert resp.status_code == 302
         # check that we stored the token
-        assert flask.session["test-service_oauth_token"] == "test-token"
+        assert flask.session["test-service_oauth_token"] == fake_token
 
     assert len(calls) == 1
     assert calls[0][0] == (bp,)
-    assert calls[0][1] == {"token": "test-token"}
+    assert calls[0][1] == {"token": fake_token}
 
 
 @requires_blinker
@@ -355,12 +357,13 @@ def test_signal_oauth_authorized_abort(request):
 
     oauth_authorized.connect(callback)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+    fake_token = {"access_token": "test-token"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
 
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -383,12 +386,13 @@ def test_signal_oauth_authorized_response(request):
 
     oauth_authorized.connect(callback)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+    fake_token = {"access_token": "test-token"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
 
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -423,13 +427,15 @@ def test_signal_sender_oauth_authorized(request):
 
     oauth_authorized.connect(callback, sender=bp)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback, sender=bp))
+    fake_token = {"access_token": "test-token"}
+    fake_token2 = {"access_token": "test-token2"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
-        bp2.session.fetch_token = mock.Mock(return_value="test2-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
+        bp2.session.fetch_token = mock.Mock(return_value=fake_token2)
 
         resp = client.get(
             "/login/test2/authorized?code=secret-code&state=random-string",
@@ -456,8 +462,8 @@ def test_signal_sender_oauth_authorized(request):
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
-        bp2.session.fetch_token = mock.Mock(return_value="test2-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
+        bp2.session.fetch_token = mock.Mock(return_value=fake_token2)
 
         resp = client.get(
             "/login/test2/authorized?code=secret-code&state=random-string",
