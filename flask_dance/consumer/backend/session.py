@@ -1,4 +1,4 @@
-from . import BaseBackend
+from flask_dance.consumer.backend import BaseBackend
 import flask
 
 
