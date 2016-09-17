@@ -5,6 +5,10 @@ unreleased
 ----------
 Nothing yet.
 
+0.9.1 (2016-09-17)
+-----------------
+* Added the Azure AD pre-set configuration
+
 0.9.0 (2016-07-1)
 -----------------
 * Allowed an ``oauth_authorized`` event handler to return a ``flask.Response``
