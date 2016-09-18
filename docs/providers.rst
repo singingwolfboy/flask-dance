@@ -107,6 +107,19 @@ Slack
     already has the Slack authentication token loaded (assuming that the user
     has authenticated with Slack at some point in the past).
 
+Azure
+-------
+.. module:: flask_dance.contrib.azure
+
+.. autofunction:: make_azure_blueprint
+
+.. data:: azure
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Azure AD authentication token loaded (assuming that the user
+    has authenticated with Azure AD at some point in the past).
+
+
 .. _custom-provider:
 
 Custom

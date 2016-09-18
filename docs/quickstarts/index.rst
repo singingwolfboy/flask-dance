@@ -12,4 +12,5 @@ Contents:
    dropbox
    meetup
    slack
+   azure
    sqla-multiuser

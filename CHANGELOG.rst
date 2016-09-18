@@ -3,7 +3,7 @@ Change Log
 
 unreleased
 ----------
-Nothing yet.
+* Added the Azure AD pre-set configuration
 
 0.9.0 (2016-07-1)
 -----------------
