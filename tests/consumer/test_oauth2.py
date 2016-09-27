@@ -14,6 +14,7 @@ import mock
 import responses
 from urlobject import URLObject
 import flask
+from freezegun import freeze_time
 from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.consumer import (
     OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
@@ -126,7 +127,7 @@ def test_authorized_url():
         request_data = dict(parse_qsl(responses.calls[0].request.body))
         assert request_data["client_id"] == "client_id"
         assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
-        # check that we stored the access token and secret in the session
+        # check that we stored the access token in the session
         assert (
             flask.session["test-service_oauth_token"] ==
             {'access_token': 'foobar', 'scope': ['admin'], 'token_type': 'bearer'}
@@ -187,6 +188,76 @@ def test_authorized_url_invalid_response():
         match = re.search(r"{[^}]*}", str(missingError.value))
         err_dict = json.loads(match.group(0))
         assert err_dict == {"error_message": "IMUSEFUL", "error_code": "1349048"}
+
+
+@responses.activate
+@freeze_time("2016-01-01 12:00:01")
+def test_authorized_url_token_lifetime():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","expires_in":300}',
+    )
+    app, _ = make_app()
+
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/"
+        # check that we obtained an access token
+        assert len(responses.calls) == 1
+        request_data = dict(parse_qsl(responses.calls[0].request.body))
+        assert request_data["client_id"] == "client_id"
+        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+        # check that we stored the access token and expiration date in the session
+        expected_stored_token = {
+            'access_token': 'foobar',
+            'token_type': 'bearer',
+            'expires_in': 300,
+            'expires_at': 1451649901,
+        }
+        assert flask.session["test-service_oauth_token"] == expected_stored_token
+
+
+def test_return_expired_token(request):
+    app, bp = make_app()
+    time1 = "2016-01-01 12:00:01"
+    time2 = "2016-01-01 12:05:00"  # 299 sec in future
+    time3 = "2016-01-01 12:10:01"  # 600 sec in future
+    token = {
+        'access_token': 'foobar',
+        'token_type': 'bearer',
+        'expires_in': 300,  # expires in 300 seconds
+    }
+    ctx = app.test_request_context('/')
+    request.addfinalizer(ctx.pop)
+    ctx.push()
+
+    with freeze_time(time1):
+        bp.token = token
+        modified1 = token.copy()
+        modified1["expires_at"] = 1451649901
+        assert bp.token == modified1
+
+    with freeze_time(time2):
+        modified2 = token.copy()
+        modified2["expires_in"] = 1
+        modified2["expires_at"] = 1451649901
+        assert bp.token == modified2
+
+    with freeze_time(time3):
+        modified3 = token.copy()
+        modified3["expires_in"] = -300
+        modified3["expires_at"] = 1451649901
+        assert bp.token == modified3
 
 
 @responses.activate
@@ -327,21 +398,23 @@ def test_signal_oauth_authorized(request):
 
     oauth_authorized.connect(callback)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+    fake_token = {"access_token": "test-token"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
         )
+        assert resp.status_code == 302
         # check that we stored the token
-        assert flask.session["test-service_oauth_token"] == "test-token"
+        assert flask.session["test-service_oauth_token"] == fake_token
 
     assert len(calls) == 1
     assert calls[0][0] == (bp,)
-    assert calls[0][1] == {"token": "test-token"}
+    assert calls[0][1] == {"token": fake_token}
 
 
 @requires_blinker
@@ -355,12 +428,13 @@ def test_signal_oauth_authorized_abort(request):
 
     oauth_authorized.connect(callback)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+    fake_token = {"access_token": "test-token"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
 
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -383,12 +457,13 @@ def test_signal_oauth_authorized_response(request):
 
     oauth_authorized.connect(callback)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback))
+    fake_token = {"access_token": "test-token"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
 
         resp = client.get(
             "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -423,13 +498,15 @@ def test_signal_sender_oauth_authorized(request):
 
     oauth_authorized.connect(callback, sender=bp)
     request.addfinalizer(lambda: oauth_authorized.disconnect(callback, sender=bp))
+    fake_token = {"access_token": "test-token"}
+    fake_token2 = {"access_token": "test-token2"}
 
     with app.test_client() as client:
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
-        bp2.session.fetch_token = mock.Mock(return_value="test2-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
+        bp2.session.fetch_token = mock.Mock(return_value=fake_token2)
 
         resp = client.get(
             "/login/test2/authorized?code=secret-code&state=random-string",
@@ -456,8 +533,8 @@ def test_signal_sender_oauth_authorized(request):
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = "random-string"
 
-        bp.session.fetch_token = mock.Mock(return_value="test-token")
-        bp2.session.fetch_token = mock.Mock(return_value="test2-token")
+        bp.session.fetch_token = mock.Mock(return_value=fake_token)
+        bp2.session.fetch_token = mock.Mock(return_value=fake_token2)
 
         resp = client.get(
             "/login/test2/authorized?code=secret-code&state=random-string",

@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import functools
 from collections import MutableMapping
+from datetime import datetime
 
 
 class FakeCache(object):
@@ -45,3 +46,15 @@ def getattrd(obj, name, default=sentinel):
         if default is not sentinel:
             return default
         raise
+
+
+def timestamp_from_datetime(dt):
+    """
+    Given a datetime, return a float that represents the timestamp for
+    that datetime.
+
+    http://stackoverflow.com/questions/8777753/converting-datetime-date-to-utc-timestamp-in-python#8778548
+    """
+    if hasattr(dt, "timestamp") and callable(dt.timestamp):
+        return dt.timestamp()
+    return (dt - datetime(1970, 1, 1)).total_seconds()

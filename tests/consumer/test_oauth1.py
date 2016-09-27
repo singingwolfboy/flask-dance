@@ -235,7 +235,8 @@ def test_redirect_fallback():
 @requires_blinker
 def test_signal_oauth_authorized(request):
     app, bp = make_app()
-    bp.session.fetch_access_token = mock.Mock(return_value="test-token")
+    fake_token = {"access_token": "test-token"}
+    bp.session.fetch_access_token = mock.Mock(return_value=fake_token)
 
     calls = []
     def callback(*args, **kwargs):
@@ -249,11 +250,11 @@ def test_signal_oauth_authorized(request):
             "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz",
         )
         # check that we stored the token
-        assert flask.session["test-service_oauth_token"] == "test-token"
+        assert flask.session["test-service_oauth_token"] == fake_token
 
     assert len(calls), 1
     assert calls[0][0] == (bp,)
-    assert calls[0][1] == {"token": "test-token"}
+    assert calls[0][1] == {"token": fake_token}
 
 
 @requires_blinker

@@ -89,5 +89,8 @@ class OAuth2Session(BaseOAuth2Session):
 
         self.load_token()
         return super(OAuth2Session, self).request(
-            method=method, url=url, data=data, headers=headers, **kwargs
+            method=method, url=url, data=data, headers=headers,
+            client_id=self.blueprint.client_id,
+            client_secret=self.blueprint.client_secret,
+            **kwargs
         )

@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, print_function
 
+from datetime import datetime, timedelta
 import six
 from lazy import lazy
 from abc import ABCMeta, abstractmethod, abstractproperty
@@ -7,7 +8,7 @@ from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
 from flask_dance.consumer.backend.session import SessionBackend
-from flask_dance.utils import getattrd
+from flask_dance.utils import getattrd, timestamp_from_datetime
 
 
 _signals = Namespace()
@@ -91,11 +92,26 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
 
     @property
     def token(self):
-        return self.backend.get(self)
+        _token = self.backend.get(self)
+        if _token and _token.get("expires_in") and _token.get("expires_at"):
+            # Update the `expires_in` value, so that requests-oauthlib
+            # can handle automatic token refreshing. Assume that
+            # `expires_at` is a valid Unix timestamp.
+            expires_at = datetime.utcfromtimestamp(_token["expires_at"])
+            expires_in = expires_at - datetime.utcnow()
+            _token["expires_in"] = expires_in.total_seconds()
+        return _token
 
     @token.setter
     def token(self, value):
-        self.backend.set(self, value)
+        _token = value
+        if _token and _token.get("expires_in"):
+            # Set the `expires_at` value, overwriting any value
+            # that may already be there.
+            delta = timedelta(seconds=_token["expires_in"])
+            expires_at = datetime.utcnow() + delta
+            _token["expires_at"] = timestamp_from_datetime(expires_at)
+        self.backend.set(self, _token)
         lazy.invalidate(self.session, "token")
 
     @token.deleter
