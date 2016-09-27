@@ -3,7 +3,12 @@ Change Log
 
 unreleased
 ----------
+nothing yet
+
+0.10.0 (2016-09-27)
+-------------------
 * Added the Azure AD pre-set configuration
+* Improve OAuth 2 token auto-refresh
 
 0.9.0 (2016-07-1)
 -----------------
