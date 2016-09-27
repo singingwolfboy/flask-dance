@@ -1,7 +1,6 @@
 requests>=2.0
 oauthlib
-# requests-oauthlib>=0.6.2
-git+https://github.com/singingwolfboy/requests-oauthlib.git@oauth2-request-accept-client-id-and-secret#egg=requests_oauthlib
+requests-oauthlib>=0.7.0
 Flask>=0.7
 urlobject
 six
