@@ -66,6 +66,7 @@ def make_google_blueprint(
         base_url="https://www.googleapis.com/",
         authorization_url="https://accounts.google.com/o/oauth2/auth",
         token_url="https://accounts.google.com/o/oauth2/token",
+        auto_refresh_url="https://accounts.google.com/o/oauth2/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
