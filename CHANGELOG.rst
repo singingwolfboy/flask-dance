@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+nothing yet
+
+0.10.1 (2016-11-21)
+-------------------
 * Fixed ``make_google_blueprint`` to include ``auto_refresh_url`` so that
   token renewal is automatically handled by ``requests-oauthlib``
 
