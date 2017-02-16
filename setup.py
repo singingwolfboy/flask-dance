@@ -60,7 +60,7 @@ setup(
     install_requires=get_requirements("requirements.txt"),
     tests_require=get_requirements("dev-requirements.txt"),
     extras_require={
-        'sqla': ['sqlalchemy', 'sqlalchemy-utils'],
+        'sqla': ['sqlalchemy>=1.1'],
         'signals': ['blinker'],
     },
     cmdclass = {'test': PyTest},

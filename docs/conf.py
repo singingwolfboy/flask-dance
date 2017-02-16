@@ -275,7 +275,6 @@ intersphinx_mapping = {
     'requests': ('http://docs.python-requests.org/en/latest/', None),
     'requests_oauthlib': ('http://requests-oauthlib.readthedocs.org/en/latest/', None),
     'sqlalchemy': ('http://docs.sqlalchemy.org/en/latest/', None),
-    'sqlalchemy_utils': ('http://sqlalchemy-utils.readthedocs.org/en/latest/', None),
 }
 
 autodoc_member_order = "bysource"

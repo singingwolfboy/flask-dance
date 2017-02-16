@@ -3,7 +3,9 @@ Change Log
 
 unreleased
 ----------
-nothing yet
+* Depend on SQLAlchemy 1.1 or higher, so that we can drop the dependency on
+  sqlalchemy_utils. We only needed it for the JSON type, which is now built
+  into SQLAlchemy 1.1.
 
 0.10.1 (2016-11-21)
 -------------------

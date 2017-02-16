@@ -9,8 +9,7 @@ mock
 responses
 freezegun
 # testing sqlalchemy support
-sqlalchemy>=0.9
-sqlalchemy_utils
+sqlalchemy>=1.1
 flask-sqlalchemy
 # testing integration with other extensions
 flask-login
