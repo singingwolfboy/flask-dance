@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, JSON
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy_utils import JSONType
 from sqlalchemy.orm.exc import NoResultFound
 from flask_dance.utils import FakeCache, first, getattrd
 from flask_dance.consumer.backend import BaseBackend
@@ -27,7 +26,7 @@ class OAuthConsumerMixin(object):
         an automatically generated datetime that indicates when
         the OAuth provider issued this token
     ``token``
-        a :class:`JSON <sqlalchemy_utils.types.json.JSONType>` field to store
+        a :class:`JSON <sqlalchemy.types.JSON>` field to store
         the actual token received from the OAuth provider
     """
     @declared_attr
@@ -37,7 +36,7 @@ class OAuthConsumerMixin(object):
     id = Column(Integer, primary_key=True)
     provider = Column(String(50))
     created_at = Column(DateTime, default=datetime.utcnow)
-    token = Column(MutableDict.as_mutable(JSONType))
+    token = Column(MutableDict.as_mutable(JSON))
 
     def __repr__(self):
         parts = []
