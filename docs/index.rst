@@ -14,6 +14,7 @@ User Guide:
 .. toctree::
    :maxdepth: 2
 
+   install
    quickstarts/index
    providers
    backends
