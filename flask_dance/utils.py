@@ -1,7 +1,22 @@
 from __future__ import unicode_literals
 import functools
 from collections import MutableMapping
-from datetime import datetime, timezone
+from datetime import datetime
+
+
+try:
+    from datetime import timezone
+    utc = timezone.utc
+except ImportError:
+    from datetime import timedelta, tzinfo
+    class UTC(tzinfo):
+        def utcoffset(self, dt):
+            return timedelta(0)
+        def tzname(self, dt):
+            return "UTC"
+        def dst(self, dst):
+            return timedelta(0)
+    utc = UTC()
 
 
 class FakeCache(object):
@@ -55,6 +70,7 @@ def timestamp_from_datetime(dt):
 
     http://stackoverflow.com/questions/8777753/converting-datetime-date-to-utc-timestamp-in-python#8778548
     """
+    dt = dt.replace(tzinfo=utc)
     if hasattr(dt, "timestamp") and callable(dt.timestamp):
-        return dt.replace(tzinfo=timezone.utc).timestamp()
-    return (dt - datetime(1970, 1, 1, tzinfo=timezone.utc)).total_seconds()
+        return dt.replace(tzinfo=utc).timestamp()
+    return (dt - datetime(1970, 1, 1, tzinfo=utc)).total_seconds()
