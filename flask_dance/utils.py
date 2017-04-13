@@ -4,6 +4,21 @@ from collections import MutableMapping
 from datetime import datetime
 
 
+try:
+    from datetime import timezone
+    utc = timezone.utc
+except ImportError:
+    from datetime import timedelta, tzinfo
+    class UTC(tzinfo):
+        def utcoffset(self, dt):
+            return timedelta(0)
+        def tzname(self, dt):
+            return "UTC"
+        def dst(self, dst):
+            return timedelta(0)
+    utc = UTC()
+
+
 class FakeCache(object):
     """
     An object that mimics just enough of Flask-Cache's API to be compatible
@@ -50,11 +65,12 @@ def getattrd(obj, name, default=sentinel):
 
 def timestamp_from_datetime(dt):
     """
-    Given a datetime, return a float that represents the timestamp for
+    Given a datetime, in UTC, return a float that represents the timestamp for
     that datetime.
 
     http://stackoverflow.com/questions/8777753/converting-datetime-date-to-utc-timestamp-in-python#8778548
     """
+    dt = dt.replace(tzinfo=utc)
     if hasattr(dt, "timestamp") and callable(dt.timestamp):
-        return dt.timestamp()
-    return (dt - datetime(1970, 1, 1)).total_seconds()
+        return dt.replace(tzinfo=utc).timestamp()
+    return (dt - datetime(1970, 1, 1, tzinfo=utc)).total_seconds()
