@@ -85,7 +85,7 @@ class record_queries(object):
 
 def test_sqla_backend_without_user(app, db, blueprint, request):
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
@@ -126,7 +126,7 @@ def test_sqla_backend_without_user(app, db, blueprint, request):
 
 
 def test_sqla_model_repr(app, db, request):
-    class MyAwesomeOAuth(db.Model, OAuthConsumerMixin):
+    class MyAwesomeOAuth(OAuthConsumerMixin, db.Model):
         pass
 
     db.create_all()
@@ -154,7 +154,7 @@ def test_sqla_backend(app, db, blueprint, request):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -210,7 +210,7 @@ def test_sqla_load_token_for_user(app, db, blueprint, request):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -281,7 +281,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -377,7 +377,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -461,7 +461,7 @@ def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -525,7 +525,7 @@ def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
 
 def test_sqla_delete_token(app, db, blueprint, request):
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
@@ -561,7 +561,7 @@ def test_sqla_delete_token(app, db, blueprint, request):
 
 def test_sqla_overwrite_token(app, db, blueprint, request):
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
@@ -617,7 +617,7 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
 def test_sqla_cache(app, db, blueprint, request):
     cache = Cache(app)
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session, cache=cache)
