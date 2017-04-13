@@ -44,7 +44,7 @@ Create a file called ``multi.py`` with the following contents:
         username = db.Column(db.String(256), unique=True)
         # ... other columns as needed
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -193,7 +193,7 @@ it to your Flask application.
         username = db.Column(db.String(256), unique=True)
         # ... other columns as needed
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 

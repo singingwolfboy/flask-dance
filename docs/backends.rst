@@ -25,7 +25,7 @@ column and a ``provider`` column. Flask-Dance includes a
     from flask_dance.consumer.backend.sqla import OAuthConsumerMixin
 
     db = SQLAlchemy()
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
 Next, create an instance of the SQLAlchemy backend and assign it to your blueprint::
@@ -47,7 +47,7 @@ If you do, it's slightly more complicated::
         id = db.Column(db.Integer, primary_key=True)
         # ... other columns as needed
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 

@@ -101,7 +101,7 @@ just set it up like this:
         id = db.Column(db.Integer, primary_key=True)
         # ... other columns as needed
 
-    class OAuth(db.Model, OAuthConsumerMixin):
+    class OAuth(OAuthConsumerMixin, db.Model):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
