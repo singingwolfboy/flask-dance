@@ -3,7 +3,8 @@ Change Log
 
 unreleased
 ----------
-nothing yet
+* Improve timezone handling for OAuth 2 token refreshing.
+* Update tests and docs regarding ``OAuthConsumerMixin`` inheritance.
 
 0.10.1 (2016-11-21)
 -------------------
