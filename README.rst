@@ -9,6 +9,7 @@ README will give you a taste of the features.
 Flask-Dance currently provides pre-set OAuth configurations for the following
 popular websites:
 
+* Bitbucket
 * Facebook
 * GitHub
 * Google
