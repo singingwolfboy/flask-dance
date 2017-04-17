@@ -11,6 +11,18 @@ to Flask-Dance!
    :local:
    :backlinks: none
 
+Bitbucket
+--------
+.. module:: flask_dance.contrib.bitbucket
+
+.. autofunction:: make_bitbucket_blueprint
+
+.. data:: bitbucket
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Bitbucket authentication token loaded (assuming that the user
+    has authenticated with Bitbucket at some point in the past).
+
 Facebook
 --------
 .. module:: flask_dance.contrib.facebook

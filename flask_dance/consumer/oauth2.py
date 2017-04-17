@@ -42,6 +42,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             redirect_to=None,
             session_class=None,
             backend=None,
+            auth=None,
 
             **kwargs):
         """
@@ -99,6 +100,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+            auth: Authentication details details to be passed on to `requests`. This
+                can be a tuple of (<username>, <password>) or any class that `requests`
+                allows.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
@@ -124,6 +128,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.state = state
         self.kwargs = kwargs
         self.client_secret = client_secret
+        self.auth = auth
 
         # used by view functions
         self.authorization_url = authorization_url
@@ -231,6 +236,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 self.token_url,
                 authorization_response=request.url,
                 client_secret=self.client_secret,
+                auth=self.auth,
                 **self.token_url_params
             )
         except MissingCodeError as e:
