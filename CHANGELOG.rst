@@ -3,6 +3,7 @@ Change Log
 
 unreleased
 ----------
+* Added the Nylas pre-set configuration
 * Improve timezone handling for OAuth 2 token refreshing.
 * Update tests and docs regarding ``OAuthConsumerMixin`` inheritance.
 
