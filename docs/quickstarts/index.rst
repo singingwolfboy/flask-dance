@@ -13,4 +13,5 @@ Contents:
    meetup
    slack
    azure
+   nylas
    sqla-multiuser
