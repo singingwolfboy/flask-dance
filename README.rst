@@ -18,6 +18,7 @@ popular websites:
 * Meetup
 * Slack
 * Azure AD
+* Nylas
 
 Installation
 ============

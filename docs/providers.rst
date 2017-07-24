@@ -119,6 +119,17 @@ Azure
     already has the Azure AD authentication token loaded (assuming that the user
     has authenticated with Azure AD at some point in the past).
 
+Nylas
+-----
+.. module:: flask_dance.contrib.nylas
+
+.. autofunction:: make_nylas_blueprint
+
+.. data:: nylas
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Nylas authentication token loaded (assuming that the user
+    has authenticated with Nylas at some point in the past).
 
 .. _custom-provider:
 
