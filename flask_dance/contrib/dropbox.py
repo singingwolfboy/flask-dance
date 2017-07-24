@@ -34,9 +34,9 @@ def make_dropbox_blueprint(
             view to redirect to after the authentication dance is complete.
             The actual URL will be determined by :func:`flask.url_for`
         login_url (str, optional): the URL path for the ``login`` view.
-            Defaults to ``/meetup``
+            Defaults to ``/dropbox``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
-            Defaults to ``/meetup/authorized``.
+            Defaults to ``/dropbox/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.

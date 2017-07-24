@@ -5,6 +5,8 @@ unreleased
 ----------
 * Improve timezone handling for OAuth 2 token refreshing.
 * Update tests and docs regarding ``OAuthConsumerMixin`` inheritance.
+* Fix Dropbox documentation regarding default ``login_url`` and
+  ``authorized_url``
 
 0.10.1 (2016-11-21)
 -------------------
