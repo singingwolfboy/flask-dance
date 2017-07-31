@@ -11,8 +11,8 @@ from flask_dance.consumer.backend import MemoryBackend
 
 def test_blueprint_factory():
     nylas_bp = make_nylas_blueprint(
-        api_id="foo",
-        api_secret="bar",
+        client_id="foo",
+        client_secret="bar",
         redirect_to="index",
     )
     assert isinstance(nylas_bp, OAuth2ConsumerBlueprint)
@@ -27,8 +27,8 @@ def test_blueprint_factory():
 def test_load_from_config():
     app = Flask(__name__)
     app.secret_key = "anything"
-    app.config["NYLAS_OAUTH_API_ID"] = "foo"
-    app.config["NYLAS_OAUTH_API_SECRET"] = "bar"
+    app.config["NYLAS_OAUTH_CLIENT_ID"] = "foo"
+    app.config["NYLAS_OAUTH_CLIENT_SECRET"] = "bar"
     nylas_bp = make_nylas_blueprint(redirect_to="index")
     app.register_blueprint(nylas_bp)
 
