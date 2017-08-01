@@ -13,7 +13,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_nylas_blueprint(
-        api_id=None, api_secret=None, scope="email",
+        client_id=None, client_secret=None, scope="email",
         redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
         session_class=None, backend=None):
@@ -21,11 +21,12 @@ def make_nylas_blueprint(
     Make a blueprint for authenticating with Nylas using OAuth 2. This requires
     an API ID and API secret from Nylas. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables NYLAS_OAUTH_API_KEY and NYLAS_OAUTH_API_SECRET.
+    them, using the variables NYLAS_OAUTH_CLIENT_KEY and NYLAS_OAUTH_CLIENT_SECRET.
 
     Args:
-        api_id (str): The API ID for your developer account on Nylas.
-        api_secret (str): The API secret for your developer account on Nylas.
+        client_id (str): The client ID for your developer account on Nylas.
+        client_secret (str): The client secret for your developer account
+            on Nylas.
         scope (str, optional): comma-separated list of scopes for the OAuth
             token. Defaults to "email".
         redirect_url (str): the URL to redirect to after the authentication
@@ -48,8 +49,8 @@ def make_nylas_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     nylas_bp = OAuth2ConsumerBlueprint("nylas", __name__,
-        client_id=api_id,
-        client_secret=api_secret,
+        client_id=client_id,
+        client_secret=client_secret,
         scope=scope,
         base_url="https://api.nylas.com/",
         authorization_url="https://api.nylas.com/oauth/authorize",
@@ -61,8 +62,8 @@ def make_nylas_blueprint(
         session_class=session_class,
         backend=backend,
     )
-    nylas_bp.from_config["client_id"] = "NYLAS_OAUTH_API_ID"
-    nylas_bp.from_config["client_secret"] = "NYLAS_OAUTH_API_SECRET"
+    nylas_bp.from_config["client_id"] = "NYLAS_OAUTH_CLIENT_ID"
+    nylas_bp.from_config["client_secret"] = "NYLAS_OAUTH_CLIENT_SECRET"
 
     @nylas_bp.before_app_request
     def set_applocal_session():
