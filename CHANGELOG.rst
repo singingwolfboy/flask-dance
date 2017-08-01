@@ -3,6 +3,15 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.11.1 (2017-07-31)
+-------------------
+* Changed Nylas configuration to refer to "client_id" and "client_secret"
+  rather than "api_id" and "api_secret".
+
+0.11.0 (2017-07-24)
+-------------------
 * Added the Nylas pre-set configuration
 * Improve timezone handling for OAuth 2 token refreshing.
 * Update tests and docs regarding ``OAuthConsumerMixin`` inheritance.
