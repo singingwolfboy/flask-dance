@@ -9,7 +9,7 @@ except ImportError:
     from flask import _request_ctx_stack as stack
 
 
-__maintainer__ = "Steven MARTINS <steven.martins.fr@gmail.com>"
+__maintainer__ = "Nick DiRienzo <me@nickdirienzo.com>"
 
 
 def make_spotify_blueprint(
@@ -17,14 +17,14 @@ def make_spotify_blueprint(
         redirect_to=None, login_url=None, authorized_url=None,
         session_class=None, backend=None):
     """
-    Make a blueprint for authenticating with Azure AD using OAuth 2. This requires
-    a client ID and client secret from Azure AD. You should either pass them to
+    Make a blueprint for authenticating with Spotify using OAuth 2. This requires
+    a client ID and client secret from Spotify. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables AZURE_OAUTH_CLIENT_ID and AZURE_OAUTH_CLIENT_SECRET.
+    them, using the variables SPOTIFY_OAUTH_CLIENT_ID and SPOTIFY_OAUTH_CLIENT_SECRET.
 
     Args:
-        client_id (str): The client ID for your application on Azure AD.
-        client_secret (str): The client secret for your application on Azure AD
+        client_id (str): The client ID for your application on Spotify.
+        client_secret (str): The client secret for your application on Spotify
         scope (str, optional): comma-separated list of scopes for the OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
@@ -32,9 +32,9 @@ def make_spotify_blueprint(
             view to redirect to after the authentication dance is complete.
             The actual URL will be determined by :func:`flask.url_for`
         login_url (str, optional): the URL path for the ``login`` view.
-            Defaults to ``/azure``
+            Defaults to ``/spotify``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
-            Defaults to ``/azure/authorized``.
+            Defaults to ``/spotify/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
