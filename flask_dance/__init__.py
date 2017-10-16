@@ -3,4 +3,4 @@ from __future__ import unicode_literals
 
 from .consumer import OAuth1ConsumerBlueprint, OAuth2ConsumerBlueprint
 
-__version__ = "0.11.2"
+__version__ = "0.12.1"
