@@ -5,6 +5,12 @@ unreleased
 ----------
 Nothing yet
 
+0.12.0 (2017-10-22)
+-------------------
+* Updated the Dropbox configuration to use the v2 authentication URLs
+* Added the "require_role" authentication parameter for Dropbox
+* Documented all authentication parameters for Dropbox
+
 0.11.1 (2017-07-31)
 -------------------
 * Changed Nylas configuration to refer to "client_id" and "client_secret"
