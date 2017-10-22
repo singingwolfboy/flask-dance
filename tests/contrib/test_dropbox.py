@@ -110,3 +110,22 @@ def test_disable_signup():
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["disable_signup"] == "true"
+
+
+def test_require_role():
+    app = Flask(__name__)
+    app.secret_key = "apple-app-store"
+    dropbox_bp = make_dropbox_blueprint(
+        "foo", "bar", require_role="work",
+    )
+    app.register_blueprint(dropbox_bp)
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/dropbox",
+            base_url="https://a.b.c",
+            follow_redirects=False,
+        )
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.query_dict["require_role"] == "work"
