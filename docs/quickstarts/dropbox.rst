@@ -30,7 +30,7 @@ Code
     def index():
         if not dropbox.authorized:
             return redirect(url_for("dropbox.login"))
-        resp = dropbox.get("account/info")
+        resp = dropbox.post("users/get_current_account")
         assert resp.ok
         return "You are {email} on Dropbox".format(email=resp.json()["email"])
 

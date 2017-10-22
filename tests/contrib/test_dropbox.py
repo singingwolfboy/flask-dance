@@ -15,11 +15,11 @@ def test_blueprint_factory():
         app_secret="bar",
     )
     assert isinstance(dropbox_bp, OAuth2ConsumerBlueprint)
-    assert dropbox_bp.session.base_url == "https://api.dropbox.com/1/"
+    assert dropbox_bp.session.base_url == "https://api.dropbox.com/2/"
     assert dropbox_bp.session.client_id == "foo"
     assert dropbox_bp.client_secret == "bar"
-    assert dropbox_bp.authorization_url == "https://www.dropbox.com/1/oauth2/authorize"
-    assert dropbox_bp.token_url == "https://api.dropbox.com/1/oauth2/token"
+    assert dropbox_bp.authorization_url == "https://www.dropbox.com/oauth2/authorize"
+    assert dropbox_bp.token_url == "https://api.dropbox.com/oauth2/token"
 
 
 def test_load_from_config():
