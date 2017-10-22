@@ -1,6 +1,5 @@
 # documentation tools
-sphinx
-sphinxcontrib-napoleon
+sphinx>=1.3
 sphinxcontrib-seqdiag
 # testing tools
 pytest
