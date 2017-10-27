@@ -115,4 +115,4 @@ backend that uses a file on disk::
 Then, just create an instance of your backend and assign it to the
 :attr:`backend` attribute of your blueprint, and Flask-Dance will use it.
 
-.. _ORM: https://stackoverflow.com/a/1280345/4115031
+.. _ORM: https://docs.python.org/3.4/howto/webservers.html#data-persistence
