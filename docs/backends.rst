@@ -16,7 +16,7 @@ to choose from.
 SQLAlchemy
 ----------
 
-SQLAlchemy is the "standard" database for Flask applications, and Flask-Dance
+SQLAlchemy is the "standard" ORM_ for Flask applications, and Flask-Dance
 has great support for it. First, define your database model with a ``token``
 column and a ``provider`` column. Flask-Dance includes a
 :class:`~flask_dance.consumer.backend.sqla.OAuthConsumerMixin` class to make this easier::
@@ -114,3 +114,5 @@ backend that uses a file on disk::
 
 Then, just create an instance of your backend and assign it to the
 :attr:`backend` attribute of your blueprint, and Flask-Dance will use it.
+
+.. _ORM: https://docs.python.org/3.4/howto/webservers.html#data-persistence
