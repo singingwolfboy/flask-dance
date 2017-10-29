@@ -131,6 +131,18 @@ Nylas
     already has the Nylas authentication token loaded (assuming that the user
     has authenticated with Nylas at some point in the past).
 
+Spotify
+-------
+.. module:: flask_dance.contrib.spotify
+
+.. autofunction:: make_spotify_blueprint
+
+.. data:: spotify
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Spotify authentication token loaded (assuming that the user
+    has authenticated with Spotify at some point in the past).
+
 .. _custom-provider:
 
 Custom
