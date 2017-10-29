@@ -113,28 +113,28 @@ OAuth 1
     on the consumer's website labelled "Log In with Twitter" or similar, which
     takes the user to this special URL.
 
-1.  The consumer tells the provider that they're about to do the OAuth dance.
+2.  The consumer tells the provider that they're about to do the OAuth dance.
     The consumer gives the provider the client secret, to verify that
     everything's cool. The provider checks the OAuth secret, and if it
     looks good, the provider makes up a new secret called a
     "request token", and gives it to the consumer.
 
-2.  The consumer crafts a special URL that points to the provider, but has the
+3.  The consumer crafts a special URL that points to the provider, but has the
     client secret and request token embedded in it. The consumer asks the client
     to visit the provider using this special URL.
 
-3.  When the client visits the provider at that URL, the provider notices the
+4.  When the client visits the provider at that URL, the provider notices the
     request token, and looks up the consumer that it belongs to.
     The provider tells the user that this consumer wants to access some or all
     of the user's information. The user gets to decide if this is OK or not.
     If the user decides that this is not OK, the dance is over.
 
-4.  If the user grants consent, the provider makes up another new secret, called
+5.  If the user grants consent, the provider makes up another new secret, called
     the "authorization code". The provider crafts a special URL that points to
     the consumer, but has the authorization code embedded in it.
     The provider asks the client to go visit the consumer at that special URL.
 
-5.  When the client visits the consumer at that URL, the consumer notices the
+6.  When the client visits the consumer at that URL, the consumer notices the
     authorization code. The consumer makes another request to the provider,
     passing along the client secret and the authorization code.
     If everything looks good to the provider, the provider makes up one
