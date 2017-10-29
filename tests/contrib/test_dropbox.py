@@ -15,11 +15,11 @@ def test_blueprint_factory():
         app_secret="bar",
     )
     assert isinstance(dropbox_bp, OAuth2ConsumerBlueprint)
-    assert dropbox_bp.session.base_url == "https://api.dropbox.com/1/"
+    assert dropbox_bp.session.base_url == "https://api.dropbox.com/2/"
     assert dropbox_bp.session.client_id == "foo"
     assert dropbox_bp.client_secret == "bar"
-    assert dropbox_bp.authorization_url == "https://www.dropbox.com/1/oauth2/authorize"
-    assert dropbox_bp.token_url == "https://api.dropbox.com/1/oauth2/token"
+    assert dropbox_bp.authorization_url == "https://www.dropbox.com/oauth2/authorize"
+    assert dropbox_bp.token_url == "https://api.dropbox.com/oauth2/token"
 
 
 def test_load_from_config():
@@ -110,3 +110,22 @@ def test_disable_signup():
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["disable_signup"] == "true"
+
+
+def test_require_role():
+    app = Flask(__name__)
+    app.secret_key = "apple-app-store"
+    dropbox_bp = make_dropbox_blueprint(
+        "foo", "bar", require_role="work",
+    )
+    app.register_blueprint(dropbox_bp)
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/dropbox",
+            base_url="https://a.b.c",
+            follow_redirects=False,
+        )
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.query_dict["require_role"] == "work"
