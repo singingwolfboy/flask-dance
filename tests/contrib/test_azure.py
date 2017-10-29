@@ -18,11 +18,11 @@ def test_blueprint_factory():
     )
     assert isinstance(azure_bp, OAuth2ConsumerBlueprint)
     assert azure_bp.session.scope == "user.read"
-    assert azure_bp.session.base_url == "https://graph.microsoft.com"
+    assert azure_bp.session.base_url == "https://graph.microsoft.com/v1.0/"
     assert azure_bp.session.client_id == "foo"
     assert azure_bp.client_secret == "bar"
-    assert azure_bp.authorization_url == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
-    assert azure_bp.token_url == "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    assert azure_bp.authorization_url == "https://login.microsoftonline.com/common/oauth2/authorize"
+    assert azure_bp.token_url == "https://login.microsoftonline.com/common/oauth2/token"
 
 
 def test_load_from_config():

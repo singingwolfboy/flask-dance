@@ -106,9 +106,12 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
     def token(self, value):
         _token = value
         if _token and _token.get("expires_in"):
+            # Ensure the `expires_in` information is an integer before passing it
+            # to `timedelta`
+            expires_in = int(_token['expires_in'])
             # Set the `expires_at` value, overwriting any value
             # that may already be there.
-            delta = timedelta(seconds=_token["expires_in"])
+            delta = timedelta(seconds=expires_in)
             expires_at = datetime.utcnow() + delta
             _token["expires_at"] = timestamp_from_datetime(expires_at)
         self.backend.set(self, _token)
