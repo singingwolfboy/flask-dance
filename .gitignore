@@ -3,12 +3,10 @@
 .DS_Store
 .coverage
 .cache
+.idea/
 htmlcov
 dist
 docs/_build
 build
-MANIFEST
-
-# Ignore PyCharm project files.
-.idea/
 venv/
+MANIFEST
