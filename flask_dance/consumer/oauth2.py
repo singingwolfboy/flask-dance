@@ -185,6 +185,11 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         return redirect(url)
 
     def authorized(self):
+        """
+        This is the route/function that the user will be redirected to by
+        the provider (e.g. Twitter) after the user has logged into the
+        provider's website and authorized your app to access their account.
+        """
         if "next" in request.args:
             next_url = request.args["next"]
         elif self.redirect_url:
