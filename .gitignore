@@ -11,3 +11,4 @@ MANIFEST
 
 # Ignore PyCharm project files.
 .idea/
+venv/
