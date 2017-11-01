@@ -40,7 +40,7 @@ class OAuth1Session(BaseOAuth1Session):
         """ This is the property used when you have a statement in your code
         that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
 
-        The flow of control is kind of complicated: this function just tries
+        The way it works is kind of complicated: this function just tries
         to load the token, and then the 'super()' statement basically just
         tests if the token exists (see BaseOAuth1Session.authorized).
 
@@ -99,7 +99,7 @@ class OAuth2Session(BaseOAuth2Session):
         """ This is the property used when you have a statement in your code
         that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
 
-        The flow of control is kind of complicated: this function just tries
+        The way it works is kind of complicated: this function just tries
         to load the token, and then the 'super()' statement basically just
         tests if the token exists (see BaseOAuth1Session.authorized).
 
