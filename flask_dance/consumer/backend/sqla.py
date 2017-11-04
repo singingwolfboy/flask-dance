@@ -57,7 +57,8 @@ class SQLAlchemyBackend(BaseBackend):
     .. _SQLAlchemy: http://www.sqlalchemy.org/
     """
     def __init__(self, model, session,
-                 user=None, user_id=None, anon_user=None, cache=None):
+                 user=None, user_id=None, user_required=None, anon_user=None,
+                 cache=None):
         """
         Args:
             model: The SQLAlchemy model class that represents the OAuth token
@@ -84,6 +85,13 @@ class SQLAlchemyBackend(BaseBackend):
                 User object, use this argument instead. Sometimes it can save
                 a database query or two. If both ``user`` and ``user_id`` are
                 provided, ``user_id`` will take precendence.
+            user_required:
+                If set to ``True``, an exception will be raised if you try to
+                set or retrieve an OAuth token without an associated user.
+                If set to ``False``, OAuth tokens can be set with or without
+                an associated user. The default is auto-detection: it will
+                be ``True`` if you pass a ``user`` or ``user_id`` parameter,
+                ``False`` otherwise.
             anon_user:
                 If anonymous users are represented by a class in your application,
                 provide that class here. If you are using `Flask-Login`_,
@@ -102,6 +110,10 @@ class SQLAlchemyBackend(BaseBackend):
         self.session = session
         self.user = user
         self.user_id = user_id
+        if user_required is None:
+            self.user_required = user is not None or user_id is not None
+        else:
+            self.user_required = user_required
         self.anon_user = anon_user or AnonymousUserMixin
         self.cache = cache or FakeCache()
 
@@ -145,6 +157,10 @@ class SQLAlchemyBackend(BaseBackend):
         uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
         u = first(_get_real_user(ref, self.anon_user)
                   for ref in (user, self.user, blueprint.config.get("user")))
+
+        if self.user_required and not u and not uid:
+            raise ValueError("Cannot get OAuth token without an associated user")
+
         # check for user ID
         if hasattr(self.model, "user_id") and uid:
             query = query.filter_by(user_id=uid)
@@ -166,6 +182,13 @@ class SQLAlchemyBackend(BaseBackend):
         return token
 
     def set(self, blueprint, token, user=None, user_id=None):
+        uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
+        u = first(_get_real_user(ref, self.anon_user)
+                      for ref in (user, self.user, blueprint.config.get("user")))
+
+        if self.user_required and not u and not uid:
+            raise ValueError("Cannot set OAuth token without an associated user")
+
         # if there was an existing model, delete it
         existing_query = (
             self.session.query(self.model)
@@ -173,17 +196,12 @@ class SQLAlchemyBackend(BaseBackend):
         )
         # check for user ID
         has_user_id = hasattr(self.model, "user_id")
-        if has_user_id:
-            uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
-            if uid:
-                existing_query = existing_query.filter_by(user_id=uid)
+        if has_user_id and uid:
+            existing_query = existing_query.filter_by(user_id=uid)
         # check for user (relationship property)
         has_user = hasattr(self.model, "user")
-        if has_user:
-            u = first(_get_real_user(ref, self.anon_user)
-                      for ref in (user, self.user, blueprint.config.get("user")))
-            if u:
-                existing_query = existing_query.filter_by(user=u)
+        if has_user and u:
+            existing_query = existing_query.filter_by(user=u)
         # queue up delete query -- won't be run until commit()
         existing_query.delete()
         # create a new model for this token
@@ -211,6 +229,10 @@ class SQLAlchemyBackend(BaseBackend):
         uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
         u = first(_get_real_user(ref, self.anon_user)
                   for ref in (user, self.user, blueprint.config.get("user")))
+
+        if self.user_required and not u and not uid:
+            raise ValueError("Cannot delete OAuth token without an associated user")
+
         # check for user ID
         if hasattr(self.model, "user_id") and uid:
             query = query.filter_by(user_id=uid)
