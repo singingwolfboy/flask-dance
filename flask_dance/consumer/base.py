@@ -129,4 +129,9 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
 
     @abstractmethod
     def authorized(self):
+        """
+        This is the route/function that the user will be redirected to by
+        the provider (e.g. Twitter) after the user has logged into the
+        provider's website and authorized your app to access their account.
+        """
         raise NotImplementedError()

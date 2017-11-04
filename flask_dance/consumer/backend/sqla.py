@@ -116,6 +116,21 @@ class SQLAlchemyBackend(BaseBackend):
         )
 
     def get(self, blueprint, user=None, user_id=None):
+        """ When you have a statement in your code that says
+        "if <provider>.authorized:" (for example "if twitter.authorized:"),
+        a long string of function calls result in this function being used to
+        check the Flask server's cache and database for any records associated
+        with the current_user. The `user` and `user_id` parameters are actually
+        not set in that case (see base.py:token(), that's what calls this
+        function), so the user information is instead loaded from the
+        current_user (if that's what you specified when you created the
+        blueprint) with blueprint.config.get('user_id').
+
+        :param blueprint:
+        :param user:
+        :param user_id:
+        :return:
+        """
         # check cache
         cache_key = self.make_cache_key(blueprint=blueprint, user=user, user_id=user_id)
         token = self.cache.get(cache_key)

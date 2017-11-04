@@ -3,8 +3,10 @@
 .DS_Store
 .coverage
 .cache
+.idea/
 htmlcov
 dist
 docs/_build
 build
+venv/
 MANIFEST

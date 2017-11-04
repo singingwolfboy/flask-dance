@@ -37,6 +37,22 @@ class OAuth1Session(BaseOAuth1Session):
 
     @property
     def authorized(self):
+        """ This is the property used when you have a statement in your code
+        that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
+
+        The way it works is kind of complicated: this function just tries
+        to load the token, and then the 'super()' statement basically just
+        tests if the token exists (see BaseOAuth1Session.authorized).
+
+        To load the token, it calls the load_token() function within this class,
+        which in turn checks the 'token' property of this class (another
+        function), which in turn checks the 'token' property of the blueprint
+        (see base.py), which calls 'backend.get()' to actually try to load
+        the token from the cache/db (see the 'get()' function in
+        backend/sqla.py).
+
+        :return:
+        """
         self.load_token()
         return super(OAuth1Session, self).authorized
 
@@ -80,6 +96,22 @@ class OAuth2Session(BaseOAuth2Session):
 
     @property
     def authorized(self):
+        """ This is the property used when you have a statement in your code
+        that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
+
+        The way it works is kind of complicated: this function just tries
+        to load the token, and then the 'super()' statement basically just
+        tests if the token exists (see BaseOAuth1Session.authorized).
+
+        To load the token, it calls the load_token() function within this class,
+        which in turn checks the 'token' property of this class (another
+        function), which in turn checks the 'token' property of the blueprint
+        (see base.py), which calls 'backend.get()' to actually try to load
+        the token from the cache/db (see the 'get()' function in
+        backend/sqla.py).
+
+        :return:
+        """
         self.load_token()
         return super(OAuth2Session, self).authorized
 
