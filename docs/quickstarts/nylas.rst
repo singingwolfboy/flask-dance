@@ -1,7 +1,7 @@
 Nylas Quickstart
 ================
 
-Setup Application
+Set up the application
 -----------------
 Visit https://developer.nylas.com/ to sign up for a Nylas Developer account.
 On the Nylas Developer dashboard, click on the "Settings" button, and in the

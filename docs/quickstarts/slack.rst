@@ -1,7 +1,7 @@
 Slack Quickstart
 ================
 
-Setup Application
+Set up the application
 -----------------
 Visit https://api.slack.com/applications/new
 to register an application on Slack. The application's "Redirect URI(s)"

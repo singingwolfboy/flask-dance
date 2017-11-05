@@ -1,7 +1,7 @@
 Google Quickstart
 =================
 
-Setup Application
+Set up the application
 -----------------
 Visit the Google Developers Console at https://console.developers.google.com
 and create a new project. In the "APIs & auth" section, click on "Credentials",

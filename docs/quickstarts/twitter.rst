@@ -1,7 +1,7 @@
 Twitter Quickstart
 ==================
 
-Setup Application
+Set up the application
 -----------------
 Go to Twitter Application Manager at https://apps.twitter.com and create a
 new app. The application's "Callback URL" must be
