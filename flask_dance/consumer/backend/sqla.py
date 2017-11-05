@@ -5,7 +5,7 @@ from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy_utils import JSONType
 from sqlalchemy.orm.exc import NoResultFound
-from flask_dance.utils import FakeCache, first, getattrd
+from flask_dance.utils import FakeCache, first
 from flask_dance.consumer.backend import BaseBackend
 try:
     from flask_login import AnonymousUserMixin

@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 from functools import partial
-from werkzeug.urls import url_encode, url_decode
-from urlobject import URLObject
 from flask.globals import LocalProxy, _lookup_app_object
 try:
     from flask import _app_ctx_stack as stack

@@ -4,8 +4,6 @@ import logging
 from lazy import lazy
 from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response
-from urlobject import URLObject
-from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib.oauth1_session import TokenRequestDenied
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
