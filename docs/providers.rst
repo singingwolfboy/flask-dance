@@ -143,6 +143,18 @@ Spotify
     already has the Spotify authentication token loaded (assuming that the user
     has authenticated with Spotify at some point in the past).
 
+Discord
+-------
+.. module:: flask_dance.contrib.discord
+
+.. autofunction:: make_discord_blueprint
+
+.. data:: discord
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Discord authentication token loaded (assuming that the user
+    has authenticated with Discord at some point in the past).
+
 .. _custom-provider:
 
 Custom
