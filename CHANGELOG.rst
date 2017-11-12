@@ -6,6 +6,7 @@ unreleased
 * sphinxcontrib-napoleon is no longer required to build the Flask-Dance
   documentation.
 * Added Spotify pre-set configuration
+* Added Discord pre-set configuration
 
 0.12.0 (2017-10-22)
 -------------------

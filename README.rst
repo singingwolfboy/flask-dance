@@ -19,6 +19,8 @@ popular websites:
 * Slack
 * Azure AD
 * Nylas
+* Spotify
+* Discord
 
 Installation
 ============
