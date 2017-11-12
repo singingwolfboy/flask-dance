@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.13.0 (2017-11-12)
+-------------------
 * sphinxcontrib-napoleon is no longer required to build the Flask-Dance
   documentation.
 * Added Spotify pre-set configuration
