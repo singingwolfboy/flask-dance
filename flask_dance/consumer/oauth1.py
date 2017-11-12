@@ -4,8 +4,6 @@ import logging
 from lazy import lazy
 from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response
-from urlobject import URLObject
-from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib.oauth1_session import TokenRequestDenied
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
@@ -89,8 +87,9 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :func:`~flask.url_for` with this argument. If you do not specify
                 either ``redirect_url`` or ``redirect_to``, the user will be
                 redirected to the root path (``/``).
-            session_class: The class to use for creating a
-                Requests session. Defaults to
+            session_class: The class to use for creating a Requests session
+                between the consumer (your website) and the provider (e.g.
+                Twitter). Defaults to
                 :class:`~flask_dance.consumer.requests.OAuth1Session`.
             backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
@@ -132,6 +131,12 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
     @lazy
     def session(self):
+        """
+        This is a session between the consumer (your website) and the provider
+        (e.g. Twitter). It is *not* a session between a user of your website
+        and your website.
+        :return: 
+        """
         return self.session_class(
             client_key=self.client_key,
             client_secret=self.client_secret,

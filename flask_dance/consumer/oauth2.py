@@ -93,8 +93,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :func:`~flask.url_for` with this argument. If you do not specify
                 either ``redirect_url`` or ``redirect_to``, the user will be
                 redirected to the root path (``/``).
-            session_class: The class to use for creating a
-                Requests session. Defaults to
+            session_class: The class to use for creating a Requests session
+                between the consumer (your website) and the provider (e.g.
+                Twitter). Defaults to
                 :class:`~flask_dance.consumer.requests.OAuth2Session`.
             backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
@@ -147,6 +148,12 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
     @lazy
     def session(self):
+        """
+        This is a session between the consumer (your website) and the provider
+        (e.g. Twitter). It is *not* a session between a user of your website
+        and your website.
+        :return:
+        """
         ret = self.session_class(
             client_id=self._client_id,
             client=self.client,

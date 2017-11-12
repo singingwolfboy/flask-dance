@@ -1,7 +1,7 @@
 Azure Quickstart
 =================
 
-Setup Application
+Set up the application
 -----------------
 Visit https://apps.dev.microsoft.com/
 to register an application on Azure AD. The application's "Redirect

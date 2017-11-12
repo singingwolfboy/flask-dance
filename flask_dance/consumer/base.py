@@ -121,6 +121,11 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
 
     @abstractproperty
     def session(self):
+        """
+        This is a session between the consumer (your website) and the provider
+        (e.g. Twitter). It is *not* a session between a user of your website
+        and your website.
+        """
         raise NotImplementedError()
 
     @abstractmethod

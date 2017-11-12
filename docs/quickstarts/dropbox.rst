@@ -1,7 +1,7 @@
 Dropbox Quickstart
 ==================
 
-Setup Application
+Set up the application
 -----------------
 Visit the Dropbox App Console at https://www.dropbox.com/developers/apps
 and create a new app. Select "Dropbox API app", not "Drop-ins app". Decide

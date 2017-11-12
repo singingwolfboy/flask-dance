@@ -15,6 +15,10 @@ class OAuth1Session(BaseOAuth1Session):
     * handles OAuth1 authentication
       (from :class:`requests_oauthlib.OAuth1Session` superclass)
     * has a ``base_url`` property used for relative URL resolution
+
+    Note that this is a session between the consumer (your website) and the
+    provider (e.g. Twitter), and *not* a session between a user of your website
+    and your website.
     """
     def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
         super(OAuth1Session, self).__init__(*args, **kwargs)
@@ -76,6 +80,10 @@ class OAuth2Session(BaseOAuth2Session):
     * handles OAuth2 authentication
       (from :class:`requests_oauthlib.OAuth2Session` superclass)
     * has a ``base_url`` property used for relative URL resolution
+
+    Note that this is a session between the consumer (your website) and the
+    provider (e.g. Twitter), and *not* a session between a user of your website
+    and your website.
     """
     def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
         super(OAuth2Session, self).__init__(*args, **kwargs)

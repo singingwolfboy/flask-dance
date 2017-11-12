@@ -33,6 +33,11 @@ The following signals exist in Flask-Dance:
                 name=blueprint.name.capitalize()
             ))
 
+    If you are linking OAuth records to User records, you *must* implement an
+    ``@oauth_authorized`` subscriber that creates new ``User`` and ``OAuth``
+    database entries for any new users, and links those two new records via
+    the ``OAuth`` table's ``user_id`` field.
+
     If you're using OAuth 2, the user may grant you different scopes from the
     ones you requested: check the ``scope`` key in the *token* dict to
     determine what scopes were actually granted. If you don't want the *token*

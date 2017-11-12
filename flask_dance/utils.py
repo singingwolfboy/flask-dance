@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 import functools
-from collections import MutableMapping
 from datetime import datetime
 
 

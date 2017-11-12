@@ -1,7 +1,7 @@
 GitHub Quickstart
 =================
 
-Setup Application
+Set up the application
 -----------------
 Visit https://github.com/settings/applications/new
 to register an application on GitHub. The application's "authorization
