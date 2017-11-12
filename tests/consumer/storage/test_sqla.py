@@ -10,7 +10,7 @@ from sqlalchemy import event
 from sqlalchemy.orm.exc import NoResultFound
 from flask_cache import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
-from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized
+from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
 from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
 try:
     import blinker
@@ -370,6 +370,58 @@ def test_sqla_flask_login(app, db, blueprint, request):
 
 
 @requires_blinker
+def test_sqla_flask_login_misconfigured(app, db, blueprint, request):
+    login_manager = LoginManager(app)
+
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(80))
+
+    class OAuth(OAuthConsumerMixin, db.Model):
+        user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+        user = db.relationship(User)
+
+    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    # configure login manager
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.get(userid)
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_error.connect(callback)
+    request.addfinalizer(lambda: oauth_error.disconnect(callback))
+
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        # make the request
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+
+    assert len(calls) == 1
+    assert calls[0][0] == (blueprint,)
+    error = calls[0][1]['error']
+    assert isinstance(error, ValueError)
+    assert str(error) == 'Cannot set OAuth token without an associated user'
+
+
+@requires_blinker
 def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
     login_manager = LoginManager(app)
 
@@ -519,6 +571,51 @@ def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
     with app.test_request_context("/"):
         # no one is logged in -- this is an anonymous user
         logout_user()
+        with pytest.raises(ValueError):
+            blueprint.session.get("/noop")
+
+
+def test_sqla_flask_login_no_user_required(app, db, blueprint, request):
+    # need a URL to hit, so that tokens will be loaded, but result is irrelevant
+    responses.add(
+        responses.GET,
+        "https://example.com/noop",
+    )
+
+    login_manager = LoginManager(app)
+
+    class User(db.Model, UserMixin):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(80))
+
+    class OAuth(OAuthConsumerMixin, db.Model):
+        user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+        user = db.relationship(User)
+
+    blueprint.backend = SQLAlchemyBackend(
+        OAuth, db.session, user=current_user, user_required=False,
+    )
+
+    db.create_all()
+    def done():
+        db.session.remove()
+        db.drop_all()
+    request.addfinalizer(done)
+
+    # configure login manager
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.get(userid)
+
+    # create a simple view
+    @app.route("/")
+    def index():
+        return "success"
+
+    with app.test_request_context("/"):
+        # no one is logged in -- this is an anonymous user
+        logout_user()
+        # this should *not* raise an error
         blueprint.session.get("/noop")
         assert blueprint.session.token == None
 

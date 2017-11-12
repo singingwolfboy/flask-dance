@@ -263,5 +263,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 set_token = False
 
         if set_token:
-            self.token = token
+            try:
+                self.token = token
+            except ValueError as error:
+                log.warning("OAuth 2 authorization error: %s", str(error))
+                oauth_error.send(self, error=error)
         return redirect(next_url)

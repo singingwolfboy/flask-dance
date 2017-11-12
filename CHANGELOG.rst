@@ -7,6 +7,9 @@ unreleased
   documentation.
 * Added Spotify pre-set configuration
 * Added Discord pre-set configuration
+* Added an optional ``user_required`` argument to the SQLAlchemy backend.
+  When this is enabled, trying to set an OAuth object without an associated
+  user will raise an error.
 
 0.12.0 (2017-10-22)
 -------------------
