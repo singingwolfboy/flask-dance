@@ -96,7 +96,7 @@ backend that uses a file on disk::
 
     class FileBackend(BaseBackend):
         def __init__(self, filepath):
-            super(FileStorage, self).__init__()
+            super(FileBackend, self).__init__()
             self.filepath = filepath
 
         def get(self, blueprint):
