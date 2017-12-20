@@ -18,6 +18,7 @@ User Guide:
    quickstarts/index
    providers
    backends
+   multi-user
    proxies
    signals
 

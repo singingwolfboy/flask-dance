@@ -7,6 +7,7 @@ OAuth tokens are stored using the
 be familiar with setting up a single-use Flask-Dance application -- you can
 consult some of the other quickstarts for that.
 
+Further details are available in the documentation for :doc:`../multi-user`.
 
 Code
 ----
@@ -45,6 +46,7 @@ Create a file called ``multi.py`` with the following contents:
         # ... other columns as needed
 
     class OAuth(OAuthConsumerMixin, db.Model):
+        provider_user_id = db.Column(db.String(256), unique=True)
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -60,28 +62,58 @@ Create a file called ``multi.py`` with the following contents:
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
     # create/login local user on successful OAuth login
-    @oauth_authorized.connect_via(blueprint)
+    @oauth_authorized.connect_via(github_bp)
     def github_logged_in(blueprint, token):
         if not token:
-            flash("Failed to log in with {name}".format(name=blueprint.name))
-            return
-        # figure out who the user is
+            flash("Failed to log in with GitHub.", category="error")
+            return False
+
         resp = blueprint.session.get("/user")
-        if resp.ok:
-            username = resp.json()["login"]
-            query = User.query.filter_by(username=username)
-            try:
-                user = query.one()
-            except NoResultFound:
-                # create a user
-                user = User(username=username)
-                db.session.add(user)
-                db.session.commit()
-            login_user(user)
-            flash("Successfully signed in with GitHub")
-        else:
-            msg = "Failed to fetch user info from {name}".format(name=blueprint.name)
+        if not resp.ok:
+            msg = "Failed to fetch user info from GitHub."
             flash(msg, category="error")
+            return False
+
+        github_info = resp.json()
+        github_user_id = str(github_info["id"])
+
+        # Find this OAuth token in the database, or create it
+        query = OAuth.query.filter_by(
+            provider=blueprint.name,
+            provider_user_id=github_user_id,
+        )
+        try:
+            oauth = query.one()
+        except NoResultFound:
+            oauth = OAuth(
+                provider=blueprint.name,
+                provider_user_id=github_user_id,
+                token=token,
+            )
+
+        if oauth.user:
+            login_user(oauth.user)
+            flash("Successfully signed in with GitHub.")
+
+        else:
+            # Create a new local user account for this user
+            user = User(
+                # Remember that `email` can be None, if the user declines
+                # to publish their email address on GitHub!
+                email=github_info["email"],
+                name=github_info["name"],
+            )
+            # Associate the new local user account with the OAuth token
+            oauth.user = user
+            # Save and commit our database models
+            db.session.add_all([user, oauth])
+            db.session.commit()
+            # Log in the new local user account
+            login_user(user)
+            flash("Successfully signed in with GitHub.")
+
+        # Disable Flask-Dance's default behavior for saving the OAuth token
+        return False
 
     # notify on OAuth provider error
     @oauth_error.connect_via(blueprint)
@@ -194,6 +226,7 @@ it to your Flask application.
         # ... other columns as needed
 
     class OAuth(OAuthConsumerMixin, db.Model):
+        provider_user_id = db.Column(db.String(256), unique=True)
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
@@ -202,7 +235,9 @@ called ``multi.db``. You can change this to use any database that `SQLAlchemy`_
 supports. This code also defines two database models: a :class:`User` model
 that inherits from :class:`flask_login.UserMixin` (to ensure it has the
 methods that Flask-Login expects), and an :class:`OAuth` model for actually
-storing OAuth tokens.
+storing OAuth tokens. In addition to providing a connection to the
+:class:`User` model, the :class:`OAuth` model also stores the user ID that
+the provider uses -- in this case, the GitHub user ID.
 
 .. code-block:: python
 
@@ -233,36 +268,67 @@ are scoped to individual users.
 .. code-block:: python
 
     # create/login local user on successful OAuth login
-    @oauth_authorized.connect_via(blueprint)
+    @oauth_authorized.connect_via(github_bp)
     def github_logged_in(blueprint, token):
         if not token:
-            flash("Failed to log in with {name}".format(name=blueprint.name))
-            return
-        # figure out who the user is
+            flash("Failed to log in with GitHub.", category="error")
+            return False
+
         resp = blueprint.session.get("/user")
-        if resp.ok:
-            username = resp.json()["login"]
-            query = User.query.filter_by(username=username)
-            try:
-                user = query.one()
-            except NoResultFound:
-                # create a user
-                user = User(username=username)
-                db.session.add(user)
-                db.session.commit()
-            login_user(user)
-            flash("Successfully signed in with GitHub")
-        else:
-            msg = "Failed to fetch user info from {name}".format(name=blueprint.name)
+        if not resp.ok:
+            msg = "Failed to fetch user info from GitHub."
             flash(msg, category="error")
+            return False
+
+        github_info = resp.json()
+        github_user_id = str(github_info["id"])
+
+        # Find this OAuth token in the database, or create it
+        query = OAuth.query.filter_by(
+            provider=blueprint.name,
+            provider_user_id=github_user_id,
+        )
+        try:
+            oauth = query.one()
+        except NoResultFound:
+            oauth = OAuth(
+                provider=blueprint.name,
+                provider_user_id=github_user_id,
+                token=token,
+            )
+
+        if oauth.user:
+            login_user(oauth.user)
+            flash("Successfully signed in with GitHub.")
+
+        else:
+            # Create a new local user account for this user
+            user = User(
+                # Remember that `email` can be None, if the user declines
+                # to publish their email address on GitHub!
+                email=github_info["email"],
+                name=github_info["name"],
+            )
+            # Associate the new local user account with the OAuth token
+            oauth.user = user
+            # Save and commit our database models
+            db.session.add_all([user, oauth])
+            db.session.commit()
+            # Log in the new local user account
+            login_user(user)
+            flash("Successfully signed in with GitHub.")
+
+        # Disable Flask-Dance's default behavior for saving the OAuth token
+        return False)
 
 This code hooks into the :data:`~flask_dance.consumer.oauth_authorized` signal,
 which is triggered when a user successfully completes the OAuth dance.
 We make an HTTP request to GitHub using :attr:`blueprint.session`,
 which already has the OAuth token loaded, in order to determine some
-basic information for the user, like their GitHub username. Then we look up
-in our local database to see if we already have a user with that username --
-if not, we create a new user. We then log that user in, using Flask-Login's
+basic information for the user, like their GitHub user ID. Then we look up
+in our local database to see if we already have a user associated with that
+GitHub user ID -- if not, we create a new user.
+We then log that user in, using Flask-Login's
 :func:`~flask_dance.login_user` function.
 
 We also use the :func:`~flask.flash` function to display status messages to the
