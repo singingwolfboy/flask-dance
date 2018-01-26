@@ -42,6 +42,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             redirect_to=None,
             session_class=None,
             backend=None,
+            _url_for=None,
 
             **kwargs):
         """
@@ -100,6 +101,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+            _url_for: A custom version of the flask ``url_for``. Defaults to
+                :func:`~flask.url_for`.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
@@ -115,6 +118,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
         self.base_url = base_url
         self.session_class = session_class or OAuth2Session
+        self.url_for = _url_for or url_for
 
         # passed to OAuth2Session()
         self._client_id = client_id
@@ -178,7 +182,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
     def login(self):
         log.debug("client_id = %s", self.client_id)
-        self.session.redirect_uri = url_for(
+        self.session.redirect_uri = self.url_for(
             ".authorized", next=request.args.get('next'), _external=True,
         )
         url, state = self.session.authorization_url(
@@ -202,7 +206,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         elif self.redirect_url:
             next_url = self.redirect_url
         elif self.redirect_to:
-            next_url = url_for(self.redirect_to)
+            next_url = self.url_for(self.redirect_to)
         else:
             next_url = "/"
         log.debug("next_url = %s", next_url)
@@ -225,14 +229,14 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         if state_key not in flask.session:
             # can't validate state, so redirect back to login view
             log.info("state not found, redirecting user to login")
-            return redirect(url_for(".login"))
+            return redirect(self.url_for(".login"))
 
         state = flask.session[state_key]
         log.debug("state = %s", state)
         self.session._state = state
         del flask.session[state_key]
 
-        self.session.redirect_uri = url_for(
+        self.session.redirect_uri = self.url_for(
             ".authorized", next=request.args.get('next'), _external=True,
         )
 

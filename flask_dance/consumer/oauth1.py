@@ -39,6 +39,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             redirect_to=None,
             session_class=None,
             backend=None,
+            _url_for=None,
 
             **kwargs):
         """
@@ -94,6 +95,8 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+            _url_for: A custom version of the flask ``url_for``. Defaults to
+                :func:`~flask.url_for`.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self, name, import_name,
@@ -109,6 +112,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
         self.base_url = base_url
         self.session_class = session_class or OAuth1Session
+        self.url_for = _url_for or url_for
 
         # passed to OAuth1Session()
         self.client_key = client_key
@@ -135,7 +139,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         This is a session between the consumer (your website) and the provider
         (e.g. Twitter). It is *not* a session between a user of your website
         and your website.
-        :return: 
+        :return:
         """
         return self.session_class(
             client_key=self.client_key,
@@ -154,7 +158,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         lazy.invalidate(self, "session")
 
     def login(self):
-        callback_uri = url_for(
+        callback_uri = self.url_for(
             ".authorized", next=request.args.get('next'), _external=True,
         )
         self.session._client.client.callback_uri = to_unicode(callback_uri)
@@ -172,7 +176,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             elif self.redirect_url:
                 next_url = self.redirect_url
             elif self.redirect_to:
-                next_url = url_for(self.redirect_to)
+                next_url = self.url_for(self.redirect_to)
             else:
                 next_url = "/"
             return redirect(next_url)
@@ -191,7 +195,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         elif self.redirect_url:
             next_url = self.redirect_url
         elif self.redirect_to:
-            next_url = url_for(self.redirect_to)
+            next_url = self.url_for(self.redirect_to)
         else:
             next_url = "/"
         self.session.parse_authorization_response(request.url)
