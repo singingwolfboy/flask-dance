@@ -48,3 +48,27 @@ def test_oauth2session_not_authorized():
     bp = mock.Mock(token=None)
     sess = OAuth2Session(client_id="cid", blueprint=bp)
     assert sess.authorized == False
+
+
+def test_oauth2session_token():
+    bp = mock.Mock(token=FAKE_OAUTH2_TOKEN)
+    sess = OAuth2Session(client_id="cid", blueprint=bp)
+    assert sess.token == FAKE_OAUTH2_TOKEN
+
+
+def test_oauth2session_unset_token():
+    bp = mock.Mock(token=None)
+    sess = OAuth2Session(client_id="cid", blueprint=bp)
+    assert sess.token == None
+
+
+def test_oauth2session_access_token():
+    bp = mock.Mock(token=FAKE_OAUTH2_TOKEN)
+    sess = OAuth2Session(client_id="cid", blueprint=bp)
+    assert sess.access_token == "deadbeef"
+
+
+def test_oauth2session_unset_access_token():
+    bp = mock.Mock(token=None)
+    sess = OAuth2Session(client_id="cid", blueprint=bp)
+    assert sess.access_token == None

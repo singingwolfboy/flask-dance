@@ -103,6 +103,10 @@ class OAuth2Session(BaseOAuth2Session):
         return False
 
     @property
+    def access_token(self):
+        return self.token and self.token.get("access_token")
+
+    @property
     def authorized(self):
         """ This is the property used when you have a statement in your code
         that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
