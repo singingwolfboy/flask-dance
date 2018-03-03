@@ -21,6 +21,7 @@ popular websites:
 * Nylas
 * Spotify
 * Discord
+* VK
 
 Installation
 ============

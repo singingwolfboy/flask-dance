@@ -49,7 +49,7 @@ def make_vk_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://oauth.vk.com/",
+        base_url="https://api.vk.com/",
         authorization_url="https://oauth.vk.com/authorize",
         token_url="https://oauth.vk.com/access_token",
         redirect_url=redirect_url,
