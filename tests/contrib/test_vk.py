@@ -18,7 +18,7 @@ def test_blueprint_factory():
     )
     assert isinstance(vk_bp, OAuth2ConsumerBlueprint)
     assert vk_bp.session.scope == "email"
-    assert vk_bp.session.base_url == "https://oauth.vk.com/"
+    assert vk_bp.session.base_url == "https://api.vk.com/"
     assert vk_bp.session.client_id == "foo"
     assert vk_bp.client_secret == "bar"
     assert vk_bp.authorization_url == "https://oauth.vk.com/authorize"
