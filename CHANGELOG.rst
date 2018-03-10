@@ -6,6 +6,7 @@ unreleased
 * Accessing the ``access_token`` property on an instance of the
   ``OAuth2Session`` class will now query the token backend, instead of
   checking the client on the instance.
+* Pre-set configuration for GitLab provider
 
 0.13.0 (2017-11-12)
 -------------------

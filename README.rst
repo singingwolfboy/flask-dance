@@ -11,6 +11,7 @@ popular websites:
 
 * Facebook
 * GitHub
+* GitLab
 * Google
 * Twitter
 * JIRA
