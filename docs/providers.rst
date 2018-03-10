@@ -35,6 +35,18 @@ GitHub
     already has the GitHub authentication token loaded (assuming that the user
     has authenticated with GitHub at some point in the past).
 
+GitLab
+------
+.. module:: flask_dance.contrib.gitlab
+
+.. autofunction:: make_gitlab_blueprint
+
+.. data:: gitlab
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the GitLab authentication token loaded (assuming that the user
+    has authenticated with GitLab at some point in the past).
+
 Google
 ------
 .. module:: flask_dance.contrib.google
