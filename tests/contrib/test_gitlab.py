@@ -10,20 +10,35 @@ from flask_dance.consumer.backend import MemoryBackend
 
 
 def test_blueprint_factory():
-    gitlab_bp = make_gitlab_blueprint(
+    # Test with gitlab.com
+    glbp1 = make_gitlab_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="read_user",
+        redirect_to="index"
+    )
+    assert isinstance(glbp1, OAuth2ConsumerBlueprint)
+    assert glbp1.session.scope == "read_user"
+    assert glbp1.session.base_url == "https://gitlab.com/api/v4/"
+    assert glbp1.session.client_id == "foo"
+    assert glbp1.client_secret == "bar"
+    assert glbp1.authorization_url == "https://gitlab.com/oauth/authorize"
+    assert glbp1.token_url == "https://gitlab.com/oauth/token"
+    # Test with custom hostname
+    glbp2 = make_gitlab_blueprint(
         client_id="foo",
         client_secret="bar",
         scope="read_user",
         redirect_to="index",
+        hostname="git.example.com"
     )
-    assert isinstance(gitlab_bp, OAuth2ConsumerBlueprint)
-    assert gitlab_bp.session.scope == "read_user"
-    assert gitlab_bp.session.base_url == "https://gitlab.com/api/v4/"
-    assert gitlab_bp.session.client_id == "foo"
-    assert gitlab_bp.client_secret == "bar"
-    assert gitlab_bp.authorization_url == "https://gitlab.com/oauth/authorize"
-    assert gitlab_bp.token_url == "https://gitlab.com/oauth/token"
-
+    assert isinstance(glbp2, OAuth2ConsumerBlueprint)
+    assert glbp2.session.scope == "read_user"
+    assert glbp2.session.base_url == "https://git.example.com/api/v4/"
+    assert glbp2.session.client_id == "foo"
+    assert glbp2.client_secret == "bar"
+    assert glbp2.authorization_url == "https://git.example.com/oauth/authorize"
+    assert glbp2.token_url == "https://git.example.com/oauth/token"
 
 def test_load_from_config():
     app = Flask(__name__)

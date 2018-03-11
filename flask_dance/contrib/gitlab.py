@@ -15,7 +15,7 @@ __maintainer__ = "Justin Georgeson <jgeorgeson@lopht.net>"
 def make_gitlab_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, hostname="gitlab.com"):
     """
     Make a blueprint for authenticating with GitLab using OAuth 2. This requires
     a client ID and client secret from GitLab. You should either pass them to
@@ -41,6 +41,8 @@ def make_gitlab_blueprint(
         backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+        hostname (str, optional): If using a private instance of GitLab CE/EE,
+            specify the hostname, default is ``gitlab.com``
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -49,9 +51,9 @@ def make_gitlab_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://gitlab.com/api/v4/",
-        authorization_url="https://gitlab.com/oauth/authorize",
-        token_url="https://gitlab.com/oauth/token",
+        base_url="https://"+hostname+"/api/v4/",
+        authorization_url="https://"+hostname+"/oauth/authorize",
+        token_url="https://"+hostname+"/oauth/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
