@@ -26,7 +26,7 @@ def test_blueprint_factory_default():
     assert glbp1.token_url == "https://gitlab.com/oauth/token"
 
 
-def test_blueprint_factory_custom()
+def test_blueprint_factory_custom():
     glbp2 = make_gitlab_blueprint(
         client_id="foo",
         client_secret="bar",
