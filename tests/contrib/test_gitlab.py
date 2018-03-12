@@ -9,7 +9,7 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
 
 
-def test_blueprint_factory():
+def test_blueprint_factory_default():
     # Test with gitlab.com
     glbp1 = make_gitlab_blueprint(
         client_id="foo",
@@ -24,7 +24,9 @@ def test_blueprint_factory():
     assert glbp1.client_secret == "bar"
     assert glbp1.authorization_url == "https://gitlab.com/oauth/authorize"
     assert glbp1.token_url == "https://gitlab.com/oauth/token"
-    # Test with custom hostname
+
+
+def test_blueprint_factory_custom()
     glbp2 = make_gitlab_blueprint(
         client_id="foo",
         client_secret="bar",
@@ -39,6 +41,7 @@ def test_blueprint_factory():
     assert glbp2.client_secret == "bar"
     assert glbp2.authorization_url == "https://git.example.com/oauth/authorize"
     assert glbp2.token_url == "https://git.example.com/oauth/token"
+
 
 def test_load_from_config():
     app = Flask(__name__)
