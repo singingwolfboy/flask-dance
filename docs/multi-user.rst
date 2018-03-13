@@ -191,7 +191,7 @@ behavior in order to create user accounts automatically:
                 # Remember that `email` can be None, if the user declines
                 # to publish their email address on GitHub!
                 email=github_info["email"],
-                name=github_info["name"],
+                username=github_info["name"],
             )
             # Associate the new local user account with the OAuth token
             oauth.user = user
