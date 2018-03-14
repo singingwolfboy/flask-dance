@@ -3,6 +3,10 @@ Change Log
 
 unreleased
 ----------
+Nothing yet
+
+0.14.0 (2018-03-14)
+-------------------
 * Accessing the ``access_token`` property on an instance of the
   ``OAuth2Session`` class will now query the token backend, instead of
   checking the client on the instance.
