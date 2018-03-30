@@ -62,7 +62,7 @@ Create a file called ``multi.py`` with the following contents:
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
 
     # create/login local user on successful OAuth login
-    @oauth_authorized.connect_via(github_bp)
+    @oauth_authorized.connect_via(blueprint)
     def github_logged_in(blueprint, token):
         if not token:
             flash("Failed to log in with GitHub.", category="error")
@@ -268,7 +268,7 @@ are scoped to individual users.
 .. code-block:: python
 
     # create/login local user on successful OAuth login
-    @oauth_authorized.connect_via(github_bp)
+    @oauth_authorized.connect_via(blueprint)
     def github_logged_in(blueprint, token):
         if not token:
             flash("Failed to log in with GitHub.", category="error")
