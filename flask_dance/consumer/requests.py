@@ -65,8 +65,10 @@ class OAuth1Session(BaseOAuth1Session):
             request.url = self.base_url.relative(request.url)
         return super(OAuth1Session, self).prepare_request(request)
 
-    def request(self, method, url, data=None, headers=None, **kwargs):
-        self.load_token()
+    def request(self, method, url, data=None, headers=None,
+                should_load_token=True, **kwargs):
+        if should_load_token:
+            self.load_token()
         return super(OAuth1Session, self).request(
             method=method, url=url, data=data, headers=headers, **kwargs
         )
