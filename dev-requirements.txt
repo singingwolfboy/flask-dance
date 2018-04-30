@@ -13,4 +13,4 @@ sqlalchemy_utils
 flask-sqlalchemy
 # testing integration with other extensions
 flask-login
-flask-cache
+flask-caching
