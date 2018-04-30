@@ -135,7 +135,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         This is a session between the consumer (your website) and the provider
         (e.g. Twitter). It is *not* a session between a user of your website
         and your website.
-        :return: 
+        :return:
         """
         return self.session_class(
             client_key=self.client_key,
@@ -160,7 +160,10 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session._client.client.callback_uri = to_unicode(callback_uri)
 
         try:
-            self.session.fetch_request_token(self.request_token_url)
+            self.session.fetch_request_token(
+                self.request_token_url,
+                should_load_token=False,
+            )
         except TokenRequestDenied as err:
             message = err.args[0]
             response = getattr(err, "response", None)
@@ -197,7 +200,10 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session.parse_authorization_response(request.url)
 
         try:
-            token = self.session.fetch_access_token(self.access_token_url)
+            token = self.session.fetch_access_token(
+                self.access_token_url,
+                should_load_token=False,
+            )
         except ValueError as err:
             # can't proceed with OAuth, have to just redirect to next_url
             message = err.args[0]
