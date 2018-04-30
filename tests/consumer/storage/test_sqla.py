@@ -8,7 +8,7 @@ from lazy import lazy
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 from sqlalchemy.orm.exc import NoResultFound
-from flask_cache import Cache
+from flask_caching import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
 from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend

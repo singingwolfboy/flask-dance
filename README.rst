@@ -113,7 +113,7 @@ just set it up like this:
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=get_current_user)
 
 The SQLAlchemy backend seamlessly integrates with `Flask-SQLAlchemy`_,
-as well as `Flask-Login`_ for user management, and `Flask-Cache`_ for caching.
+as well as `Flask-Login`_ for user management, and `Flask-Caching`_ for caching.
 
 Full Documentation
 ==================
@@ -123,7 +123,7 @@ This README provides just a taste of what Flask-Dance is capable of. To see more
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
 .. _Flask-Login: https://flask-login.readthedocs.org/
-.. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
+.. _Flask-Caching: https://flask-caching.readthedocs.io/
 
 .. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master&style=flat
    :target: https://travis-ci.org/singingwolfboy/flask-dance

@@ -3,7 +3,7 @@ Change Log
 
 unreleased
 ----------
-Nothing yet
+* Flask-Cache is deprecated. Switch to Flask-Caching.
 
 0.14.0 (2018-03-14)
 -------------------

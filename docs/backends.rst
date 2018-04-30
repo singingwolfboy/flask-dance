@@ -63,11 +63,11 @@ user, if you want.
 
 You also probably want to use a caching system for your database, so that it
 is more performant under heavy load. The SQLAlchemy token storage backend
-also integrates with `Flask-Cache`_ if you just pass an Flask-Cache instance
+also integrates with `Flask-Caching`_ if you just pass an Flask-Caching instance
 to the backend, like this::
 
     from flask import Flask
-    from flask_cache import Cache
+    from flask_caching import Cache
 
     app = Flask(__name__)
     cache = Cache(app)
@@ -79,7 +79,7 @@ to the backend, like this::
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-Login: https://flask-login.readthedocs.org/
-.. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
+.. _Flask-Caching: https://flask-caching.readthedocs.io/
 
 Custom
 ------
