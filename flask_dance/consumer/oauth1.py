@@ -197,7 +197,15 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             next_url = url_for(self.redirect_to)
         else:
             next_url = "/"
-        self.session.parse_authorization_response(request.url)
+            
+        try:
+            self.session.parse_authorization_response(request.url)
+        except Exception as err:
+            message = err.args[0]
+            response = getattr(err, "response", None)
+            log.warning("OAuth 1 access token error: %s", message)
+            oauth_error.send(self, message=message, response=response)
+            return redirect(next_url)
 
         try:
             token = self.session.fetch_access_token(
