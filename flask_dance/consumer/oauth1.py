@@ -4,7 +4,7 @@ import logging
 from lazy import lazy
 from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response
-from requests_oauthlib.oauth1_session import TokenRequestDenied
+from requests_oauthlib.oauth1_session import TokenRequestDenied, TokenMissing
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
 from .base import BaseOAuthConsumerBlueprint, oauth_authorized, oauth_error
@@ -200,11 +200,10 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             
         try:
             self.session.parse_authorization_response(request.url)
-        except Exception as err:
+        except TokenMissing as err:
             message = err.args[0]
-            response = getattr(err, "response", None)
             log.warning("OAuth 1 access token error: %s", message)
-            oauth_error.send(self, message=message, response=response)
+            oauth_error.send(self, message=message)
             return redirect(next_url)
 
         try:
@@ -217,7 +216,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             message = err.args[0]
             response = getattr(err, "response", None)
             log.warning("OAuth 1 access token error: %s", message)
-            oauth_error.send(self, message=message, response=response)
+            oauth_error.send(self, message=message)
             return redirect(next_url)
 
         results = oauth_authorized.send(self, token=token) or []

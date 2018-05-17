@@ -421,6 +421,31 @@ def test_signal_oauth_error_authorized(request):
     assert resp.status_code == 302
 
 
+@requires_blinker
+def test_signal_oauth_notoken_authorized(request):
+    app, bp = make_app()
+
+    calls = []
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+
+    oauth_error.connect(callback)
+    request.addfinalizer(lambda: oauth_error.disconnect(callback))
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?"
+            "denied=faketoken",
+            base_url="https://a.b.c",
+        )
+
+    assert len(calls) == 1
+    assert calls[0][0] == (bp,)
+    assert calls[0][1]["message"] == "Response does not contain a token: {'denied': 'faketoken'}"
+    assert resp.status_code == 302
+    location = resp.headers["Location"]
+    assert location == "https://a.b.c/"
+
 class CustomOAuth1Session(OAuth1Session):
     my_attr = "foobar"
 
