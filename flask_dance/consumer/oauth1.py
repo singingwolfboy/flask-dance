@@ -202,8 +202,9 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             self.session.parse_authorization_response(request.url)
         except TokenMissing as err:
             message = err.args[0]
+            response = getattr(err, "response", None)
             log.warning("OAuth 1 access token error: %s", message)
-            oauth_error.send(self, message=message)
+            oauth_error.send(self, message=message, response=response)
             return redirect(next_url)
 
         try:

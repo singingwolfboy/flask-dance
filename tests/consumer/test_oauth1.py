@@ -441,7 +441,8 @@ def test_signal_oauth_notoken_authorized(request):
 
     assert len(calls) == 1
     assert calls[0][0] == (bp,)
-    assert calls[0][1]["message"] == "Response does not contain a token: {'denied': 'faketoken'}"
+    assert "Response does not contain a token" in calls[0][1]["message"]
+    assert calls[0][1]["response"] == {'denied':'faketoken'}
     assert resp.status_code == 302
     location = resp.headers["Location"]
     assert location == "https://a.b.c/"

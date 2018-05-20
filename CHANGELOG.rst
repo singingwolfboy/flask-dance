@@ -10,6 +10,10 @@ unreleased
   Now, the backend will not attempt to load tokens until the OAuth dance
   is complete.
 
+0.14.1 (2018-05-20)
+-------------------
+* Fixed Oauth1 crash in ``authorized`` when Twitter provider redirects to ``/authorized`` without providing ``oauth_token``
+
 0.14.0 (2018-03-14)
 -------------------
 * Accessing the ``access_token`` property on an instance of the
