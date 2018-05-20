@@ -42,25 +42,28 @@ Code
     If you are running this code on Heroku, you'll need to use the
     :class:`werkzeug.contrib.fixers.ProxyFix` middleware. See :doc:`../proxies`.
 
-When you run this code, you must set the :envvar:`OAUTHLIB_INSECURE_TRANSPORT`
-environment variable for it to work. For example, if you put this code in a
-file named ``github.py``, you could run:
+If you run this code locally or without HTTPS enabled (see warning below), 
+you must set the :envvar:`OAUTHLIB_INSECURE_TRANSPORT` environment variable
+to disable the HTTPS requirement imposed by ``oauthlib``. For example, if
+you put this code in a file named ``github.py`` on your machine, you could
+run:
 
 .. code-block:: bash
 
     $ export OAUTHLIB_INSECURE_TRANSPORT=1
     $ python github.py
 
-Visit `localhost:5000`_ in your browser, and you should start the OAuth dance
-immediately.
+Visit `http://localhost:5000`_ in your browser, and you should start the OAuth
+dance immediately.
 
 .. _localhost:5000: http://localhost:5000/
 
 .. warning::
-    Do *NOT* set :envvar:`OAUTHLIB_INSECURE_TRANSPORT` in production. Setting
-    this variable allows you to use insecure ``http`` for OAuth communication.
-    However, for security, all OAuth interactions must occur over secure
-    ``https`` when running in production.
+    :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
+    or over trusted connections. By default, all OAuth interactions must occur
+    over secure ``https`` connections (this is enfored by ``oauthlib``). However,
+    setting :envvar:`OAUTHLIB_INSECURE_TRANSPORT` disables this enforcement and
+    allows OAuth to occur over insecure ``http`` connections.
 
 Explanation
 -----------
