@@ -9,10 +9,7 @@ unreleased
   tokens before any were set, causing an exception in the backend.
   Now, the backend will not attempt to load tokens until the OAuth dance
   is complete.
-
-0.14.1 (2018-05-20)
--------------------
-* Fixed Oauth1 crash in ``authorized`` when Twitter provider redirects to ``/authorized`` without providing ``oauth_token``
+* Added exception handler around ``parse_authorization_response`` in Oauth1
 
 0.14.0 (2018-03-14)
 -------------------
