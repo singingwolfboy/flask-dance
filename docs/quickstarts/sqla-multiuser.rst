@@ -404,5 +404,5 @@ running your application in production!
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
-.. _Flask-Login: https://flask-login.readthedocs.org/
+.. _Flask-Login: https://flask-login.readthedocs.io/
 .. _blinker: http://pythonhosted.org//blinker/

@@ -7,7 +7,7 @@ easily support OAuth providers in the future, as well.
 
 .. _Flask: http://flask.pocoo.org/
 .. _requests: http://python-requests.org/
-.. _oauthlib: https://oauthlib.readthedocs.org/
+.. _oauthlib: https://oauthlib.readthedocs.io/
 
 User Guide:
 

@@ -78,7 +78,7 @@ to the backend, like this::
 
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
-.. _Flask-Login: https://flask-login.readthedocs.org/
+.. _Flask-Login: https://flask-login.readthedocs.io/
 .. _Flask-Caching: https://flask-caching.readthedocs.io/
 
 Custom

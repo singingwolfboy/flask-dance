@@ -99,12 +99,12 @@ class SQLAlchemyBackend(BaseBackend):
                 :class:`flask_login.AnonymousUserMixin` class, but you don't have
                 to provide that -- Flask-Dance treats it as the default.
             cache:
-                An instance of `Flask-Cache`_. Providing a caching system is
+                An instance of `Flask-Caching`_. Providing a caching system is
                 highly recommended, but not required.
 
         .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
-        .. _Flask-Login: https://flask-login.readthedocs.org/
-        .. _Flask-Cache: http://pythonhosted.org/Flask-Cache/
+        .. _Flask-Login: https://flask-login.readthedocs.io/
+        .. _Flask-Caching: https://flask-caching.readthedocs.io/en/latest/
         """
         self.model = model
         self.session = session

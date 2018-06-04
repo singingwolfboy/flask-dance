@@ -3,7 +3,7 @@ Flask-Dance |build-status| |coverage-status| |docs|
 Doing the OAuth dance with style using Flask, requests, and oauthlib. Currently,
 only OAuth consumers are supported, but this project could easily support
 OAuth providers in the future, as well. The `full documentation for this project
-is hosted on ReadTheDocs <http://flask-dance.readthedocs.org/>`_, but this
+is hosted on ReadTheDocs <http://flask-dance.readthedocs.io/>`_, but this
 README will give you a taste of the features.
 
 Flask-Dance currently provides pre-set OAuth configurations for the following
@@ -80,7 +80,7 @@ it just like you would use the ``requests`` module.
 
 You can also use Flask-Dance with any OAuth provider you'd like, not just the
 pre-set configurations. `See the documentation for how to use other OAuth
-providers. <http://flask-dance.readthedocs.org/en/latest/providers.html>`_
+providers. <http://flask-dance.readthedocs.io/en/latest/providers.html>`_
 
 .. _flask-dance-github: https://github.com/singingwolfboy/flask-dance-github
 .. _context local: http://flask.pocoo.org/docs/latest/quickstart/#context-locals
@@ -118,11 +118,11 @@ as well as `Flask-Login`_ for user management, and `Flask-Caching`_ for caching.
 Full Documentation
 ==================
 This README provides just a taste of what Flask-Dance is capable of. To see more,
-`read the documentation on ReadTheDocs <http://flask-dance.readthedocs.org/>`_.
+`read the documentation on ReadTheDocs <http://flask-dance.readthedocs.io/>`_.
 
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
-.. _Flask-Login: https://flask-login.readthedocs.org/
+.. _Flask-Login: https://flask-login.readthedocs.io/
 .. _Flask-Caching: https://flask-caching.readthedocs.io/
 
 .. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master&style=flat
@@ -132,5 +132,5 @@ This README provides just a taste of what Flask-Dance is capable of. To see more
    :target: http://codecov.io/github/singingwolfboy/flask-dance?branch=master
    :alt: Test coverage
 .. |docs| image:: https://readthedocs.org/projects/flask-dance/badge/?version=latest&style=flat
-   :target: http://flask-dance.readthedocs.org/
+   :target: http://flask-dance.readthedocs.io/
    :alt: Documentation

@@ -20,7 +20,7 @@ except ImportError:
 
 class FakeCache(object):
     """
-    An object that mimics just enough of Flask-Cache's API to be compatible
+    An object that mimics just enough of Flask-Caching's API to be compatible
     with our needs, but does nothing.
     """
     def get(self, key):
