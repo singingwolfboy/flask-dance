@@ -1,6 +1,6 @@
 requests>=2.0
 oauthlib
-requests-oauthlib>=0.7.0
+requests-oauthlib>=1.0.0
 Flask>=0.7
 urlobject
 six

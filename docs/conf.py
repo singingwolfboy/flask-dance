@@ -268,14 +268,14 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 intersphinx_mapping = {
-    'python': ('http://docs.python.org/', None),
+    'python': ('https://docs.python.org/', None),
     'flask': ('http://flask.pocoo.org/docs/', None),
-    'flask_login': ('https://flask-login.readthedocs.org/en/latest/', None),
+    'flask_login': ('https://flask-login.readthedocs.io/en/latest/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'requests': ('http://docs.python-requests.org/en/latest/', None),
-    'requests_oauthlib': ('http://requests-oauthlib.readthedocs.org/en/latest/', None),
+    'requests_oauthlib': ('https://requests-oauthlib.readthedocs.io/en/latest/', None),
     'sqlalchemy': ('http://docs.sqlalchemy.org/en/latest/', None),
-    'sqlalchemy_utils': ('http://sqlalchemy-utils.readthedocs.org/en/latest/', None),
+    'sqlalchemy_utils': ('https://sqlalchemy-utils.readthedocs.io/en/latest/', None),
 }
 
 autodoc_member_order = "bysource"
