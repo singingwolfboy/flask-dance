@@ -3,13 +3,17 @@ Change Log
 
 unreleased
 ----------
+nothing yet
+
+1.0.0 (2018-06-04)
+------------------
 * Flask-Cache is deprecated. Switch to Flask-Caching.
 * When using the OAuth 1 blueprint with the SQLAlchemy backend and the
   ``user_required`` argument set to ``True``, the backend was trying to load
   tokens before any were set, causing an exception in the backend.
   Now, the backend will not attempt to load tokens until the OAuth dance
   is complete.
-* Added exception handler around ``parse_authorization_response`` in Oauth1
+* Added exception handler around ``parse_authorization_response`` in OAuth1
 
 0.14.0 (2018-03-14)
 -------------------
