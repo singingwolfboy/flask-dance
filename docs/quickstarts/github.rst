@@ -42,9 +42,9 @@ Code
     If you are running this code on Heroku, you'll need to use the
     :class:`werkzeug.contrib.fixers.ProxyFix` middleware. See :doc:`../proxies`.
 
-If you run this code locally or without HTTPS enabled (see warning below), 
-you must set the :envvar:`OAUTHLIB_INSECURE_TRANSPORT` environment variable
-to disable the HTTPS requirement imposed by ``oauthlib``. For example, if
+If you run this code locally or without HTTPS enabled (see warning below), you
+must set the :envvar:`OAUTHLIB_INSECURE_TRANSPORT` environment variable to
+to disable the HTTPS requirement imposed by ``oauthlib``, which is part of Flask-Dance. For example, if
 you put this code in a file named ``github.py`` on your machine, you could
 run:
 
@@ -53,8 +53,8 @@ run:
     $ export OAUTHLIB_INSECURE_TRANSPORT=1
     $ python github.py
 
-Visit `http://localhost:5000`_ in your browser, and you should start the OAuth
-dance immediately.
+Visit `http://localhost:5000`_ in your browser, and you should start the OAuth dance
+immediately.
 
 .. _localhost:5000: http://localhost:5000/
 
