@@ -59,16 +59,17 @@ For example, if you put this code in a file named ``slack.py``, you could run:
     $ export OAUTHLIB_RELAX_TOKEN_SCOPE=1
     $ python slack.py
 
-Visit `localhost:5000`_ in your browser, and you should start the OAuth dance
+Visit `http://localhost:5000`_ in your browser, and you should start the OAuth dance
 immediately.
 
 .. _localhost:5000: http://localhost:5000/
 
 .. warning::
-    Do *NOT* set :envvar:`OAUTHLIB_INSECURE_TRANSPORT` in production. Setting
-    this variable allows you to use insecure ``http`` for OAuth communication.
-    However, for security, all OAuth interactions must occur over secure
-    ``https`` when running in production.
+    :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
+    or over trusted connections. By default, all OAuth interactions must occur
+    over secure ``https`` connections (this is enfored by ``oauthlib``). However,
+    setting :envvar:`OAUTHLIB_INSECURE_TRANSPORT` disables this enforcement and
+    allows OAuth to occur over insecure ``http`` connections.
 
     However, you can (and probably should) set
     :envvar:`OAUTHLIB_RELAX_TOKEN_SCOPE` when running in production.
