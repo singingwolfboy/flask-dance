@@ -25,7 +25,7 @@ def make_discord_blueprint(
     Args:
         client_id (str): The client ID for your application on Discord.
         client_secret (str): The client secret for your application on Discord
-        scope (str, optional): comma-separated list of scopes for the OAuth token
+        scope (list, optional): list of scopes (str) for the OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
