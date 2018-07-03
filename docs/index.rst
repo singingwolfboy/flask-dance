@@ -26,6 +26,7 @@ Advanced Topics:
 
 .. toctree::
    how-oauth-works
+   testing
    api
 
 
