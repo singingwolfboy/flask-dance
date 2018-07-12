@@ -95,3 +95,54 @@ you can use all the normal ``requests`` methods, like
 :meth:`~requests.Session.get` and :meth:`~requests.Session.post`,
 to make HTTP requests. If you only specify the path component of the URL,
 the domain will default to ``https://www.googleapis.com``.
+
+Online vs offline applications
+------------------------------
+
+Google distinguishes between online and offline applications. Online applications
+are applications that only act when the user is at their keyboard, say a web
+application that only calls Google API's as the user is interacting with your
+application. Offline applications are applications that can act on behalf of the
+user while they're not at their keyboard, for example something that runs backups
+on behalf of the user at a specific point in time.
+
+The blueprint is configured by default to get an online token. This means you'll get
+a token that's valid for about an hour and after that you'll need to get a new token,
+by putting the user through the OAuth flow again. If instead you request an offline
+token you'll also be given a refresh token that your application can use to request
+a new, short lived, token without the user needing to do anything.
+
+.. warning::
+
+   The refresh token is only returned the first time you put a user through the OAuth
+   flow. This means you need to store the refresh token in a persistent fashion in
+   order to ensure your application can renew the access token. It's therefore not
+   advisable to store this using Flask's regular session, which uses a cookie. Though
+   the session can be marked as persistent that won't save you if the user decides
+   to clear their browser cache for example.
+
+It's tempting to just request an offline token but if your application doesn't act
+on behalf of the user while they're not at their keyboard this is in bad form. Instead,
+you can install an error handler in your Flask app that will automatically retrigger the
+OAuth flow when the token has expired.
+
+.. code-block:: python
+
+    from oauthlib.oauth2.rfc6749.errors import InvalidClientIdError
+
+    @app.errorhandler(InvalidClientIdError)
+    def token_expired(_):
+        """Get a fresh access token by triggering the OAuth flow.
+
+        Since the user has already given consent this won't cause the user to
+        have to interact with anything. In most cases it'll flash by without
+        the user noticing anything.
+        """
+        session.pop('google_oauth_token')
+        return redirect(url_for('index'))
+
+You'll need to adjust the ``redirect`` call to a URL that'll trigger the OAuth flow. You
+can also manually handle the error at the callsite instead, anywhere you do a ``google.get()``
+call for example, by catching the exception. That would allow you to customize the behaviour.
+In all cases you'll need to remove the ``google_oauth_token`` from the session and redirect
+to something that'll retrigger the OAuth flow.
