@@ -54,10 +54,8 @@ run:
     $ export OAUTHLIB_INSECURE_TRANSPORT=1
     $ python twitter.py
 
-Visit `localhost:5000`_ in your browser, and you should start the OAuth dance
+Visit http://localhost:5000 in your browser, and you should start the OAuth dance
 immediately.
-
-.. _localhost:5000: http://localhost:5000/
 
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing

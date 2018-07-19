@@ -59,10 +59,8 @@ For example, if you put this code in a file named ``slack.py``, you could run:
     $ export OAUTHLIB_RELAX_TOKEN_SCOPE=1
     $ python slack.py
 
-Visit `http://localhost:5000`_ in your browser, and you should start the OAuth dance
+Visit http://localhost:5000 in your browser, and you should start the OAuth dance
 immediately.
-
-.. _localhost:5000: http://localhost:5000/
 
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
