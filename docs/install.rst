@@ -17,7 +17,7 @@ To also use the :ref:`SQLAlchemy backend <sqlalchemy-backend>`, specify the
 .. _pip: https://pip.pypa.io
 
 Library development
-============
+===================
 
 Use `tox`_ to execute unit tests on multiple python versions. You can also use
 `tox`_ to build the documentation.

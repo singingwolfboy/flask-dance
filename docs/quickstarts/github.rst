@@ -2,7 +2,7 @@ GitHub Quickstart
 =================
 
 Set up the application
------------------
+----------------------
 Visit https://github.com/settings/applications/new
 to register an application on GitHub. The application's "authorization
 callback URL" must be ``http://localhost:5000/login/github/authorized``.

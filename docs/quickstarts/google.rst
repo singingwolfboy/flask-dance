@@ -2,7 +2,7 @@ Google Quickstart
 =================
 
 Set up the application
------------------
+----------------------
 Visit the Google Developers Console at https://console.developers.google.com
 and create a new project. In the "APIs & auth" section, click on "Credentials",
 and then click the "Create a new Client ID" button. Select "Web Application"

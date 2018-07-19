@@ -2,7 +2,7 @@ Meetup Quickstart
 ==================
 
 Set up the application
------------------
+----------------------
 Visit the Meetup OAuth Consumer page at
 https://secure.meetup.com/meetup_api/oauth_consumers/
 and create a new consumer. Put in

@@ -1,8 +1,8 @@
 Azure Quickstart
-=================
+================
 
 Set up the application
------------------
+----------------------
 Visit https://apps.dev.microsoft.com/
 to register an application on Azure AD. The application's "Redirect
 URI" must be ``http://localhost:5000/login/azure/authorized``.

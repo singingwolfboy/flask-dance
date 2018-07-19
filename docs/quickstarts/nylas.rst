@@ -2,7 +2,7 @@ Nylas Quickstart
 ================
 
 Set up the application
------------------
+----------------------
 Visit https://developer.nylas.com/ to sign up for a Nylas Developer account.
 On the Nylas Developer dashboard, click on the "Settings" button, and in the
 "Callbacks" tab, add ``http://localhost:5000/login/nylas/authorized`` as
