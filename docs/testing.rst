@@ -60,24 +60,32 @@ and ``datetime`` functions as you normally would:
 
 .. code-block:: python
 
+    from freezegun import freeze_time
+
     @pytest.fixture
-    @pytest.mark.freeze_time('2018-05-04')
     def loggedin_app(app):
         """Creates a logged-in test client instance."""
-        with app.test_client() as client:
-            with client.session_transaction() as sess:
-                sess['domain'] = 'example.com'
-                sess['google_oauth_token'] = {
-                    'access_token': 'this is totally fake',
-                    'id_token': 'this is not a real token',
-                    'token_type': 'Bearer',
-                    'expires_in': '3600',
-                    'expires_at': time.time() + 3600,
-                }
-            yield client
+        with freeze_time('2018-05-04', tz_offset=0)
+            with app.test_client() as client:
+                with client.session_transaction() as sess:
+                    sess['domain'] = 'example.com'
+                    sess['google_oauth_token'] = {
+                        'access_token': 'this is totally fake',
+                        'id_token': 'this is not a real token',
+                        'token_type': 'Bearer',
+                        'expires_in': '3600',
+                        'expires_at': time.time() + 3600,
+                    }
+                yield client
 
 Now that we have a logged-in client you can call any of the routes using the
 test client and check their responses.
+
+.. note::
+    Using ``freeze_time`` time is now permanently frozen in this fixture.
+    If you want to move time forwards or backwards you'll need to accept the
+    ``freezer`` fixture in your tests, and call ``freezer.move_to()`` passing
+    in an `ISO 8601`_ formatted datetime string to move time to that point in time.
 
 .. code-block:: python
 
@@ -153,3 +161,4 @@ documentation instead.
 .. _`pytest-freezegun`: https://github.com/ktosiek/pytest-freezegun
 .. _`responses`: https://github.com/getsentry/responses
 .. _`Google Plus API`: https://developers.google.com/+/web/api/rest/
+.. _`ISO 8601`: https://en.wikipedia.org/wiki/ISO_8601
