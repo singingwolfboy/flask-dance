@@ -16,7 +16,7 @@ def test_blueprint_factory():
         redirect_to="index",
     )
     assert isinstance(google_bp, OAuth2ConsumerBlueprint)
-    assert google_bp.session.scope == ["profile"]
+    assert google_bp.session.scope == ["https://www.googleapis.com/auth/userinfo.profile"]
     assert google_bp.session.base_url == "https://www.googleapis.com/"
     assert google_bp.session.client_id == "foo"
     assert google_bp.client_secret == "bar"
