@@ -1,6 +1,7 @@
 # documentation tools
 sphinx>=1.3
 sphinxcontrib-seqdiag
+Flask-Sphinx-Themes
 # testing tools
 pytest
 pytest-cov

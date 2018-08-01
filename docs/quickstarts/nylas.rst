@@ -2,7 +2,7 @@ Nylas Quickstart
 ================
 
 Set up the application
------------------
+----------------------
 Visit https://developer.nylas.com/ to sign up for a Nylas Developer account.
 On the Nylas Developer dashboard, click on the "Settings" button, and in the
 "Callbacks" tab, add ``http://localhost:5000/login/nylas/authorized`` as
@@ -55,10 +55,8 @@ run:
     $ export OAUTHLIB_INSECURE_TRANSPORT=1
     $ python nylas.py
 
-Visit `http://localhost:5000`_ in your browser, and you should start the OAuth dance
+Visit http://localhost:5000 in your browser, and you should start the OAuth dance
 immediately.
-
-.. _localhost:5000: http://localhost:5000/
 
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
