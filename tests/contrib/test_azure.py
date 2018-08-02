@@ -2,11 +2,12 @@ from __future__ import unicode_literals
 
 import pytest
 import responses
-from urlobject import URLObject
 from flask import Flask
-from flask_dance.contrib.azure import make_azure_blueprint, azure
+from urlobject import URLObject
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
+from flask_dance.contrib.azure import make_azure_blueprint, azure
 
 
 def test_blueprint_factory():
@@ -23,6 +24,23 @@ def test_blueprint_factory():
     assert azure_bp.client_secret == "bar"
     assert azure_bp.authorization_url == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
     assert azure_bp.token_url == "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+
+
+def test_blueprint_factory_with_organization_tenant():
+    azure_orgs_bp = make_azure_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="user.read",
+        redirect_to="index",
+        tenant='organizations'
+    )
+    assert isinstance(azure_orgs_bp, OAuth2ConsumerBlueprint)
+    assert azure_orgs_bp.session.scope == "user.read"
+    assert azure_orgs_bp.session.base_url == "https://graph.microsoft.com"
+    assert azure_orgs_bp.session.client_id == "foo"
+    assert azure_orgs_bp.client_secret == "bar"
+    assert azure_orgs_bp.authorization_url == "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize"
+    assert azure_orgs_bp.token_url == "https://login.microsoftonline.com/organizations/oauth2/v2.0/token"
 
 
 def test_load_from_config():

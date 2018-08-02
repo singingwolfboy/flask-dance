@@ -3,7 +3,7 @@ Change Log
 
 unreleased
 ----------
-nothing yet
+* Added ``tenant`` argument to ``make_azure_blueprint``
 
 1.0.0 (2018-06-04)
 ------------------
