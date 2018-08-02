@@ -27,7 +27,7 @@ def make_google_blueprint(
         client_id (str): The client ID for your application on Google
         client_secret (str): The client secret for your application on Google
         scope (str, optional): comma-separated list of scopes for the OAuth token.
-            Defaults to the "profile" scope.
+            Defaults to the "https://www.googleapis.com/auth/userinfo.profile" scope.
         offline (bool): Whether to request `offline access
             <https://developers.google.com/accounts/docs/OAuth2WebServer#offline>`_
             for the OAuth token. Defaults to False
@@ -53,7 +53,7 @@ def make_google_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    scope = scope or ["profile"]
+    scope = scope or ["https://www.googleapis.com/auth/userinfo.profile"]
     authorization_url_params = {}
     if offline:
         authorization_url_params["access_type"] = "offline"
