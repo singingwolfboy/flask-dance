@@ -43,7 +43,7 @@ def make_azure_blueprint(
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
         tenant: Determine which accounts are allowed to authenticate with Azure.
                 `See the Azure documentation for more information about this parameter.
-                <https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints>`_.
+                <https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints>`_
                 Defaults to ``common``.
 
 
