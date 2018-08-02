@@ -17,16 +17,10 @@ To also use the :ref:`SQLAlchemy backend <sqlalchemy-backend>`, specify the
 .. _pip: https://pip.pypa.io
 
 Library development
-============
+===================
 
-Use `tox`_ to execute unit tests on multiple python versions.
-To build the documentation, it requires the `flask-dance` theme (using git `submodule`).
-
-
-.. code-block:: bash
-
-   $ git submodule update
-   $ tox
+Use `tox`_ to execute unit tests on multiple python versions. You can also use
+`tox`_ to build the documentation.
 
 
 .. _tox: https://tox.readthedocs.io/

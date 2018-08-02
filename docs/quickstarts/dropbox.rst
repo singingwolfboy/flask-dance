@@ -2,7 +2,7 @@ Dropbox Quickstart
 ==================
 
 Set up the application
------------------
+----------------------
 Visit the Dropbox App Console at https://www.dropbox.com/developers/apps
 and create a new app. Select "Dropbox API app", not "Drop-ins app". Decide
 if your app can be limited to its own folder, provide an app name, and
@@ -56,10 +56,8 @@ run:
     $ export OAUTHLIB_RELAX_TOKEN_SCOPE=1
     $ python dropbox.py
 
-Visit `http://localhost:5000`_ in your browser, and you should start the OAuth dance
+Visit http://localhost:5000 in your browser, and you should start the OAuth dance
 immediately.
-
-.. _localhost:5000: http://localhost:5000/
 
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
