@@ -15,7 +15,7 @@ __maintainer__ = "Steven MARTINS <steven.martins.fr@gmail.com>"
 def make_azure_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, tenant=None):
     """
     Make a blueprint for authenticating with Azure AD using OAuth 2. This requires
     a client ID and client secret from Azure AD. You should either pass them to
@@ -41,18 +41,22 @@ def make_azure_blueprint(
         backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+        tenant: Defaults to 'common'. Can be set to one of the four allowed endpoint values from:
+                https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints
+
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
+    tenant = tenant or 'common'
     scope = scope or ["user.read"]
     azure_bp = OAuth2ConsumerBlueprint("azure", __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
         base_url="https://graph.microsoft.com",
-        authorization_url="https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
-        token_url="https://login.microsoftonline.com/common/oauth2/v2.0/token",
+        authorization_url="https://login.microsoftonline.com/{}/oauth2/v2.0/authorize".format(tenant),
+        token_url="https://login.microsoftonline.com/{}/oauth2/v2.0/token".format(tenant),
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
