@@ -41,7 +41,7 @@ def make_azure_blueprint(
         backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
-        tenant: Defaults to 'common'. Can be set to one of the four allowed endpoint values from:
+        tenant: Defaults to 'common'. Can be set to one of the four allowed tenant values from:
                 https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints
 
 
