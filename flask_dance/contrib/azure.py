@@ -15,7 +15,7 @@ __maintainer__ = "Steven MARTINS <steven.martins.fr@gmail.com>"
 def make_azure_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None, tenant=None):
+        session_class=None, backend=None, tenant="common"):
     """
     Make a blueprint for authenticating with Azure AD using OAuth 2. This requires
     a client ID and client secret from Azure AD. You should either pass them to
@@ -50,7 +50,6 @@ def make_azure_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    tenant = tenant or 'common'
     scope = scope or ["user.read"]
     azure_bp = OAuth2ConsumerBlueprint("azure", __name__,
         client_id=client_id,
