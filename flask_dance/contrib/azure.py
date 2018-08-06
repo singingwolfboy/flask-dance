@@ -50,7 +50,7 @@ def make_azure_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    scope = scope or ["user.read"]
+    scope = scope or ["openid", "email", "profile", "User.Read"]
     azure_bp = OAuth2ConsumerBlueprint("azure", __name__,
         client_id=client_id,
         client_secret=client_secret,

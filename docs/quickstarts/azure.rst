@@ -32,7 +32,7 @@ Code
             return redirect(url_for("azure.login"))
         resp = azure.get("/v1.0/me")
         assert resp.ok
-        return "You are {mail} on Azure AD".format(mail=resp.json()["mail"])
+        return "You are {mail} on Azure AD".format(mail=resp.json()["userPrincipalName"])
 
     if __name__ == "__main__":
         app.run()
