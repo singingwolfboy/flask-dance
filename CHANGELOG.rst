@@ -4,6 +4,7 @@ Change Log
 unreleased
 ----------
 * Added ``tenant`` argument to ``make_azure_blueprint``
+* Updated Azure AD default scopes. See `issue 149`_.
 
 1.0.0 (2018-06-04)
 ------------------
@@ -229,3 +230,4 @@ unreleased
 * Initial release
 
 .. _issue 53: https://github.com/singingwolfboy/flask-dance/issues/53
+.. _issue 149: https://github.com/singingwolfboy/flask-dance/issues/149
