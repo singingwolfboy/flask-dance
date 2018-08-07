@@ -4,6 +4,7 @@ Change Log
 unreleased
 ----------
 * Added ``tenant`` argument to ``make_azure_blueprint``
+* Support Python 3.7
 
 1.0.0 (2018-06-04)
 ------------------

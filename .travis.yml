@@ -1,17 +1,23 @@
 sudo: false
 language: python
 cache: pip
-python:
-  - 2.7
-  - 3.4
-  - 3.5
-  - 3.6
+matrix:
+  include:
+    - python: 2.7
+    - python: 3.4
+    - python: 3.5
+    - python: 3.6
+    - python: 3.7
+      # https://github.com/travis-ci/travis-ci/issues/9815
+      dist: xenial
+      sudo: true
 addons:
   postgresql: "9.4"
 env:
-  - BLINKER=1 DATABASE_URI=postgresql://localhost/travis_ci_test
-  - BLINKER=1 DATABASE_URI=sqlite://
-  - BLINKER=0 DATABASE_URI=sqlite://
+  matrix:
+    - BLINKER=1 DATABASE_URI=postgresql://localhost/travis_ci_test
+    - BLINKER=1 DATABASE_URI=sqlite://
+    - BLINKER=0 DATABASE_URI=sqlite://
 before_script:
   - if [[ $DATABASE_URI == postgresql* ]]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 install:
