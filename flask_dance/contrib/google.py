@@ -55,8 +55,10 @@ def make_google_blueprint(
     """
     scope = scope or ["https://www.googleapis.com/auth/userinfo.profile"]
     authorization_url_params = {}
+    auto_refresh_url = None
     if offline:
         authorization_url_params["access_type"] = "offline"
+        auto_refresh_url = "https://accounts.google.com/o/oauth2/token"
     if reprompt_consent:
         authorization_url_params["approval_prompt"] = "force"
     google_bp = OAuth2ConsumerBlueprint("google", __name__,
@@ -66,7 +68,7 @@ def make_google_blueprint(
         base_url="https://www.googleapis.com/",
         authorization_url="https://accounts.google.com/o/oauth2/auth",
         token_url="https://accounts.google.com/o/oauth2/token",
-        auto_refresh_url="https://accounts.google.com/o/oauth2/token",
+        auto_refresh_url=auto_refresh_url,
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,

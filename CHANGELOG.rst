@@ -5,6 +5,9 @@ unreleased
 ----------
 * Added ``tenant`` argument to ``make_azure_blueprint``
 * Updated Azure AD default scopes. See `issue 149`_.
+* Only set ``auto_refresh_url`` in ``make_google_blueprint`` if a token of
+  type ``offline`` is requested. See issues `#143`_, `#144`_ and `#161`_ for
+  background.
 
 1.0.0 (2018-06-04)
 ------------------
@@ -231,3 +234,6 @@ unreleased
 
 .. _issue 53: https://github.com/singingwolfboy/flask-dance/issues/53
 .. _issue 149: https://github.com/singingwolfboy/flask-dance/issues/149
+.. _#143: https://github.com/singingwolfboy/flask-dance/issues/143
+.. _#144: https://github.com/singingwolfboy/flask-dance/issues/144
+.. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
