@@ -22,6 +22,7 @@ def test_blueprint_factory():
     assert google_bp.client_secret == "bar"
     assert google_bp.authorization_url == "https://accounts.google.com/o/oauth2/auth"
     assert google_bp.token_url == "https://accounts.google.com/o/oauth2/token"
+    assert google_bp.auto_refresh_url is None
 
 
 def test_load_from_config():
@@ -46,6 +47,16 @@ def test_blueprint_factory_scope():
         redirect_to="index",
     )
     assert google_bp.session.scope == "customscope"
+
+
+def test_blueprint_factory_offline():
+    google_bp = make_google_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        redirect_to="index",
+        offline=True,
+    )
+    assert google_bp.auto_refresh_url == "https://accounts.google.com/o/oauth2/token"
 
 
 @responses.activate
