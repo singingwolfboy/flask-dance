@@ -167,6 +167,18 @@ Discord
     already has the Discord authentication token loaded (assuming that the user
     has authenticated with Discord at some point in the past).
 
+Okta
+-------
+.. module:: flask_dance.contrib.okta
+
+.. autofunction:: make_okta_blueprint
+
+.. data:: okta
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Okta authentication token loaded (assuming that the user
+    has authenticated with Okta at some point in the past).
+
 .. _custom-provider:
 
 Custom
