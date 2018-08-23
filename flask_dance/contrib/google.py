@@ -16,7 +16,7 @@ def make_google_blueprint(
         client_id=None, client_secret=None, scope=None,
         offline=False, reprompt_consent=False,
         redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, hd=None):
     """
     Make a blueprint for authenticating with Google using OAuth 2. This requires
     a client ID and client secret from Google. You should either pass them to
@@ -49,6 +49,8 @@ def make_google_blueprint(
         backend: A storage backend class, or an instance of a storage
                 backend class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+        hd (str, optional): The domain of the G Suite user. Used to indicate that the account selection UI should be
+            optimized for accounts at this domain.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -61,6 +63,8 @@ def make_google_blueprint(
         auto_refresh_url = "https://accounts.google.com/o/oauth2/token"
     if reprompt_consent:
         authorization_url_params["approval_prompt"] = "force"
+    if hd:
+        authorization_url_params["hd"] = hd
     google_bp = OAuth2ConsumerBlueprint("google", __name__,
         client_id=client_id,
         client_secret=client_secret,

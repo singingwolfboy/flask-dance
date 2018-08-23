@@ -59,6 +59,17 @@ def test_blueprint_factory_offline():
     assert google_bp.auto_refresh_url == "https://accounts.google.com/o/oauth2/token"
 
 
+def test_blueprint_factory_hd():
+    google_bp = make_google_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        redirect_to="index",
+        hd="example.com",
+    )
+
+    assert google_bp.authorization_url_params["hd"] == "example.com"
+
+
 @responses.activate
 def test_context_local():
     responses.add(responses.GET, "https://google.com")
@@ -114,6 +125,24 @@ def test_offline():
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
+
+
+def test_hd():
+    app = Flask(__name__)
+    app.secret_key = "backups"
+    goog_bp = make_google_blueprint("foo", "bar", hd="example.com")
+    app.register_blueprint(goog_bp)
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/google",
+            base_url="https://a.b.c",
+            follow_redirects=False,
+        )
+    # check that there is a `hd=example.com` query param in the redirect URL
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.query_dict["hd"] == "example.com"
 
 
 def test_offline_reprompt():
