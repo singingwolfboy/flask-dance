@@ -25,7 +25,10 @@ Code
     blueprint = make_google_blueprint(
         client_id="my-key-here",
         client_secret="my-secret-here",
-        scope=["profile", "email"]
+        scope=[
+            "https://www.googleapis.com/auth/plus.me",
+            "https://www.googleapis.com/auth/userinfo.email",
+        ]
     )
     app.register_blueprint(blueprint, url_prefix="/login")
 
