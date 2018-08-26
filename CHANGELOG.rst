@@ -1,15 +1,21 @@
-Change Log
-==========
+Changelog
+=========
 
-unreleased
-----------
+`unreleased`_
+-------------
+
+Added
+~~~~~
 * Added ``tenant`` argument to ``make_azure_blueprint``
+
+Fixed
+~~~~~
 * Updated Azure AD default scopes. See `issue 149`_.
 * Only set ``auto_refresh_url`` in ``make_google_blueprint`` if a token of
   type ``offline`` is requested. See issues `#143`_, `#144`_ and `#161`_ for
   background.
 
-1.0.0 (2018-06-04)
+`1.0.0`_ (2018-06-04)
 ------------------
 * Flask-Cache is deprecated. Switch to Flask-Caching.
 * When using the OAuth 1 blueprint with the SQLAlchemy backend and the
@@ -19,14 +25,14 @@ unreleased
   is complete.
 * Added exception handler around ``parse_authorization_response`` in OAuth1
 
-0.14.0 (2018-03-14)
+`0.14.0`_ (2018-03-14)
 -------------------
 * Accessing the ``access_token`` property on an instance of the
   ``OAuth2Session`` class will now query the token backend, instead of
   checking the client on the instance.
 * Pre-set configuration for GitLab provider
 
-0.13.0 (2017-11-12)
+`0.13.0`_ (2017-11-12)
 -------------------
 * sphinxcontrib-napoleon is no longer required to build the Flask-Dance
   documentation.
@@ -36,18 +42,18 @@ unreleased
   When this is enabled, trying to set an OAuth object without an associated
   user will raise an error.
 
-0.12.0 (2017-10-22)
+`0.12.0`_ (2017-10-22)
 -------------------
 * Updated the Dropbox configuration to use the v2 authentication URLs
 * Added the "require_role" authentication parameter for Dropbox
 * Documented all authentication parameters for Dropbox
 
-0.11.1 (2017-07-31)
+`0.11.1`_ (2017-07-31)
 -------------------
 * Changed Nylas configuration to refer to "client_id" and "client_secret"
   rather than "api_id" and "api_secret".
 
-0.11.0 (2017-07-24)
+`0.11.0`_ (2017-07-24)
 -------------------
 * Added the Nylas pre-set configuration
 * Improve timezone handling for OAuth 2 token refreshing.
@@ -55,40 +61,40 @@ unreleased
 * Fix Dropbox documentation regarding default ``login_url`` and
   ``authorized_url``
 
-0.10.1 (2016-11-21)
+`0.10.1`_ (2016-11-21)
 -------------------
 * Fixed ``make_google_blueprint`` to include ``auto_refresh_url`` so that
   token renewal is automatically handled by ``requests-oauthlib``
 
-0.10.0 (2016-09-27)
+`0.10.0`_ (2016-09-27)
 -------------------
 * Added the Azure AD pre-set configuration
 * Improve OAuth 2 token auto-refresh
 
-0.9.0 (2016-07-1)
+`0.9.0`_ (2016-07-1)
 -----------------
 * Allowed an ``oauth_authorized`` event handler to return a ``flask.Response``
   instance. If so, that response will be sent to the requesting user.
 
-0.8.3 (2016-05-18)
+`0.8.3`_ (2016-05-18)
 ------------------
 * Fixed an error that occurred if you were running an unreleased version
   of Flask, due to the version comparison code. See `issue 53`_.
   Thanks, @ThiefMaster!
 
-0.8.2 (2015-12-30)
+`0.8.2`_ (2015-12-30)
 ------------------
 * If the OAuth 1 token request is denied on accessing the login view,
   Flask-Dance will now redirect the user and fire the ``oauth_error`` signal.
   This matches the behavior of how Flask-Dance handles OAuth 2 errors.
 
-0.8.1 (2015-12-28)
+`0.8.1`_ (2015-12-28)
 ------------------
 * Fixed a typo in the Slack configuration, where it would load the OAuth 2
   client secret from a config variable named "SLLACK_OAUTH_CLIENT_SECRET"
   instead of "SLACK_OAUTH_CLIENT_SECRET"
 
-0.8.0 (2015-12-28)
+`0.8.0`_ (2015-12-28)
 ------------------
 * Added the Slack pre-set configuration
 * Fixed a subtle bug where setting the ``client_id`` property on an instance
@@ -102,7 +108,7 @@ unreleased
   session is dynamically created, so that the session can be modified before
   it is returned.
 
-0.7.1 (2015-12-12)
+`0.7.1`_ (2015-12-12)
 ------------------
 * Removed the Dictective utility class, and replaced it with
   ``werkzeug.datastructures.CallbackDict``. It does the same thing, but
@@ -112,14 +118,14 @@ unreleased
   to the ``login`` view to start the OAuth dance all over again, rather than
   raising a ``KeyError``.
 
-0.7.0 (2015-08-21)
+`0.7.0`_ (2015-08-21)
 ------------------
 * Flask-Dance no longer checks for the existence of a ``X-Forwarded-Proto``
   header to determine if generated URLs should use a ``https://`` scheme.
   If you are running your application behind a TLS termination proxy,
   use Werkzeug's ``ProxyFix`` middleware to inform Flask of that.
 
-0.6.0 (2015-05-12)
+`0.6.0`_ (2015-05-12)
 ------------------
 * Added the Dropbox pre-set configuration
 * Added the Meetup pre-set configuration
@@ -129,12 +135,12 @@ unreleased
 * Make Flask-Dance provide additional information in errors when providers fail
   to provide auth tokens
 
-0.5.1 (2015-04-28)
+`0.5.1`_ (2015-04-28)
 ------------------
 * Make the ``authorized`` property on both ``OAuth1Session`` and ``OAuth2Session``
   dynamically load the token from the backend
 
-0.5.0 (2015-04-20)
+`0.5.0`_ (2015-04-20)
 ------------------
 * Redesigned token storage backend system: it now uses objects
 
@@ -152,7 +158,7 @@ unreleased
   and cause a 500 status code. The ``oauth_error`` signal will be fired
   with information about the error.
 
-0.4.3 (2015-03-09)
+`0.4.3`_ (2015-03-09)
 ------------------
 * ``OAuth2ConsumerBlueprint`` now accepts two new arguments to its constructor:
   ``authorization_url_params`` and ``token_url_params``
@@ -160,7 +166,7 @@ unreleased
   access for your OAuth token by passing ``offline=True`` to the
   ``make_google_blueprint`` function
 
-0.4.2 (2015-03-01)
+`0.4.2`_ (2015-03-01)
 ------------------
 * Added ``anon_user`` argument to ``set_token_storage_sqlalchemy()`` method
 * Fire ``oauth_authorized`` signal before setting token, so that a signal
@@ -169,7 +175,7 @@ unreleased
   ``False`` from any receiver function that is connected to the
   ``oauth_authorized`` signal
 
-0.4.1 (2015-02-28)
+`0.4.1`_ (2015-02-28)
 ------------------
 * ``OAuth1SessionWithBaseURL`` has been renamed to ``OAuth1Session``. The old
   name still exists as an alias, for backwards compatibility.
@@ -181,7 +187,7 @@ unreleased
   blueprint. This method also takes ``user`` or ``user_id`` arguments.
 
 
-0.4.0 (2015-02-12)
+`0.4.0`_ (2015-02-12)
 ------------------
 * Renamed ``assign_token_to_session`` to ``load_token``
 * Added a ``from_config`` dict to OAuthConsumerBlueprint objects. The info
@@ -193,42 +199,42 @@ unreleased
   redirecting the user to the root of the website (``/``). Previously,
   specifying one of these two options was required.
 
-0.3.2 (2015-01-06)
+`0.3.2`_ (2015-01-06)
 ------------------
 * Added a the Google pre-set configuration.
 
-0.3.1 (2014-12-16)
+`0.3.1`_ (2014-12-16)
 ------------------
 * Added a new ``session_class`` parameter, so that you can specify a custom
   requests.Session subclass with custom behavior.
 
-0.3.0 (2014-12-15)
+`0.3.0`_ (2014-12-15)
 ------------------
 * Changed ``OAuthConsumerMixin.created_on`` to ``OAuthConsumerMixin.created_at``,
   to reflect the fact that it is a DateTime, not a Date. If you are upgrading
   from an older version of Flask-Dance and using ``OAuthConsumerMixin``,
   this will require a database migration.
 
-0.2.3 (2014-10-13)
+`0.2.3`_ (2014-10-13)
 ------------------
 * Renamed ``OAuthMixin`` to ``OAuthConsumerMixin``
 
-0.2.2 (2014-10-13)
+`0.2.2`_ (2014-10-13)
 ------------------
 * Changed event sender from app to blueprint, to match docs
 
-0.2.1 (2014-10-13)
+`0.2.1`_ (2014-10-13)
 ------------------
 * Fixed packaging problems
 
-0.2 (2014-10-12)
+`0.2`_ (2014-10-12)
 ----------------
 * Added SQLAlchemy support
 * Added Sphinx-based documentation
 * Added support for Flask-Login and Flask-Cache
 * Switch from ``login_callback`` decorator to blinker signals
 
-0.1 (2014-09-15)
+`0.1`_ (2014-09-15)
 ----------------
 * Initial release
 
@@ -237,3 +243,36 @@ unreleased
 .. _#143: https://github.com/singingwolfboy/flask-dance/issues/143
 .. _#144: https://github.com/singingwolfboy/flask-dance/issues/144
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
+
+
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.0.0...HEAD
+.. _1.0.0: https://github.com/singingwolfboy/flask-dance/compare/v0.14.0...v1.0.0
+.. _0.14.0: https://github.com/singingwolfboy/flask-dance/compare/v0.13.0...v0.14.0
+.. _0.13.0: https://github.com/singingwolfboy/flask-dance/compare/v0.12.0...v0.13.0
+.. _0.12.0: https://github.com/singingwolfboy/flask-dance/compare/v0.11.1...v0.12.0
+.. _0.11.1: https://github.com/singingwolfboy/flask-dance/compare/v0.11.0...v0.11.1
+.. _0.11.0: https://github.com/singingwolfboy/flask-dance/compare/v0.10.0...v0.11.0
+.. _0.10.1: https://github.com/singingwolfboy/flask-dance/compare/v0.10.0...v0.10.1
+.. _0.10.0: https://github.com/singingwolfboy/flask-dance/compare/v0.9.0...v0.10.0
+.. _0.9.0: https://github.com/singingwolfboy/flask-dance/compare/v0.8.3...v0.9.0
+.. _0.8.3: https://github.com/singingwolfboy/flask-dance/compare/v0.8.2...v0.8.3
+.. _0.8.2: https://github.com/singingwolfboy/flask-dance/compare/v0.8.1...v0.8.2
+.. _0.8.1: https://github.com/singingwolfboy/flask-dance/compare/v0.8.0...v0.8.1
+.. _0.8.0: https://github.com/singingwolfboy/flask-dance/compare/v0.7.1...v0.8.0
+.. _0.7.1: https://github.com/singingwolfboy/flask-dance/compare/v0.7.0...v0.7.1
+.. _0.7.0: https://github.com/singingwolfboy/flask-dance/compare/v0.6.0...v0.7.0
+.. _0.6.0: https://github.com/singingwolfboy/flask-dance/compare/v0.5.1...v0.6.0
+.. _0.5.1: https://github.com/singingwolfboy/flask-dance/compare/v0.5.0...v0.5.1
+.. _0.5.0: https://github.com/singingwolfboy/flask-dance/compare/v0.4.3...v0.5.0
+.. _0.4.3: https://github.com/singingwolfboy/flask-dance/compare/v0.4.2...v0.4.3
+.. _0.4.2: https://github.com/singingwolfboy/flask-dance/compare/v0.4.1...v0.4.2
+.. _0.4.1: https://github.com/singingwolfboy/flask-dance/compare/v0.4.0...v0.4.1
+.. _0.4.0: https://github.com/singingwolfboy/flask-dance/compare/v0.3.2...v0.4.0
+.. _0.3.2: https://github.com/singingwolfboy/flask-dance/compare/v0.3.1...v0.3.2
+.. _0.3.1: https://github.com/singingwolfboy/flask-dance/compare/v0.3.0...v0.3.1
+.. _0.3.0: https://github.com/singingwolfboy/flask-dance/compare/v0.2.3...v0.3.0
+.. _0.2.3: https://github.com/singingwolfboy/flask-dance/compare/v0.2.2...v0.2.3
+.. _0.2.2: https://github.com/singingwolfboy/flask-dance/compare/v0.2.1...v0.2.2
+.. _0.2.1: https://github.com/singingwolfboy/flask-dance/compare/v0.2...v0.2.1
+.. _0.2: https://github.com/singingwolfboy/flask-dance/compare/v0.1...v0.2
+.. _0.1: https://github.com/singingwolfboy/flask-dance/compare/9b458e401a0...v0.1
