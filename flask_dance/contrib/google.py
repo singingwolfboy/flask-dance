@@ -77,10 +77,10 @@ def make_google_blueprint(
             def logged_in(blueprint, token):
                 resp_json = google.get("/oauth2/v2/userinfo").json()
                 if resp_json["hd"] != blueprint.authorization_url_params["hd"]:
-                    google.authenticated = False
-                    requests.post("https://accounts.google.com/o/oauth2/revoke",
-                                  params={"token": token["access_token"]},
-                                  headers={"content-type": "application/x-www-form-urlencoded"})
+                    requests.post(
+                        "https://accounts.google.com/o/oauth2/revoke",
+                        params={"token": token["access_token"]}
+                    )
                     session.clear()
                     abort(403)
 
