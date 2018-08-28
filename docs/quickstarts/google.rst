@@ -51,6 +51,11 @@ Code
     If you are running this code on Heroku, you'll need to use the
     :class:`werkzeug.contrib.fixers.ProxyFix` middleware. See :doc:`../proxies`.
 
+.. note::
+    If you are using the ``hosted_domain`` argument, be aware that this only provides UI optimization
+    and is not a way of restricting access to users of a single domain. See the ``make_google_blueprint``
+    :ref:`documentation warning <google_hosted_domain_warning>`.
+
 If you run this code locally or without HTTPS enabled (see warning below), you
 must set the :envvar:`OAUTHLIB_INSECURE_TRANSPORT` environment variable to
 to disable the HTTPS requirement imposed by ``oauthlib``, which is part of Flask-Dance. For example, if
