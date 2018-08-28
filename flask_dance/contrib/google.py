@@ -61,6 +61,7 @@ def make_google_blueprint(
 
        .. code-block:: python
 
+            from flask import session, abort
             from flask_dance.consumer import oauth_authorized
             from flask_dance.contrib.google import make_google_blueprint, google
             import requests
