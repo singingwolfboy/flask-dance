@@ -59,12 +59,12 @@ def test_blueprint_factory_offline():
     assert google_bp.auto_refresh_url == "https://accounts.google.com/o/oauth2/token"
 
 
-def test_blueprint_factory_hd():
+def test_blueprint_factory_hosted_domain():
     google_bp = make_google_blueprint(
         client_id="foo",
         client_secret="bar",
         redirect_to="index",
-        hd="example.com",
+        hosted_domain="example.com",
     )
 
     assert google_bp.authorization_url_params["hd"] == "example.com"
@@ -130,7 +130,7 @@ def test_offline():
 def test_hd():
     app = Flask(__name__)
     app.secret_key = "backups"
-    goog_bp = make_google_blueprint("foo", "bar", hd="example.com")
+    goog_bp = make_google_blueprint("foo", "bar", hosted_domain="example.com")
     app.register_blueprint(goog_bp)
 
     with app.test_client() as client:
