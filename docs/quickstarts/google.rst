@@ -52,7 +52,7 @@ Code
     :class:`werkzeug.contrib.fixers.ProxyFix` middleware. See :doc:`../proxies`.
 
 .. note::
-    If you are using the ``hosted_domain`` argument, be aware that this only provides UI optimization
+    If you set the ``hosted_domain`` argument of ``make_google_blueprint``, be aware that this only provides UI optimization
     and is not a way of restricting access to users of a single domain. See the ``make_google_blueprint``
     :ref:`documentation warning <google_hosted_domain_warning>`.
 
