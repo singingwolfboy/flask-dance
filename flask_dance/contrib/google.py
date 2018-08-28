@@ -56,8 +56,8 @@ def make_google_blueprint(
     .. _google_hosted_domain_warning:
     .. warning::
        The ``hosted_domain`` argument **only provides UI optimization**. Don't rely on this argument to control
-       who can access your application. You must verify that the ``hd`` parameter of the response matches the
-       ``hosted_domain`` argument of ``make_google_blueprint``. For example:
+       who can access your application. You must verify that the ``hd`` claim of the response ID token matches the
+       ``hosted_domain`` argument passed to ``make_google_blueprint``. For example:
 
        .. code-block:: python
 
@@ -78,9 +78,9 @@ def make_google_blueprint(
                 resp_json = google.get("/oauth2/v2/userinfo").json()
                 if resp_json["hd"] != blueprint.authorization_url_params["hd"]:
                     google.authenticated = False
-                    requests.post('https://accounts.google.com/o/oauth2/revoke',
-                                  params={'token': token['access_token']},
-                                  headers={'content-type': 'application/x-www-form-urlencoded'})
+                    requests.post("https://accounts.google.com/o/oauth2/revoke",
+                                  params={"token": token["access_token"]},
+                                  headers={"content-type": "application/x-www-form-urlencoded"})
                     session.clear()
                     abort(403)
 
