@@ -12,6 +12,11 @@ env:
   - BLINKER=1 DATABASE_URI=postgresql://localhost/travis_ci_test
   - BLINKER=1 DATABASE_URI=sqlite://
   - BLINKER=0 DATABASE_URI=sqlite://
+
+branches:
+  only:
+  - master
+
 before_script:
   - if [[ $DATABASE_URI == postgresql* ]]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 install:
