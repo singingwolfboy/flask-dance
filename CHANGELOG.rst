@@ -15,6 +15,8 @@ Fixed
 * Only set ``auto_refresh_url`` in ``make_google_blueprint`` if a token of
   type ``offline`` is requested. See issues `#143`_, `#144`_ and `#161`_ for
   background.
+* Added Okta pre-set configuration
+=======
 
 `1.0.0`_ (2018-06-04)
 ------------------
