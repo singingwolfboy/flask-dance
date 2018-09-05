@@ -7,6 +7,7 @@ Changelog
 Added
 ~~~~~
 * Added ``tenant`` argument to ``make_azure_blueprint``
+* Added ``hosted_domain`` argument to ``make_google_blueprint``
 
 Fixed
 ~~~~~
