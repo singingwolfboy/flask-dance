@@ -4,10 +4,16 @@ Changelog
 `unreleased`_
 -------------
 
+nothing yet
+
+`1.1.0`_ (2018-09-12)
+---------------------
+
 Added
 ~~~~~
 * Added ``tenant`` argument to ``make_azure_blueprint``
 * Added ``hosted_domain`` argument to ``make_google_blueprint``
+* Added Okta pre-set configuration
 * Added Zoho pre-set configuration
 
 Fixed
@@ -16,8 +22,6 @@ Fixed
 * Only set ``auto_refresh_url`` in ``make_google_blueprint`` if a token of
   type ``offline`` is requested. See issues `#143`_, `#144`_ and `#161`_ for
   background.
-* Added Okta pre-set configuration
-=======
 
 `1.0.0`_ (2018-06-04)
 ------------------
@@ -249,7 +253,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.0.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.1.0...HEAD
+.. _1.1.0: https://github.com/singingwolfboy/flask-dance/compare/v1.0.0...v1.1.0
 .. _1.0.0: https://github.com/singingwolfboy/flask-dance/compare/v0.14.0...v1.0.0
 .. _0.14.0: https://github.com/singingwolfboy/flask-dance/compare/v0.13.0...v0.14.0
 .. _0.13.0: https://github.com/singingwolfboy/flask-dance/compare/v0.12.0...v0.13.0
