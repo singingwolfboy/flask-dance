@@ -42,10 +42,13 @@ Create a file called ``multi.py`` with the following contents:
 
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
+        # Your User model can include whatever columns you want: Flask-Dance doesn't care.
+        # Here are a few columns you might find useful, but feel free to modify them
+        # as your application needs!
         username = db.Column(db.String(256), unique=True)
         email = db.Column(db.String(256), unique=True)
-        # ... other columns as needed
-
+        name = db.Column(db.String(256))
+  
     class OAuth(OAuthConsumerMixin, db.Model):
         provider_user_id = db.Column(db.String(256), unique=True)
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -102,7 +105,7 @@ Create a file called ``multi.py`` with the following contents:
                 # Remember that `email` can be None, if the user declines
                 # to publish their email address on GitHub!
                 email=github_info["email"],
-                username=github_info["name"],
+                user=github_info["name"],
             )
             # Associate the new local user account with the OAuth token
             oauth.user = user
