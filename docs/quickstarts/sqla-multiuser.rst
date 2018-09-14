@@ -43,6 +43,7 @@ Create a file called ``multi.py`` with the following contents:
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String(256), unique=True)
+        email = db.Column(db.String(256), unique=True)
         # ... other columns as needed
 
     class OAuth(OAuthConsumerMixin, db.Model):
@@ -101,7 +102,7 @@ Create a file called ``multi.py`` with the following contents:
                 # Remember that `email` can be None, if the user declines
                 # to publish their email address on GitHub!
                 email=github_info["email"],
-                name=github_info["name"],
+                username=github_info["name"],
             )
             # Associate the new local user account with the OAuth token
             oauth.user = user
