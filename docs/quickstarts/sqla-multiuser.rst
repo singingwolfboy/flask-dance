@@ -105,7 +105,7 @@ Create a file called ``multi.py`` with the following contents:
                 # Remember that `email` can be None, if the user declines
                 # to publish their email address on GitHub!
                 email=github_info["email"],
-                user=github_info["name"],
+                name=github_info["name"],
             )
             # Associate the new local user account with the OAuth token
             oauth.user = user
