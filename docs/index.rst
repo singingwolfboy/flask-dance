@@ -19,6 +19,7 @@ User Guide:
    providers
    backends
    multi-user
+   logout
    proxies
    signals
 
