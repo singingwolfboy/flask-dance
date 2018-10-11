@@ -125,6 +125,13 @@ Here's some sample code that works with Google:
 After the user uses this method to log out, Google will not remember that they
 granted consent to share information with your website.
 
+.. warning::
+
+    In this sample code, we are using an :keyword:`assert` statement.
+    This works fine for debugging, but not for production. Be sure to modify
+    this code to appropriately handle cases where there is an API failure
+    when trying to revoke the token.
+
 .. note::
 
     In this code, we already have a reference to the ``blueprint`` object,
