@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Flask Dance'
-copyright = u'2014-2016, David Baumgold'
+copyright = u'2014-2018, David Baumgold'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -268,13 +268,13 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/', None),
+    'python': ('https://docs.python.org/3/', None),
     'flask': ('http://flask.pocoo.org/docs/', None),
     'flask_login': ('https://flask-login.readthedocs.io/en/latest/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
     'requests': ('http://docs.python-requests.org/en/latest/', None),
     'requests_oauthlib': ('https://requests-oauthlib.readthedocs.io/en/latest/', None),
-    'sqlalchemy': ('http://docs.sqlalchemy.org/en/latest/', None),
+    'sqlalchemy': ('https://docs.sqlalchemy.org/en/latest/', None),
     'sqlalchemy_utils': ('https://sqlalchemy-utils.readthedocs.io/en/latest/', None),
 }
 
