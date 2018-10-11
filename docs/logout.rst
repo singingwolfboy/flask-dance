@@ -136,7 +136,7 @@ granted consent to share information with your website.
     .. code-block:: python
 
         token = blueprint.token["access_token"]
-    
+
     You could use this line instead:
 
     .. code-block:: python
@@ -155,7 +155,7 @@ if they want to log in to your website in the future?
 The short answer is: no, you can't. You can't control how a user interacts
 with other websites, except for in the ways that those other websites
 specifically allow you to. And since this could potentially be used as
-part of a security exploits, websites will generally *not* allow you
+part of a security exploit, websites will generally *not* allow you
 to force users to log out.
 
 .. _Flask-Login: https://flask-login.readthedocs.io/
