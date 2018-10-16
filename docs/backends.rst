@@ -56,7 +56,7 @@ If you do, it's slightly more complicated::
 There are two things to notice here. One, the model that you use for storing
 OAuth tokens must have a `user` relationship to the user that it is associated
 with. Two, you must pass a reference to the currently logged-in user (if any)
-to :class:`~flask_dance.consumer.backend.sqla.SQLAlchemyStorage`.
+to :class:`~flask_dance.consumer.backend.sqla.SQLAlchemyBackend`.
 If you're using `Flask-Login`_, the :attr:`current_user` proxy works great,
 but you could instead pass a function that returns the current
 user, if you want.
