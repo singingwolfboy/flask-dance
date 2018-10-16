@@ -26,7 +26,7 @@ def make_zoho_blueprint(
     this constructor, or make sure that your Flask application config defines
     them, using the variables ZOHO_OAUTH_CLIENT_ID and ZOHO_OAUTH_CLIENT_SECRET.
     IMPORTANT: Configuring the base_url is not supported in this config
-     Args:
+    Args:
         client_id (str): The client ID for your application on Zoho.
         client_secret (str): The client secret for your application on Zoho
         scope (list, optional): list of scopes (str) for the OAuth token
@@ -50,7 +50,7 @@ def make_zoho_blueprint(
         reprompt_consent (bool): If True, force Zoho to re-prompt the user
             for their consent, even if the user has already given their
             consent. Defaults to False
-     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
+    :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ['ZohoCRM.users.all']
