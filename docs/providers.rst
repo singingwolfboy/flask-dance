@@ -179,7 +179,17 @@ Okta
     already has the Okta authentication token loaded (assuming that the user
     has authenticated with Okta at some point in the past).
 
-.. _custom-provider:
+Reddit
+------
+.. module:: flask_dance.contrib.reddit
+
+.. autofunction:: make_reddit_blueprint
+
+.. data:: reddit
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Reddit authentication token loaded (assuming that the user
+    has authenticated with Reddit at some point in the past).
 
 Zoho
 -------
