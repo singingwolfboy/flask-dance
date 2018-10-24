@@ -30,10 +30,10 @@ class RedditOAuth2Session(OAuth2Session):
             client_id=self.blueprint.client_id, *args, **kwargs)
 
 
-def make_reddit_blueprint(user_agent=None,
+def make_reddit_blueprint(
         client_id=None, client_secret=None, scope="identity", permanent=False,
         redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, user_agent=None):
     """
     Make a blueprint for authenticating with Reddit using OAuth 2. This requires
     a client ID and client secret from Reddit. You should either pass them to
@@ -41,8 +41,6 @@ def make_reddit_blueprint(user_agent=None,
     them, using the variables REDDIT_OAUTH_CLIENT_ID and REDDIT_OAUTH_CLIENT_SECRET.
 
     Args:
-        user_agent (str, optional): User agent for the requests to Reddit API.
-            Defaults to ``Flask-Dance/{{version}}``
         client_id (str): The client ID for your application on Reddit.
         client_secret (str): The client secret for your application on Reddit
         scope (str, optional): space-separated list of scopes for the OAuth token
@@ -64,6 +62,8 @@ def make_reddit_blueprint(user_agent=None,
         backend: A storage backend class, or an instance of a storage
             backend class, to use for this blueprint. Defaults to
             :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+        user_agent (str, optional): User agent for the requests to Reddit API.
+            Defaults to ``Flask-Dance/{{version}}``
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
