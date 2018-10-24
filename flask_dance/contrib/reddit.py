@@ -14,8 +14,7 @@ except ImportError:
 __maintainer__ = "Sergey Storchay <r8@r8.com.ua>"
 
 
-def _default_user_agent():
-    return "Flask-Dance/%s" % _flask_dance_version
+DEFAULT_USER_AGENT = "Flask-Dance/{version}".format(version=_flask_dance_version)
 
 
 class RedditOAuth2Session(OAuth2Session):
@@ -23,7 +22,7 @@ class RedditOAuth2Session(OAuth2Session):
         super(RedditOAuth2Session, self).__init__(*args, **kwargs)
 
         # Reddit requires to set non-generic user agent
-        self.headers["User-Agent"] = self.blueprint.user_agent or _default_user_agent()
+        self.headers["User-Agent"] = self.blueprint.user_agent or DEFAULT_USER_AGENT
 
     def fetch_token(self, *args, **kwargs):
         # Pass client_id to session so it could trigger Basic Auth
