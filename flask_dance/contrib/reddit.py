@@ -21,7 +21,7 @@ class RedditOAuth2Session(OAuth2Session):
     def __init__(self, *args, **kwargs):
         super(RedditOAuth2Session, self).__init__(*args, **kwargs)
 
-        # Reddit requires to set non-generic user agent
+        # The Reddit API requires a non-generic user agent
         self.headers["User-Agent"] = self.blueprint.user_agent or DEFAULT_USER_AGENT
 
     def fetch_token(self, *args, **kwargs):
