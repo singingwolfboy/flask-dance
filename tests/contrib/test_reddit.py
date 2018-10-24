@@ -63,18 +63,18 @@ def test_context_local():
 
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
-    ghbp1 = make_reddit_blueprint(
+    reddit_bp1 = make_reddit_blueprint(
         "foo1", "bar1", redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
-    app1.register_blueprint(ghbp1)
+    app1.register_blueprint(reddit_bp1)
 
     app2 = Flask(__name__)
-    ghbp2 = make_reddit_blueprint(
+    reddit_bp2 = make_reddit_blueprint(
         "foo2", "bar2", redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
-    app2.register_blueprint(ghbp2)
+    app2.register_blueprint(reddit_bp2)
 
     # outside of a request context, referencing functions on the `reddit` object
     # will raise an exception
