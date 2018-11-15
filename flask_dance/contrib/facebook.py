@@ -14,7 +14,7 @@ __maintainer__ = "Matt Bachmann <bachmann.matt@gmail.com>"
 
 def make_facebook_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
+        redirect_to=None, login_url=None, authorized_url=None,rerequest_auth=False,
         session_class=None, backend=None):
     """
     Make a blueprint for authenticating with Facebook using OAuth 2. This requires
@@ -35,6 +35,7 @@ def make_facebook_blueprint(
             Defaults to ``/facebook``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/facebook/authorized``.
+        rerequest_auth (bool, optional): should the blueprint ask again for declined premissions
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
@@ -51,6 +52,7 @@ def make_facebook_blueprint(
         scope=scope,
         base_url="https://graph.facebook.com/",
         authorization_url="https://www.facebook.com/dialog/oauth",
+        authorization_url_params={'auth_type':'rerequest'},
         token_url="https://graph.facebook.com/oauth/access_token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
