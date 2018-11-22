@@ -16,7 +16,7 @@ def make_nylas_blueprint(
         client_id=None, client_secret=None, scope="email",
         redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, blueprint_name='nylas'):
     """
     Make a blueprint for authenticating with Nylas using OAuth 2. This requires
     an API ID and API secret from Nylas. You should either pass them to
@@ -48,7 +48,7 @@ def make_nylas_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    nylas_bp = OAuth2ConsumerBlueprint("nylas", __name__,
+    nylas_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,

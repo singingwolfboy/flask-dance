@@ -15,7 +15,7 @@ __maintainer__ = "Matt Bachmann <bachmann.matt@gmail.com>"
 def make_facebook_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, blueprint_name="facebook"):
     """
     Make a blueprint for authenticating with Facebook using OAuth 2. This requires
     a client ID and client secret from Facebook. You should either pass them to
@@ -45,7 +45,7 @@ def make_facebook_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    facebook_bp = OAuth2ConsumerBlueprint("facebook", __name__,
+    facebook_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,

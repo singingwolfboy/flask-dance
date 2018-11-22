@@ -15,7 +15,7 @@ __maintainer__ = "Michael Delpech <michaeldel@protonmail.com>"
 def make_discord_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, blueprint_name="discord"):
     """
     Make a blueprint for authenticating with Discord using OAuth 2. This requires
     a client ID and client secret from Discord. You should either pass them to
@@ -46,7 +46,7 @@ def make_discord_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify"]
-    discord_bp = OAuth2ConsumerBlueprint("discord", __name__,
+    discord_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,

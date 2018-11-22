@@ -17,7 +17,7 @@ def make_dropbox_blueprint(
         force_reapprove=False, disable_signup=False, require_role=None,
         redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None,blueprint_name="dropbox"):
     """
     Make a blueprint for authenticating with Dropbox using OAuth 2. This requires
     a client ID and client secret from Dropbox. You should either pass them to
@@ -66,7 +66,7 @@ def make_dropbox_blueprint(
     if require_role:
         authorization_url_params["require_role"] = require_role
 
-    dropbox_bp = OAuth2ConsumerBlueprint("dropbox", __name__,
+    dropbox_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=app_key,
         client_secret=app_secret,
         scope=scope,

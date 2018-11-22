@@ -15,7 +15,7 @@ __maintainer__ = "Tom Nolan <tomnolan95@gmail.com>"
 def make_okta_blueprint(
         client_id=None, client_secret=None, base_url=None, scope=None, redirect_url=None,
         token_url=None, redirect_to=None, login_url=None, authorization_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, blueprint_name='okta'):
     """
     Make a blueprint for authenticating with Okta using OAuth 2. This requires
     a client ID and client secret from OKta. You should either pass them to
@@ -46,7 +46,7 @@ def make_okta_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["openid", "email", "profile"]
-    okta_bp = OAuth2ConsumerBlueprint("okta", __name__,
+    okta_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,

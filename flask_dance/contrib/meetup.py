@@ -16,7 +16,7 @@ def make_meetup_blueprint(
         key=None, secret=None, scope=None,
         redirect_url=None, redirect_to=None,
         login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, blueprint_name='meetup'):
     """
     Make a blueprint for authenticating with Meetup using OAuth 2. This requires
     an OAuth consumer from Meetup. You should either pass the key and secret to
@@ -47,7 +47,7 @@ def make_meetup_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["basic"]
-    meetup_bp = OAuth2ConsumerBlueprint("meetup", __name__,
+    meetup_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=key,
         client_secret=secret,
         scope=scope,

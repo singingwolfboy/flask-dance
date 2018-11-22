@@ -16,7 +16,7 @@ def make_google_blueprint(
         client_id=None, client_secret=None, scope=None,
         offline=False, reprompt_consent=False,
         redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None, hosted_domain=None):
+        session_class=None, backend=None, hosted_domain=None,blueprint_name='google'):
     """
     Make a blueprint for authenticating with Google using OAuth 2. This requires
     a client ID and client secret from Google. You should either pass them to
@@ -52,6 +52,7 @@ def make_google_blueprint(
         hosted_domain (str, optional): The domain of the G Suite user. Used to indicate that the account selection UI
             should be optimized for accounts at this domain. Note that this only provides UI optimization, and requires
             response validation (see warning).
+        blueprint_name (str, optional): The name of the blueprint, this allows use google login in another blueprint
 
     .. _google_hosted_domain_warning:
     .. warning::
@@ -98,7 +99,7 @@ def make_google_blueprint(
         authorization_url_params["approval_prompt"] = "force"
     if hosted_domain:
         authorization_url_params["hd"] = hosted_domain
-    google_bp = OAuth2ConsumerBlueprint("google", __name__,
+    google_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,

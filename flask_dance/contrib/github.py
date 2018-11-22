@@ -15,7 +15,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 def make_github_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, blueprint_name="github"):
     """
     Make a blueprint for authenticating with GitHub using OAuth 2. This requires
     a client ID and client secret from GitHub. You should either pass them to
@@ -45,7 +45,7 @@ def make_github_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    github_bp = OAuth2ConsumerBlueprint("github", __name__,
+    github_bp = OAuth2ConsumerBlueprint(blueprint_name, __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
