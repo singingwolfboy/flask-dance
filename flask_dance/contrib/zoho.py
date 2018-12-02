@@ -25,7 +25,8 @@ def make_zoho_blueprint(
     a client ID and client secret from Zoho. You should either pass them to
     this constructor, or make sure that your Flask application config defines
     them, using the variables ZOHO_OAUTH_CLIENT_ID and ZOHO_OAUTH_CLIENT_SECRET.
-    IMPORTANT: Configuring the base_url is not supported in this config
+    IMPORTANT: Configuring the base_url is not supported in this config.
+
     Args:
         client_id (str): The client ID for your application on Zoho.
         client_secret (str): The client secret for your application on Zoho
