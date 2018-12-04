@@ -80,6 +80,12 @@ def test_context_local():
 
 @pytest.mark.parametrize("rerequest", (True, False))
 def test_rerequest_declined_scopes(rerequest):
+    """
+    Tests that the rerequest_declined_permissions flag in the facebook blueprint sends
+    toggles the header reasking oauth permissions as detailed in the facebook docs https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow#reaskperms
+
+    Tests both that the header is set with the flag (rerequest=True) and that it is missing without the flag (rerequest=False)
+    """
     app = Flask(__name__)
     app.secret_key = "backups"
     bp = make_facebook_blueprint(
@@ -93,4 +99,5 @@ def test_rerequest_declined_scopes(rerequest):
         )
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
+    # Using dict.get because the "auth_type" header might not be set - this is valid behaviour
     assert (location.query_dict.get("auth_type") == "rerequest") == rerequest
