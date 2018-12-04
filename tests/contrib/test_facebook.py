@@ -76,3 +76,37 @@ def test_context_local():
         facebook.get("https://google.com")
         request = responses.calls[1].request
         assert request.headers["Authorization"] == "Bearer app2"
+
+def test_rerequest_declined_scopes():
+    app = Flask(__name__)
+    app.secret_key = "backups"
+    bp = make_facebook_blueprint(
+        scope='user_posts', rerequest_declined_permissions=True)
+    app.register_blueprint(bp)
+    with app.test_client() as client:
+        resp = client.get(
+            "/facebook",
+            base_url="https://a.b.c",
+            follow_redirects=False,
+        )
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.query_dict.get("auth_type") == "rerequest"
+
+
+def test_dont_rerequest_declined_scopes():
+    app = Flask(__name__)
+    app.secret_key = "backups"
+    bp = make_facebook_blueprint(
+        scope='user_posts', rerequest_declined_permissions=False)
+    app.register_blueprint(bp)
+    with app.test_client() as client:
+        resp = client.get(
+            "/facebook",
+            base_url="https://a.b.c",
+            follow_redirects=False,
+        )
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    # Using dict.get because the header might not be set, it will still result in valid behaviour
+    assert location.query_dict.get("auth_type") != "rerequest"
