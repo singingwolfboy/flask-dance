@@ -61,7 +61,7 @@ immediately.
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
     or over trusted connections. By default, all OAuth interactions must occur
-    over secure ``https`` connections (this is enfored by ``oauthlib``). However,
+    over secure ``https`` connections (this is enforced by ``oauthlib``). However,
     setting :envvar:`OAUTHLIB_INSECURE_TRANSPORT` disables this enforcement and
     allows OAuth to occur over insecure ``http`` connections.
 

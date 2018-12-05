@@ -5,6 +5,7 @@ Changelog
 -------------
 
 * Added ``rerequest_declined_permissions`` argument to facebook blueprint
+* Added Reddit pre-set configuration
 
 `1.1.0`_ (2018-09-12)
 ---------------------

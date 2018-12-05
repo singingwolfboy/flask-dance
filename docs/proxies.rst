@@ -6,33 +6,39 @@ HTTPS traffic is computationally expensive. Many people running large-scale
 websites (including `Heroku`_) use a `TLS termination proxy`_ to reduce load
 on the HTTP server. This works great, but means that the webserver running
 your Flask application is actually speaking HTTP, not HTTPS.
+
 As a result, Flask-Dance can get confused, and generate callback URLs
 that have an ``http://`` scheme, instead of an ``https://`` scheme.
 This is bad, because OAuth requires that all connections use HTTPS for
 security purposes, and OAuth providers will reject requests that suggest
 a callback URL with a ``http://`` scheme.
 
-Fortunately, the fix for this problem is simple: we can just inform Flask that
-it is running behind a proxy. This will allow Flask to discover that the user
-*actually* requested the site from ``https://``, and as a result, Flask-Dance
-will be sure to generate callback URLs that have an ``https://`` schema. All
-you have to do is wrap your application with Werkzueg's
-:class:`~werkzeug.contrib.fixers.ProxyFix` middleware, like so:
+When you proxy the request from a `TLS termination proxy`_, probably your
+load balancer, you need to ensure a few headers are set/proxied correctly
+for Flask to do the right thing out of the box:
 
-.. code-block:: python
+* ``Host``: preserve the Host header of the original request
+* ``X-Real-IP``: preserve the source IP of the original request
+* ``X-Forwarded-For``: a list of IP addresses of the source IP and any
+  HTTP proxies we've been through
+* ``X-Forwarded-Proto``: the protocol, http or https, that the request
+  came in with
 
-    from flask import Flask
-    from werkzeug.contrib.fixers import ProxyFix
+In 99.9% of the cases the `TLS termination proxy`_ will be configured to
+do the right thing by default and any well-behaved Flask application will
+work out of the box. However, if you're accessing the WSGI environment
+directly, you will run into trouble. Don't do this and instead use the
+functions provided by Werkzeug's :mod:`~werkzeug.wsgi` module or Flask's
+:attr:`~flask.request` to access things like a ``Host`` header.
 
-    app = Flask(__name__)
-    app.wsgi_app = ProxyFix(app.wsgi_app)
+If your Flask app is behind a TLS termination proxy, and you need to make
+sure that Flask is aware of that, check Flask's documentation for
+:ref:`how to deploy a proxy setup <flask:deploying-proxy-setups>`.
 
-After you define your Flask application, usually stored in a variable called
-``app``, just wrap the ``app.wsgi_app`` parameter in the
-:class:`~werkzeug.contrib.fixers.ProxyFix` middleware. This will teach
-Flask how to determine whether the request actually came in via HTTP or
-HTTPS, so that any part of your website that uses that information (including
-Flask-Dance) can work correctly.
+Please read it and follow its instructions. This is not unique to
+Flask-Dance and there's nothing to configure on Flask-Dance's side
+to solve this. It's also worth noting you might wish to set Flask's
+:data:`PREFERRED_URL_SCHEME`.
 
 .. _TLS termination proxy: https://en.wikipedia.org/wiki/TLS_termination_proxy
 .. _Heroku: https://www.heroku.com/
