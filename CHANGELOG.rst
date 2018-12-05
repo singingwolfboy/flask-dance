@@ -4,7 +4,7 @@ Changelog
 `unreleased`_
 -------------
 
-nothing yet
+* Added ``rerequest_declined_permissions`` argument to facebook blueprint
 
 `1.1.0`_ (2018-09-12)
 ---------------------
