@@ -4,6 +4,13 @@ Changelog
 `unreleased`_
 -------------
 
+nothing yet
+
+`1.2.0`_ (2018-12-05)
+---------------------
+
+Added
+~~~~~
 * Added ``rerequest_declined_permissions`` argument to facebook blueprint
 * Added Reddit pre-set configuration
 
@@ -254,7 +261,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.1.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.2.0...HEAD
+.. _1.2.0: https://github.com/singingwolfboy/flask-dance/compare/v1.1.0...v1.2.0
 .. _1.1.0: https://github.com/singingwolfboy/flask-dance/compare/v1.0.0...v1.1.0
 .. _1.0.0: https://github.com/singingwolfboy/flask-dance/compare/v0.14.0...v1.0.0
 .. _0.14.0: https://github.com/singingwolfboy/flask-dance/compare/v0.13.0...v0.14.0
