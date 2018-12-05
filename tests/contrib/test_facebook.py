@@ -99,5 +99,7 @@ def test_rerequest_declined_scopes(rerequest):
         )
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
-    # Using dict.get because the "auth_type" header might not be set - this is valid behaviour
-    assert (location.query_dict.get("auth_type") == "rerequest") == rerequest
+    if rerequest:
+        assert location.query_dict["auth_type"] == "rerequest"
+    else:
+        assert "auth_type" not in location.query_dict
