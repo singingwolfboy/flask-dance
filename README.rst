@@ -3,25 +3,9 @@ Flask-Dance |build-status| |coverage-status| |docs|
 Doing the OAuth dance with style using Flask, requests, and oauthlib. Currently,
 only OAuth consumers are supported, but this project could easily support
 OAuth providers in the future, as well. The `full documentation for this project
-is hosted on ReadTheDocs <http://flask-dance.readthedocs.io/>`_, but this
-README will give you a taste of the features.
-
-Flask-Dance currently provides pre-set OAuth configurations for the following
-popular websites:
-
-* Facebook
-* GitHub
-* GitLab
-* Google
-* Twitter
-* JIRA
-* Dropbox
-* Meetup
-* Slack
-* Azure AD
-* Nylas
-* Spotify
-* Discord
+is hosted on ReadTheDocs <http://flask-dance.readthedocs.io/>`_,
+including the full list of `supported OAuth providers`_,
+but this README will give you a taste of the features.
 
 Installation
 ============
@@ -40,8 +24,8 @@ Or if you're planning on using the `SQLAlchemy`_ backend:
 
 Quickstart
 ==========
-If you want your users to be able to log in to your app from any of the websites
-listed above, you've got it easy. Here's an example using GitHub:
+If you want your users to be able to log in to your app from any of the
+`supported OAuth providers`_, you've got it easy. Here's an example using GitHub:
 
 .. code-block:: python
 
@@ -120,6 +104,7 @@ Full Documentation
 This README provides just a taste of what Flask-Dance is capable of. To see more,
 `read the documentation on ReadTheDocs <http://flask-dance.readthedocs.io/>`_.
 
+.. _supported OAuth providers: https://flask-dance.readthedocs.io/en/latest/providers.html
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
 .. _Flask-Login: https://flask-login.readthedocs.io/
