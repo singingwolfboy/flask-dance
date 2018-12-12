@@ -21,7 +21,7 @@ class SlackBlueprint(OAuth2ConsumerBlueprint):
 def make_slack_blueprint(
         client_id=None, client_secret=None, scope=None, redirect_url=None,
         redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+        session_class=None, backend=None, allow_csrf=False):
     """
     Make a blueprint for authenticating with Slack using OAuth 2. This requires
     a client ID and client secret from Slack. You should either pass them to
@@ -45,8 +45,14 @@ def make_slack_blueprint(
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
         backend: A storage backend class, or an instance of a storage
-                backend class, to use for this blueprint. Defaults to
-                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+            backend class, to use for this blueprint. Defaults to
+            :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+        allow_csrf (bool): Allow `CSRF attacks
+            <https://en.wikipedia.org/wiki/Cross-site_request_forgery>`_.
+            If you want to allow users to install your Slack app directly
+            from the `Slack app directory <https://slack.com/apps>`_,
+            you will need to set this option to ``True``, since doing this
+            is indistinguishable from a CSRF attack.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -65,6 +71,7 @@ def make_slack_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         backend=backend,
+        allow_csrf=allow_csrf,
     )
     slack_bp.from_config["client_id"] = "SLACK_OAUTH_CLIENT_ID"
     slack_bp.from_config["client_secret"] = "SLACK_OAUTH_CLIENT_SECRET"

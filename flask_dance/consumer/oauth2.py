@@ -40,6 +40,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             token_url_params=None,
             redirect_url=None,
             redirect_to=None,
+            allow_csrf=False,
             session_class=None,
             backend=None,
 
@@ -93,6 +94,15 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :func:`~flask.url_for` with this argument. If you do not specify
                 either ``redirect_url`` or ``redirect_to``, the user will be
                 redirected to the root path (``/``).
+            allow_csrf (bool): Normally, the OAuth dance uses a ``state`` token
+                to prevent `cross-site request forgery (CSRF) attacks
+                <https://en.wikipedia.org/wiki/Cross-site_request_forgery>`_.
+                However, some OAuth providers expect a third-party website to
+                initiate the OAuth dance on behalf of the consumer,
+                even though this is indistinguishable from a CSRF attack.
+                Set this option to ``True`` in order to allow *both*
+                requests from third-party websites, *and* CSRF attacks.
+                Defaults to ``False``.
             session_class: The class to use for creating a Requests session
                 between the consumer (your website) and the provider (e.g.
                 Twitter). Defaults to
@@ -133,6 +143,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.token_url_params = token_url_params or {}
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
+        self.allow_csrf = allow_csrf
 
         self.teardown_app_request(self.teardown_session)
 
@@ -221,16 +232,20 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             )
             return redirect(next_url)
 
-        state_key = "{bp.name}_oauth_state".format(bp=self)
-        if state_key not in flask.session:
-            # can't validate state, so redirect back to login view
-            log.info("state not found, redirecting user to login")
-            return redirect(url_for(".login"))
+        if not self.allow_csrf:
+            state_key = "{bp.name}_oauth_state".format(bp=self)
+            if state_key not in flask.session:
+                # can't validate state, so redirect back to login view
+                log.info(
+                    "state token not found. "
+                    "Redirecting user to login to block potential CSRF attack."
+                )
+                return redirect(url_for(".login"))
 
-        state = flask.session[state_key]
-        log.debug("state = %s", state)
-        self.session._state = state
-        del flask.session[state_key]
+            state = flask.session[state_key]
+            log.debug("state = %s", state)
+            self.session._state = state
+            del flask.session[state_key]
 
         self.session.redirect_uri = url_for(
             ".authorized", next=request.args.get('next'), _external=True,
