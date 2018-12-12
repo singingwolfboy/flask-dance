@@ -28,17 +28,16 @@ except ImportError:
 requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
 
-def make_app(login_url=None, debug=False):
+def make_app(debug=False, **kwargs):
     blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
         client_id="client_id",
         client_secret="client_secret",
         scope="admin",
-        state="random-string",
         base_url="https://example.com",
         authorization_url="https://example.com/oauth/authorize",
         token_url="https://example.com/oauth/access_token",
         redirect_to="index",
-        login_url=login_url,
+        **kwargs
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
@@ -66,7 +65,7 @@ def test_override_login_url():
 
 @responses.activate
 def test_login_url():
-    app, _ = make_app()
+    app, _ = make_app(state="random-string")
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service",
@@ -147,6 +146,35 @@ def test_authorized_url_no_state():
         assert resp.headers["Location"] == "https://a.b.c/login/test-service"
         # check that there's nothing in the session
         assert "test-service_oauth_token" not in flask.session
+
+
+@responses.activate
+def test_authorized_url_csrf():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+    )
+    app, _ = make_app(allow_csrf=True)
+    with app.test_client() as client:
+        # make the request, without resetting the session beforehand
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/"
+        # check that we obtained an access token
+        assert len(responses.calls) == 1
+        request_data = dict(parse_qsl(responses.calls[0].request.body))
+        assert request_data["client_id"] == "client_id"
+        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+        # check that we stored the access token in the session
+        assert (
+            flask.session["test-service_oauth_token"] ==
+            {'access_token': 'foobar', 'scope': ['admin'], 'token_type': 'bearer'}
+        )
 
 
 @responses.activate
