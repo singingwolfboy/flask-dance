@@ -4,7 +4,8 @@ Changelog
 `unreleased`_
 -------------
 
-nothing yet
+* Added option to allow CSRF attacks, needed for Slack apps.
+  See `#191`_.
 
 `1.2.0`_ (2018-12-05)
 ---------------------
@@ -259,6 +260,7 @@ Fixed
 .. _#143: https://github.com/singingwolfboy/flask-dance/issues/143
 .. _#144: https://github.com/singingwolfboy/flask-dance/issues/144
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
+.. _#191: https://github.com/singingwolfboy/flask-dance/issues/191
 
 
 .. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.2.0...HEAD
