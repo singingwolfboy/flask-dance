@@ -100,7 +100,7 @@ class OAuth2Session(BaseOAuth2Session):
     def load_token(self):
         self._client.token = self.token
         if self.token:
-            self._client._populate_attributes(self.token)
+            self._client.populate_token_attributes(self.token)
             return True
         return False
 
