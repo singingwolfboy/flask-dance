@@ -15,6 +15,9 @@ def test_blueprint_factory():
         api_secret="supersecret",
         redirect_to="index",
     )
+    assert_bp_config(twitter_bp)
+
+def assert_bp_config(twitter_bp):
     assert isinstance(twitter_bp, OAuth1ConsumerBlueprint)
     assert twitter_bp.session.base_url == "https://api.twitter.com/1.1/"
     assert twitter_bp.session.auth.client.client_key == "foobar"
@@ -23,6 +26,13 @@ def test_blueprint_factory():
     assert twitter_bp.access_token_url == "https://api.twitter.com/oauth/access_token"
     assert twitter_bp.authorization_url == "https://api.twitter.com/oauth/authorize"
 
+def test_blueprint_config_factory():
+    app = Flask(__name__)
+    app.secret_key = "anything"
+    app.config["TWITTER_OAUTH_API_KEY"] = "foobar"
+    app.config["TWITTER_OAUTH_API_SECRET"] = "bar"
+    twitter_bp = make_twitter_blueprint(redirect_to="index")
+    assert_bp_config(twitter_bp)
 
 @responses.activate
 def test_load_from_config():
@@ -36,8 +46,6 @@ def test_load_from_config():
     app.config["TWITTER_OAUTH_API_KEY"] = "foo"
     app.config["TWITTER_OAUTH_API_SECRET"] = "bar"
     twitter_bp = make_twitter_blueprint(redirect_to="index")
-    assert twitter_bp.client_key == "foo"
-    assert twitter_bp.client_secret == "bar"
     app.register_blueprint(twitter_bp)
 
     app.test_client().get("/twitter")
