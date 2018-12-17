@@ -36,6 +36,8 @@ def test_load_from_config():
     app.config["TWITTER_OAUTH_API_KEY"] = "foo"
     app.config["TWITTER_OAUTH_API_SECRET"] = "bar"
     twitter_bp = make_twitter_blueprint(redirect_to="index")
+    assert twitter_bp.client_key == "foo"
+    assert twitter_bp.client_secret == "bar"
     app.register_blueprint(twitter_bp)
 
     app.test_client().get("/twitter")
