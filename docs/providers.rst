@@ -11,6 +11,42 @@ to Flask-Dance!
    :local:
    :backlinks: none
 
+Azure
+-------
+.. module:: flask_dance.contrib.azure
+
+.. autofunction:: make_azure_blueprint
+
+.. data:: azure
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Azure AD authentication token loaded (assuming that the user
+    has authenticated with Azure AD at some point in the past).
+
+Discord
+-------
+.. module:: flask_dance.contrib.discord
+
+.. autofunction:: make_discord_blueprint
+
+.. data:: discord
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Discord authentication token loaded (assuming that the user
+    has authenticated with Discord at some point in the past).
+
+Dropbox
+-------
+.. module:: flask_dance.contrib.dropbox
+
+.. autofunction:: make_dropbox_blueprint
+
+.. data:: dropbox
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Dropbox authentication token loaded (assuming that the user
+    has authenticated with Dropbox at some point in the past).
+
 Facebook
 --------
 .. module:: flask_dance.contrib.facebook
@@ -59,18 +95,6 @@ Google
     already has the Google authentication token loaded (assuming that the user
     has authenticated with Google at some point in the past).
 
-Twitter
--------
-.. module:: flask_dance.contrib.twitter
-
-.. autofunction:: make_twitter_blueprint
-
-.. data:: twitter
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Twitter authentication token loaded (assuming that the user
-    has authenticated with Twitter at some point in the past).
-
 JIRA
 ----
 .. module:: flask_dance.contrib.jira
@@ -82,18 +106,6 @@ JIRA
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the JIRA authentication token loaded (assuming that the user
     has authenticated with JIRA at some point in the past).
-
-Dropbox
--------
-.. module:: flask_dance.contrib.dropbox
-
-.. autofunction:: make_dropbox_blueprint
-
-.. data:: dropbox
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Dropbox authentication token loaded (assuming that the user
-    has authenticated with Dropbox at some point in the past).
 
 Meetup
 ------
@@ -107,30 +119,6 @@ Meetup
     already has the Meetup authentication token loaded (assuming that the user
     has authenticated with Meetup at some point in the past).
 
-Slack
------
-.. module:: flask_dance.contrib.slack
-
-.. autofunction:: make_slack_blueprint
-
-.. data:: slack
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Slack authentication token loaded (assuming that the user
-    has authenticated with Slack at some point in the past).
-
-Azure
--------
-.. module:: flask_dance.contrib.azure
-
-.. autofunction:: make_azure_blueprint
-
-.. data:: azure
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Azure AD authentication token loaded (assuming that the user
-    has authenticated with Azure AD at some point in the past).
-
 Nylas
 -----
 .. module:: flask_dance.contrib.nylas
@@ -142,30 +130,6 @@ Nylas
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the Nylas authentication token loaded (assuming that the user
     has authenticated with Nylas at some point in the past).
-
-Spotify
--------
-.. module:: flask_dance.contrib.spotify
-
-.. autofunction:: make_spotify_blueprint
-
-.. data:: spotify
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Spotify authentication token loaded (assuming that the user
-    has authenticated with Spotify at some point in the past).
-
-Discord
--------
-.. module:: flask_dance.contrib.discord
-
-.. autofunction:: make_discord_blueprint
-
-.. data:: discord
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Discord authentication token loaded (assuming that the user
-    has authenticated with Discord at some point in the past).
 
 Okta
 -------
@@ -190,6 +154,42 @@ Reddit
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the Reddit authentication token loaded (assuming that the user
     has authenticated with Reddit at some point in the past).
+
+Slack
+-----
+.. module:: flask_dance.contrib.slack
+
+.. autofunction:: make_slack_blueprint
+
+.. data:: slack
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Slack authentication token loaded (assuming that the user
+    has authenticated with Slack at some point in the past).
+
+Twitter
+-------
+.. module:: flask_dance.contrib.twitter
+
+.. autofunction:: make_twitter_blueprint
+
+.. data:: twitter
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Twitter authentication token loaded (assuming that the user
+    has authenticated with Twitter at some point in the past).
+
+Spotify
+-------
+.. module:: flask_dance.contrib.spotify
+
+.. autofunction:: make_spotify_blueprint
+
+.. data:: spotify
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Spotify authentication token loaded (assuming that the user
+    has authenticated with Spotify at some point in the past).
 
 Zoho
 -------
