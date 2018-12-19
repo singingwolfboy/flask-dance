@@ -16,9 +16,10 @@ __maintainer__ = "Pieter Ennes <support@authentiq.com>"
 
 
 def make_authentiq_blueprint(
-        client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None, hostname="connect.authentiq.io"):
+        client_id=None, client_secret=None, scope="openid profile",
+        redirect_url=None, redirect_to=None, login_url=None,
+        authorized_url=None, session_class=None, backend=None,
+        hostname="connect.authentiq.io"):
     """
     Make a blueprint for authenticating with authentiq using OAuth 2. This requires
     a client ID and client secret from authentiq. You should either pass them to
@@ -51,9 +52,6 @@ def make_authentiq_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    scope = set(["openid"] + (scope or "").split())
-    scope = " ".join(scope)
-
     authentiq_bp = OAuth2ConsumerBlueprint(
         "authentiq",
         __name__,

@@ -15,7 +15,7 @@ def test_blueprint_factory_default():
     glbp1 = make_authentiq_blueprint(
         client_id="foo",
         client_secret="bar",
-        scope="profile",
+        scope="openid profile",
         redirect_to="index"
     )
     assert isinstance(glbp1, OAuth2ConsumerBlueprint)
@@ -31,7 +31,7 @@ def test_blueprint_factory_custom():
     glbp2 = make_authentiq_blueprint(
         client_id="foo",
         client_secret="bar",
-        scope="profile",
+        scope="openid profile",
         redirect_to="index",
         hostname="local.example.com"
     )
