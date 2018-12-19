@@ -4,10 +4,8 @@ sa = pytest.importorskip("sqlalchemy")
 import os
 import responses
 import flask
-from lazy import lazy
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
-from sqlalchemy.orm.exc import NoResultFound
 from flask_caching import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
@@ -51,6 +49,7 @@ def db():
 def app(blueprint, db, request):
     app = flask.Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI", "sqlite://")
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["CACHE_TYPE"] = "simple"
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
