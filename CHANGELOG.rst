@@ -4,7 +4,7 @@ Changelog
 `unreleased`_
 -------------
 
-nothing yet
+* Added Authentiq pre-set configuration
 
 `1.2.0`_ (2018-12-05)
 ---------------------

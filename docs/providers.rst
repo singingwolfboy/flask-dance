@@ -11,8 +11,20 @@ to Flask-Dance!
    :local:
    :backlinks: none
 
+Authentiq
+---------
+.. module:: flask_dance.contrib.authentiq
+
+.. autofunction:: make_authentiq_blueprint
+
+.. data:: authentiq
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Authentiq Connect authentication token loaded (assuming
+    that the user has authenticated with Authentiq at some point in the past).
+
 Azure
--------
+-----
 .. module:: flask_dance.contrib.azure
 
 .. autofunction:: make_azure_blueprint
@@ -132,7 +144,7 @@ Nylas
     has authenticated with Nylas at some point in the past).
 
 Okta
--------
+----
 .. module:: flask_dance.contrib.okta
 
 .. autofunction:: make_okta_blueprint
@@ -192,7 +204,7 @@ Spotify
     has authenticated with Spotify at some point in the past).
 
 Zoho
--------
+----
 .. module:: flask_dance.contrib.zoho
 
 .. autofunction:: make_zoho_blueprint
