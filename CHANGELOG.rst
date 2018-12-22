@@ -4,7 +4,7 @@ Changelog
 `unreleased`_
 -------------
 
-* Added option to allow CSRF attacks, needed for Slack apps.
+* Added option to disable CSRF protection, needed for Slack app installation from app directory.
   See `#191`_.
 
 `1.2.0`_ (2018-12-05)

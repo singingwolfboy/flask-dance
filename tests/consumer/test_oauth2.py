@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 import json
 import re
 from oauthlib.oauth2 import MissingCodeError
+from functools import partial
 
 try:
     from urllib.parse import quote_plus, parse_qsl
@@ -155,7 +156,8 @@ def test_authorized_url_csrf():
         "https://example.com/oauth/access_token",
         body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
     )
-    app, _ = make_app(allow_csrf=True)
+    app, bp = make_app()
+    bp.authorized = partial(bp.authorized, check_state=False)
     with app.test_client() as client:
         # make the request, without resetting the session beforehand
         resp = client.get(

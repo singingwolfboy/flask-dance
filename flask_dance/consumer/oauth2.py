@@ -40,7 +40,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             token_url_params=None,
             redirect_url=None,
             redirect_to=None,
-            allow_csrf=False,
             session_class=None,
             backend=None,
 
@@ -48,7 +47,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         """
         Most of the constructor arguments are forwarded either to the
         :class:`flask.Blueprint` constructor or the
-        :class:`requests_oauthlib.OAuth2Session` construtor, including
+        :class:`requests_oauthlib.OAuth2Session` constructor, including
         ``**kwargs`` (which is forwarded to
         :class:`~requests_oauthlib.OAuth2Session`).
         Only the arguments that are relevant to Flask-Dance are documented here.
@@ -94,15 +93,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :func:`~flask.url_for` with this argument. If you do not specify
                 either ``redirect_url`` or ``redirect_to``, the user will be
                 redirected to the root path (``/``).
-            allow_csrf (bool): Normally, the OAuth dance uses a ``state`` token
-                to prevent `cross-site request forgery (CSRF) attacks
-                <https://en.wikipedia.org/wiki/Cross-site_request_forgery>`_.
-                However, some OAuth providers expect a third-party website to
-                initiate the OAuth dance on behalf of the consumer,
-                even though this is indistinguishable from a CSRF attack.
-                Set this option to ``True`` in order to allow *both*
-                requests from third-party websites, *and* CSRF attacks.
-                Defaults to ``False``.
             session_class: The class to use for creating a Requests session
                 between the consumer (your website) and the provider (e.g.
                 Twitter). Defaults to
@@ -143,7 +133,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.token_url_params = token_url_params or {}
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
-        self.allow_csrf = allow_csrf
 
         self.teardown_app_request(self.teardown_session)
 
@@ -176,8 +165,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             base_url=self.base_url,
             **self.kwargs
         )
+
         def token_updater(token):
             self.token = token
+
         ret.token_updater = token_updater
         return self.session_created(ret)
 
@@ -202,11 +193,14 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         log.debug("redirect URL = %s", url)
         return redirect(url)
 
-    def authorized(self):
+    def authorized(self, check_state=True):
         """
         This is the route/function that the user will be redirected to by
         the provider (e.g. Twitter) after the user has logged into the
         provider's website and authorized your app to access their account.
+
+        Optional :param check_state can be set to false to disable CSRF protection
+        (desirable in certain cases to prevent double authorization cycle)
         """
         if "next" in request.args:
             next_url = request.args["next"]
@@ -232,7 +226,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             )
             return redirect(next_url)
 
-        if not self.allow_csrf:
+        if check_state:
             state_key = "{bp.name}_oauth_state".format(bp=self)
             if state_key not in flask.session:
                 # can't validate state, so redirect back to login view
@@ -247,9 +241,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             self.session._state = state
             del flask.session[state_key]
 
-        self.session.redirect_uri = url_for(
-            ".authorized", next=request.args.get('next'), _external=True,
-        )
+            self.session.redirect_uri = url_for(
+                ".authorized", next=request.args.get('next'), _external=True,
+            )
 
         log.debug("client_id = %s", self.client_id)
         log.debug("client_secret = %s", self.client_secret)
