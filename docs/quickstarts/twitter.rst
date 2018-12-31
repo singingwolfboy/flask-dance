@@ -60,7 +60,7 @@ immediately.
 In your view, make sure you use a plain hyperlink to begin the dance so that redirect loads Twitter's page in the browser. 
 
 ```
-<a href="http://127.0.0.1:5000/twitter/login">Sign in with Twitter</a>
+<a href="/twitter/login">Sign in with Twitter</a>
 ```
 
 You can only use http libraries like axios to check the authentication status. For instance, when the component mounts, you can call a function to check 
