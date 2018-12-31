@@ -57,25 +57,27 @@ run:
 Visit http://127.0.0.1:5000 in your browser, and you should start the OAuth dance
 immediately.
 
-In your view, make sure you use a plain hyperlink to begin the dance so that redirect loads Twitter's page in the browser. 
+In your view, make sure you use a plain hyperlink to begin the dance so that the redirect loads Twitter's confirmation page in the browser. 
 
 ```
 <a href="/twitter/login">Sign in with Twitter</a>
 ```
 
-You can only use http libraries like axios to check the authentication status. For instance, when the component mounts, you can call a function to check 
-the authentication status. 
+You can only use http libraries like axios to check the authentication status. 
+
+For instance, when the component mounts, you can call a function to check the authentication status. 
 
 If the authentication fails, then you can display a hyperlink for the user to begin the dance. 
 
 If it succeeds, then simply display the authenticated username. 
 
 ```
+// an example using axios and vuejs but this could be ported to react, angular, or vanilajs
 // create 3 state variables: welcome (String ""), authenticated (Boolean false), authenticateCheckComplete (Boolean false)
-// !authenticated && authenticateCheckComplete show the hyperlink 
-// authenticated && authenticateCheckComplete show the username 
+// if (!authenticated && authenticateCheckComplete) show the hyperlink 
+// if (authenticated && authenticateCheckComplete) show the username 
 
-const url = (document.domain === "127.0.0.1") ? 'http://127.0.0.1:5000/twitter/auth' : 'https://production-domain/twitter/auth'
+const url = (document.domain === "127.0.0.1") ? 'http://127.0.0.1:5000/twitter/auth' : 'https://your-production-domain/twitter/auth'
 
 function checkAuthentication(){
     const self = this;
@@ -94,8 +96,6 @@ function checkAuthentication(){
 }
 
 ```
-
-
 
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
