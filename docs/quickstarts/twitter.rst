@@ -5,7 +5,7 @@ Set up the application
 ----------------------
 Go to Twitter Application Manager at https://apps.twitter.com and create a
 new app. The application's "Callback URL" must be
-``http://localhost:5000/login/twitter/authorized``.
+``http://127.0.0.1:5000/login/twitter/authorized``. `localhost:5000` will not work!
 Take note of the "API Key" and "API Secret" for the application.
 
 
@@ -24,7 +24,7 @@ Code
     )
     app.register_blueprint(blueprint, url_prefix="/login")
 
-    @app.route("/")
+    @app.route("/twitter/login")
     def index():
         if not twitter.authorized:
             return redirect(url_for("twitter.login"))
@@ -54,8 +54,48 @@ run:
     $ export OAUTHLIB_INSECURE_TRANSPORT=1
     $ python twitter.py
 
-Visit http://localhost:5000 in your browser, and you should start the OAuth dance
+Visit http://127.0.0.1:5000 in your browser, and you should start the OAuth dance
 immediately.
+
+In your view, make sure you use a plain hyperlink to begin the dance so that redirect loads Twitter's page in the browser. 
+
+```
+<a href="http://127.0.0.1:5000/twitter/login">Sign in with Twitter</a>
+```
+
+You can only use http libraries like axios to check the authentication status. For instance, when the component mounts, you can call a function to check 
+the authentication status. 
+
+If the authentication fails, then you can display a hyperlink for the user to begin the dance. 
+
+If it succeeds, then simply display the authenticated username. 
+
+```
+// create 3 state variables: welcome (String ""), authenticated (Boolean false), authenticateCheckComplete (Boolean false)
+// !authenticated && authenticateCheckComplete show the hyperlink 
+// authenticated && authenticateCheckComplete show the username 
+
+const url = (document.domain === "127.0.0.1") ? 'http://127.0.0.1:5000/twitter/auth' : 'https://production-domain/twitter/auth'
+
+function checkAuthentication(){
+    const self = this;
+
+    axios.get(url).then( 
+        response => {
+            if (response.data.screen_name) {
+                self.welcome = "welcome " + response.data.screen_name;
+                self.authenticated = true;
+            }
+        }
+    ).catch(error => {
+        this.errored = error
+    }).finally(() => self.authenticateCheckComplete = true);
+
+}
+
+```
+
+
 
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
