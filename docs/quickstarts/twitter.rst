@@ -5,7 +5,7 @@ Set up the application
 ----------------------
 Go to Twitter Application Manager at https://apps.twitter.com and create a
 new app. The application's "Callback URL" must be
-``http://127.0.0.1:5000/login/twitter/authorized``. `localhost:5000` will not work!
+``http://127.0.0.1:5000/login/twitter/authorized``. The domain ``localhost`` will not work with Twitter!
 Take note of the "API Key" and "API Secret" for the application.
 
 
@@ -54,48 +54,51 @@ run:
     $ export OAUTHLIB_INSECURE_TRANSPORT=1
     $ python twitter.py
 
-Visit http://127.0.0.1:5000 in your browser, and you should start the OAuth dance
-immediately.
+Visit ``http://127.0.0.1:5000`` in your browser, and you should start the OAuth dance
+immediately after you click on the Signin with Twitter hyperlink.
 
-In your view, make sure you use a plain hyperlink to begin the dance so that the redirect loads Twitter's confirmation page in the browser. 
+In your view, make sure you use a plain hyperlink to begin the dance
+so that the redirect loads Twitter's confirmation page in the browser.
 
-```
-<a href="/twitter/login">Sign in with Twitter</a>
-```
+.. code-block:: HTML
 
-You can only use http libraries like axios to check the authentication status. 
+    <a href="/twitter/login">Sign in with Twitter</a>
 
-For instance, when the component mounts, you can call a function to check the authentication status. 
+You can only use http libraries like axios to check the
+authentication status.
 
-If the authentication fails, then you can display a hyperlink for the user to begin the dance. 
+For instance, when the component mounts, you can call a function to check
+the authentication status. If the authentication fails, then
+you can display a hyperlink for the user to begin the dance, or
+if it succeeds, then simply display the authenticated username.
 
-If it succeeds, then simply display the authenticated username. 
+The following example uses axios and vuejs but this could be ported to
+react, angular, or vanila javascript. You could create 3 state variables:
+welcome (String ""), authenticated (Boolean false),
+authenticateCheckComplete (Boolean false), and then use these to
+either show the hyperlink or the authenticated username.
 
-```
-// an example using axios and vuejs but this could be ported to react, angular, or vanilajs
-// create 3 state variables: welcome (String ""), authenticated (Boolean false), authenticateCheckComplete (Boolean false)
-// if (!authenticated && authenticateCheckComplete) show the hyperlink 
-// if (authenticated && authenticateCheckComplete) show the username 
+.. code-block:: javascript
 
-const url = (document.domain === "127.0.0.1") ? 'http://127.0.0.1:5000/twitter/auth' : 'https://your-production-domain/twitter/auth'
+    function checkAuthentication(){
+        const self = this;
 
-function checkAuthentication(){
-    const self = this;
+        const url = (document.domain === "127.0.0.1")
+            ? 'http://127.0.0.1:5000/twitter/auth' : 'https://your-production-domain/twitter/auth'
 
-    axios.get(url).then( 
-        response => {
-            if (response.data.screen_name) {
-                self.welcome = "welcome " + response.data.screen_name;
-                self.authenticated = true;
+        axios.get(url).then(
+            response => {
+                if (response.data.screen_name) {
+                    self.welcome = "welcome " + response.data.screen_name;
+                    self.authenticated = true;
+                }
             }
-        }
-    ).catch(error => {
-        this.errored = error
-    }).finally(() => self.authenticateCheckComplete = true);
+        ).catch(error => {
+            this.errored = error
+        }).finally(() => self.authenticateCheckComplete = true);
 
-}
+    }
 
-```
 
 .. warning::
     :envvar:`OAUTHLIB_INSECURE_TRANSPORT` should only be used for local testing
