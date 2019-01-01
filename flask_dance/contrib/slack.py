@@ -17,22 +17,9 @@ class SlackBlueprint(OAuth2ConsumerBlueprint):
     def __init__(self, name, import_name,
             client_id=None,
             client_secret=None,
-            client=None,
-            auto_refresh_url=None,
-            auto_refresh_kwargs=None,
             scope=None,
-            state=None,
-
-            static_folder=None, static_url_path=None, template_folder=None,
-            url_prefix=None, subdomain=None, url_defaults=None, root_path=None,
-
             login_url=None,
             authorized_url=None,
-            base_url=None,
-            authorization_url=None,
-            authorization_url_params=None,
-            token_url=None,
-            token_url_params=None,
             redirect_url=None,
             redirect_to=None,
             session_class=None,
@@ -58,27 +45,13 @@ class SlackBlueprint(OAuth2ConsumerBlueprint):
             self, name, import_name,
             client_id=client_id,
             client_secret=client_secret,
-            client=client,
-            auto_refresh_url=auto_refresh_url,
-            auto_refresh_kwargs=auto_refresh_kwargs,
             scope=scope,
-            state=state,
-
-            static_folder=static_folder, static_url_path=static_url_path, template_folder=template_folder,
-            url_prefix=url_prefix, subdomain=subdomain, url_defaults=url_defaults, root_path=root_path,
-
             login_url=login_url,
             authorized_url=authorized_url,
-            base_url=base_url,
-            authorization_url=authorization_url,
-            authorization_url_params=authorization_url_params,
-            token_url=token_url,
-            token_url_params=token_url_params,
             redirect_url=redirect_url,
             redirect_to=redirect_to,
             session_class=session_class,
             backend=backend,
-
             **kwargs
         )
 
@@ -115,8 +88,8 @@ def make_slack_blueprint(
         login_url (str, optional): the URL path for the ``login`` view.
             Defaults to ``/slack``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
-            Defaults to ``/slack/authorized``. If ``enable_slack_app_directory``
-            is set to `True`, defaults to ``/slack/authorized/strong``
+            Defaults to ``/slack/authorized``. Can be implicitly modified
+            if ``enable_slack_app_directory`` parameter is set to True.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
