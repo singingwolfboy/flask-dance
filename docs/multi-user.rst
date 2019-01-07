@@ -15,7 +15,7 @@ User Association vs User Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Are users expected to create an account on your website *first*, and then
-assocation OAuth connections *afterwards*? Or does logging in with an an OAuth
+associate OAuth connections *afterwards*? Or does logging in with an an OAuth
 provider *create an account* for the user on your site automatically?
 
 The first option (user association) is useful when you expect users to
