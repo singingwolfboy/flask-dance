@@ -12,3 +12,4 @@ venv/
 MANIFEST
 .tox
 .pytest_cache
+.vscode
