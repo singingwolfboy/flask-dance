@@ -4,6 +4,7 @@
 .coverage
 .cache
 .idea/
+.vscode/
 htmlcov
 dist
 docs/_build
