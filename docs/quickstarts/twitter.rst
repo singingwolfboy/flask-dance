@@ -87,5 +87,5 @@ the domain will default to ``https://www.googleapis.com``.
 
 Frontend Demo
 -------------
-Please see the `twitter-frontend <twitter-frontend.rst>`_ as one
+Please see the `twitter-frontend <twitter-frontend.rst>`_ doc as one
 of many possible approaches to implementing flask-dance.
