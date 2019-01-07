@@ -3,7 +3,7 @@ Twitter Frontend Quickstart
 
 Prerequisite
 ------------
-Please see the `twitter <twitter.rst>` document before
+Please see the `twitter <twitter.rst>`_ document before
 reading this implementation. You are familiar with
 frontend libraries like React, Angular, or VueJS and have worked
 with components, webpack, and other JS libaries like axios.
@@ -13,12 +13,11 @@ Set up the application
 In this demo, I have used 127.0.0.1 instead of localhost after
 I experienced the issue in this `tech note <https://twittercommunity.com/t/why-cant-i-use-localhost-as-my-oauth-callback/708>`_.
 
-
 Github Demo
 -----------
 You can find the complete source for this demo in this `flask-dance-twitter-frontend <https://github.com/headwinds/flask-dance-twitter-frontend>`_ github.
 Please note that this demo does not yet include the
-`sql backend <slqa-multiuser.rst>` that hangs onto the token
+`sql backend <slqa-multiuser.rst>`_ that hangs onto the token
 after the flask session has expired.
 
 Code
