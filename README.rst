@@ -76,7 +76,7 @@ that if the user ever clears their browser cookies, they will have to go through
 the OAuth dance again, which is not good. You're better off storing access tokens
 in a database or some other persistent store, and Flask-Dance has support for
 swapping out the storage backend. For example, if you're using `SQLAlchemy`_,
-just set it up like this:
+set it up like this:
 
 .. code-block:: python
 
