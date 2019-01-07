@@ -44,7 +44,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         """
         Most of the constructor arguments are forwarded either to the
         :class:`flask.Blueprint` constructor or the
-        :class:`requests_oauthlib.OAuth1Session` construtor, including
+        :class:`requests_oauthlib.OAuth1Session` constructor, including
         ``**kwargs`` (which is forwarded to
         :class:`~requests_oauthlib.OAuth1Session`).
         Only the arguments that are relevant to Flask-Dance are documented here.
@@ -197,7 +197,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             next_url = url_for(self.redirect_to)
         else:
             next_url = "/"
-            
+
         try:
             self.session.parse_authorization_response(request.url)
         except TokenMissing as err:

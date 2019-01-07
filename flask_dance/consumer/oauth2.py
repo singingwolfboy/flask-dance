@@ -47,7 +47,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         """
         Most of the constructor arguments are forwarded either to the
         :class:`flask.Blueprint` constructor or the
-        :class:`requests_oauthlib.OAuth2Session` construtor, including
+        :class:`requests_oauthlib.OAuth2Session` constructor, including
         ``**kwargs`` (which is forwarded to
         :class:`~requests_oauthlib.OAuth2Session`).
         Only the arguments that are relevant to Flask-Dance are documented here.
