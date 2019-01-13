@@ -34,3 +34,10 @@ flask-dance-twitter
 :providers: Twitter
 
 A deployable example of using Flask Dance with Twitter.
+
+flask-dance-slack
+-----------------
+:source: `@singingwolfboy/flask-dance-slack on GitHub <https://github.com/singingwolfboy/flask-dance-slack>`_
+:providers: Slack
+
+A deployable example of using Flask Dance to build a Slack bot.
