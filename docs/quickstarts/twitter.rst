@@ -5,7 +5,7 @@ Set up the application
 ----------------------
 Go to Twitter Application Manager at https://apps.twitter.com and create a
 new app. The application's "Callback URL" must be
-``http://localhost:5000/login/twitter/authorized``.
+``http://127.0.0.1:5000/login/twitter/authorized``.
 Take note of the "API Key" and "API Secret" for the application.
 
 
@@ -54,7 +54,7 @@ run:
     $ export OAUTHLIB_INSECURE_TRANSPORT=1
     $ python twitter.py
 
-Visit http://localhost:5000 in your browser, and you should start the OAuth dance
+Visit http://127.0.0.1:5000 in your browser, and you should start the OAuth dance
 immediately.
 
 .. warning::
