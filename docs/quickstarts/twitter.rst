@@ -84,3 +84,8 @@ you can use all the normal ``requests`` methods, like
 :meth:`~requests.Session.get` and :meth:`~requests.Session.post`,
 to make HTTP requests. If you only specify the path component of the URL,
 the domain will default to ``https://www.googleapis.com``.
+
+Frontend Demo
+-------------
+Please see the `flask-dance demo registry <registry.rst>`_ doc and find one
+of many possible approaches to implementing flask-dance with Twitter.
