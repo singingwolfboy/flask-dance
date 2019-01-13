@@ -41,3 +41,11 @@ flask-dance-slack
 :providers: Slack
 
 A deployable example of using Flask Dance to build a Slack bot.
+
+flask-dance-twitter-multi
+-------------------------
+:source: `@singingwolfboy/flask-dance-twitter-multi on GitHub <https://github.com/singingwolfboy/flask-dance-twitter-multi>`_
+:providers: Twitter
+
+A deployable example of using Flask Dance with Twitter. This app uses
+a database for multi-user support.
