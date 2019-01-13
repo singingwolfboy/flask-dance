@@ -89,3 +89,4 @@ Frontend Demo
 -------------
 Please see the `flask-dance demo registry <registry.rst>`_ doc and find one
 of many possible approaches to implementing flask-dance with Twitter.
+
