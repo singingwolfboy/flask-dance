@@ -22,6 +22,7 @@ User Guide:
    logout
    proxies
    signals
+   examples
 
 Advanced Topics:
 
