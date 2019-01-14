@@ -4,6 +4,13 @@ Changelog
 `unreleased`_
 -------------
 
+nothing yet
+
+`1.3.0`_ (2019-01-14)
+---------------------
+
+Added
+~~~~~
 * Add ``authorization_required`` decorator
 * Added Authentiq pre-set configuration
 
@@ -262,7 +269,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.2.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.3.0...HEAD
+.. _1.3.0: https://github.com/singingwolfboy/flask-dance/compare/v1.2.0...v1.3.0
 .. _1.2.0: https://github.com/singingwolfboy/flask-dance/compare/v1.1.0...v1.2.0
 .. _1.1.0: https://github.com/singingwolfboy/flask-dance/compare/v1.0.0...v1.1.0
 .. _1.0.0: https://github.com/singingwolfboy/flask-dance/compare/v0.14.0...v1.0.0
