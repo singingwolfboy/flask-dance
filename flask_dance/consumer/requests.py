@@ -66,6 +66,8 @@ class OAuth1Session(BaseOAuth1Session):
     @property
     def authorization_required(self):
         """
+        .. versionadded:: 1.3.0
+
         This is a decorator for a view function. If the current user does not
         have an OAuth token, then they will be redirected to the
         :meth:`~flask_dance.consumer.oauth1.OAuth1ConsumerBlueprint.login`
@@ -160,6 +162,8 @@ class OAuth2Session(BaseOAuth2Session):
     @property
     def authorization_required(self):
         """
+        .. versionadded:: 1.3.0
+
         This is a decorator for a view function. If the current user does not
         have an OAuth token, then they will be redirected to the
         :meth:`~flask_dance.consumer.oauth2.OAuth2ConsumerBlueprint.login`
