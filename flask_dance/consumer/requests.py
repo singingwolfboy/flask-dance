@@ -1,5 +1,7 @@
 from __future__ import unicode_literals, print_function
 
+from functools import wraps
+from flask import redirect, url_for
 from lazy import lazy
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
@@ -27,6 +29,9 @@ class OAuth1Session(BaseOAuth1Session):
 
     @lazy
     def token(self):
+        """
+        Get and set the values in the OAuth token, structured as a dictionary.
+        """
         return self.blueprint.token
 
     def load_token(self):
@@ -54,11 +59,32 @@ class OAuth1Session(BaseOAuth1Session):
         (see base.py), which calls 'backend.get()' to actually try to load
         the token from the cache/db (see the 'get()' function in
         backend/sqla.py).
-
-        :return:
         """
         self.load_token()
         return super(OAuth1Session, self).authorized
+
+    @property
+    def authorization_required(self):
+        """
+        .. versionadded:: 1.3.0
+
+        This is a decorator for a view function. If the current user does not
+        have an OAuth token, then they will be redirected to the
+        :meth:`~flask_dance.consumer.oauth1.OAuth1ConsumerBlueprint.login`
+        view to obtain one.
+        """
+        def wrapper(func):
+
+            @wraps(func)
+            def check_authorization(*args, **kwargs):
+                if not self.authorized:
+                    endpoint = "{name}.login".format(name=self.blueprint.name)
+                    return redirect(url_for(endpoint))
+                return func(*args, **kwargs)
+
+            return check_authorization
+
+        return wrapper
 
     def prepare_request(self, request):
         if self.base_url:
@@ -95,6 +121,9 @@ class OAuth2Session(BaseOAuth2Session):
 
     @lazy
     def token(self):
+        """
+        Get and set the values in the OAuth token, structured as a dictionary.
+        """
         return self.blueprint.token
 
     def load_token(self):
@@ -106,6 +135,9 @@ class OAuth2Session(BaseOAuth2Session):
 
     @property
     def access_token(self):
+        """
+        Returns the ``access_token`` from the OAuth token.
+        """
         return self.token and self.token.get("access_token")
 
     @property
@@ -123,11 +155,32 @@ class OAuth2Session(BaseOAuth2Session):
         (see base.py), which calls 'backend.get()' to actually try to load
         the token from the cache/db (see the 'get()' function in
         backend/sqla.py).
-
-        :return:
         """
         self.load_token()
         return super(OAuth2Session, self).authorized
+
+    @property
+    def authorization_required(self):
+        """
+        .. versionadded:: 1.3.0
+
+        This is a decorator for a view function. If the current user does not
+        have an OAuth token, then they will be redirected to the
+        :meth:`~flask_dance.consumer.oauth2.OAuth2ConsumerBlueprint.login`
+        view to obtain one.
+        """
+        def wrapper(func):
+
+            @wraps(func)
+            def check_authorization(*args, **kwargs):
+                if not self.authorized:
+                    endpoint = "{name}.login".format(name=self.blueprint.name)
+                    return redirect(url_for(endpoint))
+                return func(*args, **kwargs)
+
+            return check_authorization
+
+        return wrapper
 
     def request(self, method, url, data=None, headers=None, **kwargs):
         if self.base_url:

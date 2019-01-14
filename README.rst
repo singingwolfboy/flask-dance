@@ -43,9 +43,8 @@ If you want your users to be able to log in to your app from any of the
     app.register_blueprint(blueprint, url_prefix="/login")
 
     @app.route("/")
+    @github.authorization_required
     def index():
-        if not github.authorized:
-            return redirect(url_for("github.login"))
         resp = github.get("/user")
         assert resp.ok
         return "You are @{login} on GitHub".format(login=resp.json()["login"])

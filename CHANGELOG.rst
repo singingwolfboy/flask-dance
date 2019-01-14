@@ -4,6 +4,7 @@ Changelog
 `unreleased`_
 -------------
 
+* Add ``authorization_required`` decorator
 * Added Authentiq pre-set configuration
 
 `1.2.0`_ (2018-12-05)

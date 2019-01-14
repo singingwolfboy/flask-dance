@@ -20,6 +20,7 @@ from flask_dance.consumer import (
     OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
 )
 from flask_dance.consumer.requests import OAuth2Session
+from flask_dance.consumer.backend import MemoryBackend
 
 try:
     import blinker
@@ -386,6 +387,43 @@ def test_redirect_fallback():
         # check that we redirected the client
         assert resp.status_code == 302
         assert resp.headers["Location"] == "https://a.b.c/"
+
+def test_authorization_required_decorator_allowed():
+    app, blueprint = make_app()
+
+    @app.route("/restricted")
+    @blueprint.session.authorization_required
+    def restricted_view():
+        return "allowed"
+
+    blueprint.backend = MemoryBackend({"access_token": "faketoken"})
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/restricted",
+            base_url="https://a.b.c",
+        )
+        assert resp.status_code == 200
+        text = resp.get_data(as_text=True)
+        assert text == "allowed"
+
+
+def test_authorization_required_decorator_redirect():
+    app, blueprint = make_app()
+
+    @app.route("/restricted")
+    @blueprint.session.authorization_required
+    def restricted_view():
+        return "allowed"
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/restricted",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] == "https://a.b.c/login/test-service"
 
 
 @requires_blinker

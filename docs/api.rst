@@ -117,3 +117,11 @@ Backends
    :members:
    :special-members:
 
+Sessions
+--------
+
+.. autoclass:: flask_dance.consumer.requests.OAuth1Session
+   :members: token, authorized, authorization_required
+
+.. autoclass:: flask_dance.consumer.requests.OAuth2Session
+   :members: token, access_token, authorized, authorization_required
