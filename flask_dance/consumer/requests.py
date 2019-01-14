@@ -29,6 +29,9 @@ class OAuth1Session(BaseOAuth1Session):
 
     @lazy
     def token(self):
+        """
+        Get and set the values in the OAuth token, structured as a dictionary.
+        """
         return self.blueprint.token
 
     def load_token(self):
@@ -56,8 +59,6 @@ class OAuth1Session(BaseOAuth1Session):
         (see base.py), which calls 'backend.get()' to actually try to load
         the token from the cache/db (see the 'get()' function in
         backend/sqla.py).
-
-        :return:
         """
         self.load_token()
         return super(OAuth1Session, self).authorized
@@ -117,6 +118,9 @@ class OAuth2Session(BaseOAuth2Session):
 
     @lazy
     def token(self):
+        """
+        Get and set the values in the OAuth token, structured as a dictionary.
+        """
         return self.blueprint.token
 
     def load_token(self):
@@ -128,6 +132,9 @@ class OAuth2Session(BaseOAuth2Session):
 
     @property
     def access_token(self):
+        """
+        Returns the ``access_token`` from the OAuth token.
+        """
         return self.token and self.token.get("access_token")
 
     @property
@@ -145,8 +152,6 @@ class OAuth2Session(BaseOAuth2Session):
         (see base.py), which calls 'backend.get()' to actually try to load
         the token from the cache/db (see the 'get()' function in
         backend/sqla.py).
-
-        :return:
         """
         self.load_token()
         return super(OAuth2Session, self).authorized
