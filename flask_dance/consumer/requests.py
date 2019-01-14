@@ -67,7 +67,8 @@ class OAuth1Session(BaseOAuth1Session):
     def authorization_required(self):
         """
         This is a decorator for a view function. If the current user does not
-        have an OAuth token, then they will be redirected to the ``login``
+        have an OAuth token, then they will be redirected to the
+        :meth:`~flask_dance.consumer.oauth1.OAuth1ConsumerBlueprint.login`
         view to obtain one.
         """
         def wrapper(func):
@@ -160,7 +161,8 @@ class OAuth2Session(BaseOAuth2Session):
     def authorization_required(self):
         """
         This is a decorator for a view function. If the current user does not
-        have an OAuth token, then they will be redirected to the ``login``
+        have an OAuth token, then they will be redirected to the
+        :meth:`~flask_dance.consumer.oauth2.OAuth2ConsumerBlueprint.login`
         view to obtain one.
         """
         def wrapper(func):
