@@ -126,7 +126,6 @@ def test_authorized_url():
         # check that we obtained an access token
         assert len(responses.calls) == 1
         request_data = dict(parse_qsl(responses.calls[0].request.body))
-        assert request_data["client_id"] == "client_id"
         assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
         # check that we stored the access token in the session
         assert (
@@ -216,7 +215,6 @@ def test_authorized_url_token_lifetime():
         # check that we obtained an access token
         assert len(responses.calls) == 1
         request_data = dict(parse_qsl(responses.calls[0].request.body))
-        assert request_data["client_id"] == "client_id"
         assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
         # check that we stored the access token and expiration date in the session
         expected_stored_token = {
