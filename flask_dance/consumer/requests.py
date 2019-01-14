@@ -1,5 +1,7 @@
 from __future__ import unicode_literals, print_function
 
+from functools import wraps
+from flask import redirect, url_for
 from lazy import lazy
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
@@ -59,6 +61,26 @@ class OAuth1Session(BaseOAuth1Session):
         """
         self.load_token()
         return super(OAuth1Session, self).authorized
+
+    @property
+    def authorization_required(self):
+        """
+        This is a decorator for a view function. If the current user does not
+        have an OAuth token, then they will be redirected to the ``login``
+        view to obtain one.
+        """
+        def wrapper(func):
+
+            @wraps(func)
+            def check_authorization(*args, **kwargs):
+                if not self.authorized:
+                    endpoint = "{name}.login".format(name=self.blueprint.name)
+                    return redirect(url_for(endpoint))
+                return func(*args, **kwargs)
+
+            return check_authorization
+
+        return wrapper
 
     def prepare_request(self, request):
         if self.base_url:
@@ -128,6 +150,26 @@ class OAuth2Session(BaseOAuth2Session):
         """
         self.load_token()
         return super(OAuth2Session, self).authorized
+
+    @property
+    def authorization_required(self):
+        """
+        This is a decorator for a view function. If the current user does not
+        have an OAuth token, then they will be redirected to the ``login``
+        view to obtain one.
+        """
+        def wrapper(func):
+
+            @wraps(func)
+            def check_authorization(*args, **kwargs):
+                if not self.authorized:
+                    endpoint = "{name}.login".format(name=self.blueprint.name)
+                    return redirect(url_for(endpoint))
+                return func(*args, **kwargs)
+
+            return check_authorization
+
+        return wrapper
 
     def request(self, method, url, data=None, headers=None, **kwargs):
         if self.base_url:
