@@ -65,7 +65,7 @@ setup(
     },
     cmdclass = {'test': PyTest},
     license='MIT',
-    classifiers=(
+    classifiers=[
         'License :: OSI Approved :: MIT License',
         'Framework :: Flask',
         'Programming Language :: Python',
@@ -74,7 +74,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-    ),
+    ],
     zip_safe=False,
 )
 
