@@ -65,6 +65,8 @@ def make_instagram_blueprint(
                                       authorized_url=authorized_url,
                                       session_class=session_class,
                                       backend=backend,
+                                      token_url_params={
+                                          'include_client_id': True},
                                       )
     instagram_bp.from_config["client_id"] = "INSTAGRAM_OAUTH_CLIENT_ID"
     instagram_bp.from_config["client_secret"] = "INSTAGRAM_OAUTH_CLIENT_SECRET"
