@@ -38,6 +38,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             authorization_url_params=None,
             token_url=None,
             token_url_params=None,
+            include_client_id=False,
             redirect_url=None,
             redirect_to=None,
             session_class=None,
@@ -74,6 +75,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 key-value pairs to include in the query string of the
                 ``token_url``, beyond those necessary for a standard
                 OAuth 2 access token request.
+            include_client_id (bool): Whether to include client_id and
+                client_secret in the URL params in fetch_token and refresh_token.
             login_url: The URL route for the ``login`` view that kicks off
                 the OAuth dance. This string will be
                 :ref:`formatted <python:formatstrings>`
@@ -131,6 +134,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.authorization_url_params = authorization_url_params or {}
         self.token_url = token_url
         self.token_url_params = token_url_params or {}
+        self.include_client_id = include_client_id
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
 
@@ -243,6 +247,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 self.token_url,
                 authorization_response=request.url,
                 client_secret=self.client_secret,
+                include_client_id=self.include_client_id,
                 **self.token_url_params
             )
         except MissingCodeError as e:
