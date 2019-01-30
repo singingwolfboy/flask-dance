@@ -64,5 +64,23 @@ The following signals exist in Flask-Dance:
     anyway, so it is your responsibility to hook into this signal and inform
     the user that there was an error.
 
+
+.. data:: oauth_before_login
+
+    This signal is sent before redirecting to the provider login page. The signal
+    is sent with a ``url`` parameter specifying the redirect URL. This signal is mostly
+    useful for doing things like session construction / de-construction before the user
+    is redirected.
+
+    Example subscriber::
+
+        from flask_dance.consumer import oauth_before_login
+
+        @oauth_before_login.connect
+        def before_login(blueprint, url):
+            flask.session["i_was_here_before"] = "the_login"
+            # if "facebook" in url:
+                # do facebook stuff
+
 .. _flash a message: http://flask.pocoo.org/docs/latest/patterns/flashing/
 .. _blinker: http://pythonhosted.org/blinker/

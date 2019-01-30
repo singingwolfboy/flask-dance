@@ -13,7 +13,7 @@ from flask_dance.utils import getattrd, timestamp_from_datetime
 
 _signals = Namespace()
 oauth_authorized = _signals.signal('oauth-authorized')
-oauth_before_login = _signals.signal('oauth-before-authorized')
+oauth_before_login = _signals.signal('oauth-before-login')
 oauth_error = _signals.signal('oauth-error')
 
 
