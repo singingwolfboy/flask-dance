@@ -327,17 +327,21 @@ def test_signal_oauth_authorized_abort(request):
 def test_signal_oauth_before_login(request):
     app, bp = make_app()
     bp.session.fetch_request_token = mock.Mock(return_value="test-token")
+    
     def callback(*args, **kwargs):
-        flask.session["test"] = "test"
+        del flask.session["user_id"]
         return False
     oauth_before_login.connect(callback)
     request.addfinalizer(
         lambda: oauth_before_login.disconnect(callback))
-    with app.test_client() as client:
-        client.get(
-            "/login/test-service",
-        )
-        assert flask.session["test"] == "test"
+    with app.test_request_context():
+        with app.test_client() as client:
+            flask.session["user_id"] = 1
+            assert flask.session["user_id"] == 1
+            client.get(
+                "/login/test-service",
+            )
+            assert "user_id" not in flask.session
 
 @requires_blinker
 def test_signal_oauth_authorized_response(request):
