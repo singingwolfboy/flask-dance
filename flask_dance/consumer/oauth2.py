@@ -8,7 +8,7 @@ from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response
 from oauthlib.oauth2 import MissingCodeError
 from .base import (
-    BaseOAuthConsumerBlueprint, oauth_authorized, oauth_before_authorized, oauth_error
+    BaseOAuthConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
 )
 from .requests import OAuth2Session
 
@@ -189,7 +189,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         flask.session[state_key] = state
         log.debug("state = %s", state)
         log.debug("redirect URL = %s", url)
-        oauth_before_authorized.send(self, url=url)
+        oauth_before_login.send(self, url=url)
         return redirect(url)
 
     def authorized(self):

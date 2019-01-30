@@ -17,7 +17,7 @@ import flask
 from freezegun import freeze_time
 from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.consumer import (
-    OAuth2ConsumerBlueprint, oauth_authorized, oauth_before_authorized, oauth_error
+    OAuth2ConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
 )
 from flask_dance.consumer.requests import OAuth2Session
 from flask_dance.consumer.backend import MemoryBackend
@@ -454,13 +454,13 @@ def test_signal_oauth_authorized(request):
 
 
 @requires_blinker
-def test_signal_oauth_before_authorized(request):
+def test_signal_oauth_before_login(request):
     app, bp = make_app()
     def callback(*args, **kwargs):
         flask.session["test"] = "test"
-    oauth_before_authorized.connect(callback)
+    oauth_before_login.connect(callback)
     request.addfinalizer(
-        lambda: oauth_before_authorized.disconnect(callback))
+        lambda: oauth_before_login.disconnect(callback))
     with app.test_client() as client:
         client.get(
             "/login/test-service",

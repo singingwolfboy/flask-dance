@@ -7,7 +7,7 @@ from werkzeug.wrappers import Response
 from requests_oauthlib.oauth1_session import TokenRequestDenied, TokenMissing
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
-from .base import BaseOAuthConsumerBlueprint, oauth_authorized, oauth_before_authorized, oauth_error
+from .base import BaseOAuthConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
 from .requests import OAuth1Session
 
 log = logging.getLogger(__name__)
@@ -181,7 +181,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             return redirect(next_url)
 
         url = self.session.authorization_url(self.authorization_url)
-        oauth_before_authorized.send(self, url=url)
+        oauth_before_login.send(self, url=url)
         return redirect(url)
 
     def authorized(self):

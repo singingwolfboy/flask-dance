@@ -11,7 +11,7 @@ import responses
 import flask
 from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.consumer import (
-    OAuth1ConsumerBlueprint, oauth_authorized, oauth_before_authorized, oauth_error
+    OAuth1ConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
 )
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 from flask_dance.consumer.requests import OAuth1Session
@@ -324,15 +324,15 @@ def test_signal_oauth_authorized_abort(request):
 
 
 @requires_blinker
-def test_signal_oauth_before_authorized(request):
+def test_signal_oauth_before_login(request):
     app, bp = make_app()
     bp.session.fetch_request_token = mock.Mock(return_value="test-token")
     def callback(*args, **kwargs):
         flask.session["test"] = "test"
         return False
-    oauth_before_authorized.connect(callback)
+    oauth_before_login.connect(callback)
     request.addfinalizer(
-        lambda: oauth_before_authorized.disconnect(callback))
+        lambda: oauth_before_login.disconnect(callback))
     with app.test_client() as client:
         client.get(
             "/login/test-service",
