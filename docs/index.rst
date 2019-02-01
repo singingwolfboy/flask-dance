@@ -15,12 +15,13 @@ User Guide:
    :maxdepth: 2
 
    install
-   quickstarts/index
+   quickstart
+   concepts
+   understanding-the-magic
    providers
    backends
    multi-user
    logout
-   proxies
    signals
    examples
 
@@ -28,8 +29,10 @@ Advanced Topics:
 
 .. toctree::
    how-oauth-works
+   proxies
    testing
    api
+   contributing
 
 
 
