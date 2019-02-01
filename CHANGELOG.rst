@@ -4,7 +4,7 @@ Changelog
 `unreleased`_
 -------------
 
-nothing yet
+* Add ``oauth_before_login`` signal
 
 `1.3.0`_ (2019-01-14)
 ---------------------

@@ -17,7 +17,7 @@ import flask
 from freezegun import freeze_time
 from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.consumer import (
-    OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
+    OAuth2ConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
 )
 from flask_dance.consumer.requests import OAuth2Session
 from flask_dance.consumer.backend import MemoryBackend
@@ -452,6 +452,23 @@ def test_signal_oauth_authorized(request):
     assert calls[0][0] == (bp,)
     assert calls[0][1] == {"token": fake_token}
 
+
+@requires_blinker
+def test_signal_oauth_before_login(request):
+    app, bp = make_app()
+    def callback(*args, **kwargs):
+        del flask.session["user_id"]
+    oauth_before_login.connect(callback)
+    request.addfinalizer(
+        lambda: oauth_before_login.disconnect(callback))
+    with app.test_request_context():
+        with app.test_client() as client:
+            flask.session["user_id"] = 1
+            assert flask.session["user_id"] == 1
+            client.get(
+                "/login/test-service",
+            )
+            assert "user_id" not in flask.session
 
 @requires_blinker
 def test_signal_oauth_authorized_abort(request):
