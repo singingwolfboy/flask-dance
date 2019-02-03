@@ -50,9 +50,6 @@ If you want your users to be able to log in to your app from any of the
         assert resp.ok
         return "You are @{login} on GitHub".format(login=resp.json()["login"])
 
-    if __name__ == "__main__":
-        app.run()
-
 If you're itching to try it out, check out the `flask-dance-github`_ example
 repository, with detailed instructions for how to run this code.
 
