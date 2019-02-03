@@ -12,6 +12,13 @@ env:
   - BLINKER=1 DATABASE_URI=postgresql://localhost/travis_ci_test
   - BLINKER=1 DATABASE_URI=sqlite://
   - BLINKER=0 DATABASE_URI=sqlite://
+matrix:
+  include:
+  - name: "Black"
+    python: 3.6
+    install: travis_retry pip install black
+    script: black --check flask_dance
+    after_success: skip
 
 branches:
   only:
