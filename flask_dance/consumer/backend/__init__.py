@@ -18,7 +18,9 @@ class BaseBackend(six.with_metaclass(ABCMeta)):
 
 class NullBackend(BaseBackend):
     """
-    Don't actually store anything
+    This mock backend will never store OAuth tokens.
+    If you try to retrieve a token from this backend, you will always
+    get ``None``.
     """
 
     def get(self, blueprint):
@@ -33,7 +35,12 @@ class NullBackend(BaseBackend):
 
 class MemoryBackend(BaseBackend):
     """
-    "Store" the token in memory
+    This mock backend stores an OAuth token in memory and so that it can
+    be retrieved later. Since the token is not persisted in any way,
+    this is mostly useful for writing automated tests.
+
+    The initializer accepts a ``token`` argument, for setting the
+    initial value of the token.
     """
 
     def __init__(self, token=None, *args, **kwargs):

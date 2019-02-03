@@ -61,7 +61,8 @@ to post that tweet to your Twitter account -- which requires using OAuth.
 
 Flask-Dance does *not* assume that your website has a user management system.
 It's easy to use Flask-Dance with a user management system if you want to,
-though!
+though! Read the documentation on :doc:`multi-user` if you plan to use a
+user management system.
 
 Blueprints
 ----------
