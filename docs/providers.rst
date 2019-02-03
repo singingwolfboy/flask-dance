@@ -260,6 +260,6 @@ blueprint:
     assert resp.ok
     print("Here's the content of my response: " + resp.content)
 
-It all follows the same patterns as the :doc:`quickstarts/index`. You can also read
-the code to see how the pre-set configurations are implemented -- it's very
-short.
+It all follows the same patterns as the :doc:`quickstart` example projects.
+You can also read the code to see how the pre-set configurations are
+implemented -- it's very short.
