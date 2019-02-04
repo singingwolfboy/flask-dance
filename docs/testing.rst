@@ -13,7 +13,7 @@ OAuth token, an expired token, or no token at all?
 Fortunately, we've got you covered.
 
 Mock Storages
-=============
+-------------
 
 The simplest way to write tests with Flask-Dance is to use a
 mock token storage. This allows you to easily control
@@ -81,7 +81,7 @@ or ``False``, and the rest of the test asserts that the result is what
 we expect.
 
 Mock API Responses
-==================
+------------------
 
 Once you've gotten past the question of whether the current user is
 authorized or not, you still have to account for any API calls that
