@@ -5,12 +5,8 @@ Token Storages
 
 A Flask-Dance blueprint has a token storage associated with it,
 which is an object that knows how to store and retrieve OAuth tokens
-from some kind of persistent storage. The default storage uses the
-:ref:`Flask session <flask:sessions>` to store OAuth tokens, which is simple
-and requires no configuration. However, when the user closes
-their browser, the OAuth token will be lost, so its not a good choice for
-production usage. Fortunately, Flask-Dance comes with some other storages
-to choose from.
+from some kind of persistent storage. A storage is most often
+some kind of database, but it doesn't have to be.
 
 .. _flask-session-storage:
 
