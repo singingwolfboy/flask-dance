@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth1ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,9 +14,15 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_twitter_blueprint(
-        api_key=None, api_secret=None,
-        redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    api_key=None,
+    api_secret=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Twitter using OAuth 1. This requires
     an API key and API secret from Twitter. You should either pass them to
@@ -44,7 +51,9 @@ def make_twitter_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    twitter_bp = OAuth1ConsumerBlueprint("twitter", __name__,
+    twitter_bp = OAuth1ConsumerBlueprint(
+        "twitter",
+        __name__,
         client_key=api_key,
         client_secret=api_secret,
         base_url="https://api.twitter.com/1.1/",
@@ -67,5 +76,6 @@ def make_twitter_blueprint(
         ctx.twitter_oauth = twitter_bp.session
 
     return twitter_bp
+
 
 twitter = LocalProxy(partial(_lookup_app_object, "twitter_oauth"))

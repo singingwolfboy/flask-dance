@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,9 +14,17 @@ __maintainer__ = "Justin Georgeson <jgeorgeson@lopht.net>"
 
 
 def make_gitlab_blueprint(
-        client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None, hostname="gitlab.com"):
+    client_id=None,
+    client_secret=None,
+    scope=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+    hostname="gitlab.com",
+):
     """
     Make a blueprint for authenticating with GitLab using OAuth 2. This requires
     a client ID and client secret from GitLab. You should either pass them to
@@ -47,12 +56,16 @@ def make_gitlab_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    gitlab_bp = OAuth2ConsumerBlueprint("gitlab", __name__,
+    gitlab_bp = OAuth2ConsumerBlueprint(
+        "gitlab",
+        __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
         base_url="https://{hostname}/api/v4/".format(hostname=hostname),
-        authorization_url="https://{hostname}/oauth/authorize".format(hostname=hostname),
+        authorization_url="https://{hostname}/oauth/authorize".format(
+            hostname=hostname
+        ),
         token_url="https://{hostname}/oauth/token".format(hostname=hostname),
         redirect_url=redirect_url,
         redirect_to=redirect_to,
@@ -70,5 +83,6 @@ def make_gitlab_blueprint(
         ctx.gitlab_oauth = gitlab_bp.session
 
     return gitlab_bp
+
 
 gitlab = LocalProxy(partial(_lookup_app_object, "gitlab_oauth"))

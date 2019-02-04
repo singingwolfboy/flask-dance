@@ -20,10 +20,13 @@ class NullBackend(BaseBackend):
     """
     Don't actually store anything
     """
+
     def get(self, blueprint):
         return None
+
     def set(self, blueprint, token):
         return None
+
     def delete(self, blueprint):
         return None
 
@@ -32,6 +35,7 @@ class MemoryBackend(BaseBackend):
     """
     "Store" the token in memory
     """
+
     def __init__(self, token=None, *args, **kwargs):
         self.token = token
 

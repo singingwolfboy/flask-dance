@@ -7,6 +7,7 @@ from flask_dance.consumer import OAuth1ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth1Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -23,9 +24,16 @@ class JsonOAuth1Session(OAuth1Session):
 
 
 def make_jira_blueprint(
-        base_url, consumer_key=None, rsa_key=None,
-        redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    base_url,
+    consumer_key=None,
+    rsa_key=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with JIRA using OAuth 1. This requires
     a consumer key and RSA key for the JIRA application link. You should either
@@ -65,7 +73,9 @@ def make_jira_blueprint(
             rsa_key = f.read()
     base_url = URLObject(base_url)
 
-    jira_bp = OAuth1ConsumerBlueprint("jira", __name__,
+    jira_bp = OAuth1ConsumerBlueprint(
+        "jira",
+        __name__,
         client_key=consumer_key,
         rsa_key=rsa_key,
         signature_method=SIGNATURE_RSA,
@@ -89,5 +99,6 @@ def make_jira_blueprint(
         ctx.jira_oauth = jira_bp.session
 
     return jira_bp
+
 
 jira = LocalProxy(partial(_lookup_app_object, "jira_oauth"))

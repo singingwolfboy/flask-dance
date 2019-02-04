@@ -7,6 +7,7 @@ class SessionBackend(BaseBackend):
     The default storage backend. Stores and retrieves OAuth tokens using
     the :ref:`Flask session <flask:sessions>`.
     """
+
     def __init__(self, key="{bp.name}_oauth_token"):
         """
         Args:

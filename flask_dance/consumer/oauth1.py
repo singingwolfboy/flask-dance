@@ -7,7 +7,12 @@ from werkzeug.wrappers import Response
 from requests_oauthlib.oauth1_session import TokenRequestDenied, TokenMissing
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
-from .base import BaseOAuthConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
+from .base import (
+    BaseOAuthConsumerBlueprint,
+    oauth_authorized,
+    oauth_before_login,
+    oauth_error,
+)
 from .requests import OAuth1Session
 
 log = logging.getLogger(__name__)
@@ -17,30 +22,37 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     """
     A subclass of :class:`flask.Blueprint` that sets up OAuth 1 authentication.
     """
-    def __init__(self, name, import_name,
-            client_key=None,
-            client_secret=None,
-            signature_method=SIGNATURE_HMAC,
-            signature_type=SIGNATURE_TYPE_AUTH_HEADER,
-            rsa_key=None,
-            client_class=None,
-            force_include_body=False,
 
-            static_folder=None, static_url_path=None, template_folder=None,
-            url_prefix=None, subdomain=None, url_defaults=None, root_path=None,
-
-            login_url=None,
-            authorized_url=None,
-            base_url=None,
-            request_token_url=None,
-            authorization_url=None,
-            access_token_url=None,
-            redirect_url=None,
-            redirect_to=None,
-            session_class=None,
-            backend=None,
-
-            **kwargs):
+    def __init__(
+        self,
+        name,
+        import_name,
+        client_key=None,
+        client_secret=None,
+        signature_method=SIGNATURE_HMAC,
+        signature_type=SIGNATURE_TYPE_AUTH_HEADER,
+        rsa_key=None,
+        client_class=None,
+        force_include_body=False,
+        static_folder=None,
+        static_url_path=None,
+        template_folder=None,
+        url_prefix=None,
+        subdomain=None,
+        url_defaults=None,
+        root_path=None,
+        login_url=None,
+        authorized_url=None,
+        base_url=None,
+        request_token_url=None,
+        authorization_url=None,
+        access_token_url=None,
+        redirect_url=None,
+        redirect_to=None,
+        session_class=None,
+        backend=None,
+        **kwargs
+    ):
         """
         Most of the constructor arguments are forwarded either to the
         :class:`flask.Blueprint` constructor or the
@@ -96,12 +108,16 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
         """
         BaseOAuthConsumerBlueprint.__init__(
-            self, name, import_name,
+            self,
+            name,
+            import_name,
             static_folder=static_folder,
             static_url_path=static_url_path,
             template_folder=template_folder,
-            url_prefix=url_prefix, subdomain=subdomain,
-            url_defaults=url_defaults, root_path=root_path,
+            url_prefix=url_prefix,
+            subdomain=subdomain,
+            url_defaults=url_defaults,
+            root_path=root_path,
             login_url=login_url,
             authorized_url=authorized_url,
             backend=backend,
@@ -155,14 +171,13 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
     def login(self):
         callback_uri = url_for(
-            ".authorized", next=request.args.get('next'), _external=True,
+            ".authorized", next=request.args.get("next"), _external=True
         )
         self.session._client.client.callback_uri = to_unicode(callback_uri)
 
         try:
             self.session.fetch_request_token(
-                self.request_token_url,
-                should_load_token=False,
+                self.request_token_url, should_load_token=False
             )
         except TokenRequestDenied as err:
             message = err.args[0]
@@ -210,8 +225,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
         try:
             token = self.session.fetch_access_token(
-                self.access_token_url,
-                should_load_token=False,
+                self.access_token_url, should_load_token=False
             )
         except ValueError as err:
             # can't proceed with OAuth, have to just redirect to next_url

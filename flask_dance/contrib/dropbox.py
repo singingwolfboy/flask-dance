@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,11 +14,19 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_dropbox_blueprint(
-        app_key=None, app_secret=None, scope=None,
-        force_reapprove=False, disable_signup=False, require_role=None,
-        redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    app_key=None,
+    app_secret=None,
+    scope=None,
+    force_reapprove=False,
+    disable_signup=False,
+    require_role=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Dropbox using OAuth 2. This requires
     a client ID and client secret from Dropbox. You should either pass them to
@@ -66,7 +75,9 @@ def make_dropbox_blueprint(
     if require_role:
         authorization_url_params["require_role"] = require_role
 
-    dropbox_bp = OAuth2ConsumerBlueprint("dropbox", __name__,
+    dropbox_bp = OAuth2ConsumerBlueprint(
+        "dropbox",
+        __name__,
         client_id=app_key,
         client_secret=app_secret,
         scope=scope,
@@ -90,5 +101,6 @@ def make_dropbox_blueprint(
         ctx.dropbox_oauth = dropbox_bp.session
 
     return dropbox_bp
+
 
 dropbox = LocalProxy(partial(_lookup_app_object, "dropbox_oauth"))

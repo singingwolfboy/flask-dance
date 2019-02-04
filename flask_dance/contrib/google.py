@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,10 +14,19 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_google_blueprint(
-        client_id=None, client_secret=None, scope=None,
-        offline=False, reprompt_consent=False,
-        redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None, hosted_domain=None):
+    client_id=None,
+    client_secret=None,
+    scope=None,
+    offline=False,
+    reprompt_consent=False,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+    hosted_domain=None,
+):
     """
     Make a blueprint for authenticating with Google using OAuth 2. This requires
     a client ID and client secret from Google. You should either pass them to
@@ -98,7 +108,9 @@ def make_google_blueprint(
         authorization_url_params["approval_prompt"] = "force"
     if hosted_domain:
         authorization_url_params["hd"] = hosted_domain
-    google_bp = OAuth2ConsumerBlueprint("google", __name__,
+    google_bp = OAuth2ConsumerBlueprint(
+        "google",
+        __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
@@ -123,5 +135,6 @@ def make_google_blueprint(
         ctx.google_oauth = google_bp.session
 
     return google_bp
+
 
 google = LocalProxy(partial(_lookup_app_object, "google_oauth"))

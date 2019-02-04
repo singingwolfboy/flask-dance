@@ -12,16 +12,27 @@ from flask_dance.utils import getattrd, timestamp_from_datetime
 
 
 _signals = Namespace()
-oauth_authorized = _signals.signal('oauth-authorized')
-oauth_before_login = _signals.signal('oauth-before-login')
-oauth_error = _signals.signal('oauth-error')
+oauth_authorized = _signals.signal("oauth-authorized")
+oauth_before_login = _signals.signal("oauth-before-login")
+oauth_error = _signals.signal("oauth-error")
 
 
 class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
-    def __init__(self, name, import_name,
-            static_folder=None, static_url_path=None, template_folder=None,
-            url_prefix=None, subdomain=None, url_defaults=None, root_path=None,
-            login_url=None, authorized_url=None, backend=None):
+    def __init__(
+        self,
+        name,
+        import_name,
+        static_folder=None,
+        static_url_path=None,
+        template_folder=None,
+        url_prefix=None,
+        subdomain=None,
+        url_defaults=None,
+        root_path=None,
+        login_url=None,
+        authorized_url=None,
+        backend=None,
+    ):
 
         bp_kwargs = dict(
             name=name,
@@ -44,9 +55,7 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
         authorized_url = authorized_url or "/{bp.name}/authorized"
 
         self.add_url_rule(
-            rule=login_url.format(bp=self),
-            endpoint="login",
-            view_func=self.login,
+            rule=login_url.format(bp=self), endpoint="login", view_func=self.login
         )
         self.add_url_rule(
             rule=authorized_url.format(bp=self),

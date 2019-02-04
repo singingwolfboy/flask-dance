@@ -5,16 +5,21 @@ from datetime import datetime
 
 try:
     from datetime import timezone
+
     utc = timezone.utc
 except ImportError:
     from datetime import timedelta, tzinfo
+
     class UTC(tzinfo):
         def utcoffset(self, dt):
             return timedelta(0)
+
         def tzname(self, dt):
             return "UTC"
+
         def dst(self, dst):
             return timedelta(0)
+
     utc = UTC()
 
 
@@ -23,10 +28,13 @@ class FakeCache(object):
     An object that mimics just enough of Flask-Caching's API to be compatible
     with our needs, but does nothing.
     """
+
     def get(self, key):
         return None
+
     def set(self, key, value):
         return None
+
     def delete(self, key):
         return None
 
@@ -48,6 +56,7 @@ def first(iterable, default=None, key=None):
 
 
 sentinel = object()
+
 
 def getattrd(obj, name, default=sentinel):
     """
