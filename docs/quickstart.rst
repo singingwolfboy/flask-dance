@@ -2,8 +2,8 @@ Quickstart
 ==========
 
 The fastest way to get up and running with Flask-Dance is to start from
-an example project. First, decide which :doc:`token storage backend
-<backends>` you want to use:
+an example project. First, decide which :doc:`token storage
+<storages>` you want to use:
 
 * :class:`~flask_dance.consumer.backend.session.SessionBackend` is the default
   because it requires zero configuration. It uses the

@@ -56,7 +56,7 @@ Checking Authorization
 ----------------------
 
 When your application starts up, Flask-Dance will check your token
-storage backend to see if there is an OAuth token already saved
+storage to see if there is an OAuth token already saved
 there. If so, the ``authorized`` property on your Requests
 Session object will be ``True``; if not, it will be ``False``.
 You can use this to determine if the user needs to go through the
@@ -91,7 +91,7 @@ Finishing the Dance
 After the user finishes the OAuth dance, they will be redirected
 back to the :meth:`~OAuth2ConsumerBlueprint.authorized` view
 from your blueprint. This will save the OAuth token to whatever
-token storage backend you are using, and will then redirect the user
+token storage you are using, and will then redirect the user
 to a different page on your website.
 
 By default, the user will be redirected back to the root page (``/``).

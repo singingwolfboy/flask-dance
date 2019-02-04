@@ -18,8 +18,8 @@ class BaseBackend(six.with_metaclass(ABCMeta)):
 
 class NullBackend(BaseBackend):
     """
-    This mock backend will never store OAuth tokens.
-    If you try to retrieve a token from this backend, you will always
+    This mock storage will never store OAuth tokens.
+    If you try to retrieve a token from this storage, you will always
     get ``None``.
     """
 
@@ -35,7 +35,7 @@ class NullBackend(BaseBackend):
 
 class MemoryBackend(BaseBackend):
     """
-    This mock backend stores an OAuth token in memory and so that it can
+    This mock storage stores an OAuth token in memory and so that it can
     be retrieved later. Since the token is not persisted in any way,
     this is mostly useful for writing automated tests.
 

@@ -18,13 +18,13 @@ of the user.
    .. attribute:: session
 
       An :class:`~requests_oauthlib.OAuth1Session` instance that
-      automatically loads tokens for the OAuth provider from the backend.
+      automatically loads tokens for the OAuth provider from the token storage.
       This instance is automatically created the first time it is referenced
       for each request to your Flask application.
 
    .. attribute:: backend
 
-      The :doc:`token storage backend <backends>` that this blueprint
+      The :doc:`token storage <storages>` that this blueprint
       uses.
 
    .. attribute:: token
@@ -34,12 +34,12 @@ of the user.
    .. attribute:: config
 
       A special dictionary that holds information about the current state of
-      the application, which the backend can use to look up the correct OAuth
+      the application, which the token storage can use to look up the correct OAuth
       token from storage. For example, in a multi-user system, where each user
       has their own OAuth token, information about which user is currently logged
       in for this request is stored in this dictionary. This dictionary is special
-      because it automatically alerts the backend when any attribute in the
-      dictionary is changed, so that the backend's caches are appropriately
+      because it automatically alerts the storage when any attribute in the
+      dictionary is changed, so that the storage's caches are appropriately
       invalidated.
 
    .. attribute:: from_config
@@ -65,13 +65,13 @@ of the user.
    .. attribute:: session
 
       An :class:`~requests_oauthlib.OAuth2Session` instance that
-      automatically loads tokens for the OAuth provider from the backend.
+      automatically loads tokens for the OAuth provider from the storage.
       This instance is automatically created the first time it is referenced
       for each request to your Flask application.
 
    .. attribute:: backend
 
-      The :doc:`token storage backend <backends>` that this blueprint
+      The :doc:`token storage <storages>` that this blueprint
       uses.
 
    .. attribute:: token
@@ -81,12 +81,12 @@ of the user.
    .. attribute:: config
 
       A special dictionary that holds information about the current state of
-      the application, which the backend can use to look up the correct OAuth
+      the application, which the token storage can use to look up the correct OAuth
       token from storage. For example, in a multi-user system, where each user
       has their own OAuth token, information about which user is currently logged
       in for this request is stored in this dictionary. This dictionary is special
-      because it automatically alerts the backend when any attribute in the
-      dictionary is changed, so that the backend's caches are appropriately
+      because it automatically alerts the storage when any attribute in the
+      dictionary is changed, so that the storage's caches are appropriately
       invalidated.
 
    .. attribute:: from_config
@@ -105,7 +105,7 @@ of the user.
 
          blueprint.session.client_id = app.config["GITHUB_OAUTH_CLIENT_ID"]
 
-Backends
+Storages
 --------
 
 .. autoclass:: flask_dance.consumer.backend.session.SessionBackend(...)

@@ -52,7 +52,7 @@ Options & Configuration
    :maxdepth: 2
 
    providers
-   backends
+   storages
    signals
 
 Advanced Topics

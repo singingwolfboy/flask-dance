@@ -59,9 +59,9 @@ Flask-Dance's Default Behavior
 ------------------------------
 
 Flask-Dance does the best it can to resolve these issues for you, while
-allowing you to take control in complex circumstances. Different backends
+allowing you to take control in complex circumstances. Different token storages
 may handle this differently, but for simplicity, this document will
-refer to the :ref:`SQLAlchemy backend <sqlalchemy-backend>`.
+refer to the :ref:`SQLAlchemy storage <sqlalchemy-storage>`.
 
 User Association vs User Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

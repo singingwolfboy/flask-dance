@@ -57,7 +57,7 @@ The following signals exist in Flask-Dance:
     If you're using OAuth 2, the user may grant you different scopes from the
     ones you requested: check the ``scope`` key in the *token* dict to
     determine what scopes were actually granted. If you don't want the *token*
-    to be :doc:`stored <backends>`, simply return ``False`` from one of your
+    to be :doc:`stored <storages>`, simply return ``False`` from one of your
     signal receiver functions -- this can be useful if the user has declined
     to authorize your OAuth request, has granted insufficient scopes, or in some
     other way has given you a token that you don't want.

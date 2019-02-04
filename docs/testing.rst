@@ -12,14 +12,14 @@ authorization? How do you handle cases where the user has a valid
 OAuth token, an expired token, or no token at all?
 Fortunately, we've got you covered.
 
-Mock Backends
+Mock Storages
 =============
 
 The simplest way to write tests with Flask-Dance is to use a
-mock token storage backend. This allows you to easily control
+mock token storage. This allows you to easily control
 whether Flask-Dance believes the current user is authorized
 with the OAuth provider or not. Flask-Dance provides two
-mock token storage backends:
+mock token storages:
 
 .. currentmodule:: flask_dance.consumer.backend
 

@@ -56,8 +56,8 @@ def make_google_blueprint(
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
-        backend: A storage backend class, or an instance of a storage
-                backend class, to use for this blueprint. Defaults to
+        backend: A token storage class, or an instance of a token storage
+                class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
         hosted_domain (str, optional): The domain of the G Suite user. Used to indicate that the account selection UI
             should be optimized for accounts at this domain. Note that this only provides UI optimization, and requires

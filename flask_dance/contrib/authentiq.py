@@ -48,8 +48,8 @@ def make_authentiq_blueprint(
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
-        backend: A storage backend class, or an instance of a storage
-                backend class, to use for this blueprint. Defaults to
+        backend: A token storage class, or an instance of a token storage
+                class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
         hostname (str, optional): If using a private instance of authentiq CE/EE,
             specify the hostname, default is ``connect.authentiq.io``

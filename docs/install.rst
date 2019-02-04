@@ -7,7 +7,7 @@ Use `pip`_ to install Flask-Dance. To use basic functionality, run this:
 
     $ pip install Flask-Dance
 
-To also use the :ref:`SQLAlchemy backend <sqlalchemy-backend>`, specify the
+To also use the :ref:`SQLAlchemy storage <sqlalchemy-storage>`, specify the
 ``sqla`` extra, like this:
 
 .. code-block:: bash
