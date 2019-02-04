@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,9 +14,17 @@ __maintainer__ = "Matt Bachmann <bachmann.matt@gmail.com>"
 
 
 def make_facebook_blueprint(
-        client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None, rerequest_declined_permissions=False,
-        session_class=None, backend=None):
+    client_id=None,
+    client_secret=None,
+    scope=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    rerequest_declined_permissions=False,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Facebook using OAuth 2. This requires
     a client ID and client secret from Facebook. You should either pass them to
@@ -49,22 +58,24 @@ def make_facebook_blueprint(
     """
     authorization_url_params = {}
     if rerequest_declined_permissions:
-        authorization_url_params['auth_type'] = 'rerequest'
-    facebook_bp = OAuth2ConsumerBlueprint("facebook", __name__,
-                                          client_id=client_id,
-                                          client_secret=client_secret,
-                                          scope=scope,
-                                          base_url="https://graph.facebook.com/",
-                                          authorization_url="https://www.facebook.com/dialog/oauth",
-                                          authorization_url_params=authorization_url_params,
-                                          token_url="https://graph.facebook.com/oauth/access_token",
-                                          redirect_url=redirect_url,
-                                          redirect_to=redirect_to,
-                                          login_url=login_url,
-                                          authorized_url=authorized_url,
-                                          session_class=session_class,
-                                          backend=backend,
-                                          )
+        authorization_url_params["auth_type"] = "rerequest"
+    facebook_bp = OAuth2ConsumerBlueprint(
+        "facebook",
+        __name__,
+        client_id=client_id,
+        client_secret=client_secret,
+        scope=scope,
+        base_url="https://graph.facebook.com/",
+        authorization_url="https://www.facebook.com/dialog/oauth",
+        authorization_url_params=authorization_url_params,
+        token_url="https://graph.facebook.com/oauth/access_token",
+        redirect_url=redirect_url,
+        redirect_to=redirect_to,
+        login_url=login_url,
+        authorized_url=authorized_url,
+        session_class=session_class,
+        backend=backend,
+    )
     facebook_bp.from_config["client_id"] = "FACEBOOK_OAUTH_CLIENT_ID"
     facebook_bp.from_config["client_secret"] = "FACEBOOK_OAUTH_CLIENT_SECRET"
 

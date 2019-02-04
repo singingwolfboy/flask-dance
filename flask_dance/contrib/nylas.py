@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,10 +14,16 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_nylas_blueprint(
-        client_id=None, client_secret=None, scope="email",
-        redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    client_id=None,
+    client_secret=None,
+    scope="email",
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Nylas using OAuth 2. This requires
     an API ID and API secret from Nylas. You should either pass them to
@@ -48,7 +55,9 @@ def make_nylas_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    nylas_bp = OAuth2ConsumerBlueprint("nylas", __name__,
+    nylas_bp = OAuth2ConsumerBlueprint(
+        "nylas",
+        __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
@@ -71,5 +80,6 @@ def make_nylas_blueprint(
         ctx.nylas_oauth = nylas_bp.session
 
     return nylas_bp
+
 
 nylas = LocalProxy(partial(_lookup_app_object, "nylas_oauth"))

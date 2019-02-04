@@ -8,7 +8,10 @@ from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response
 from oauthlib.oauth2 import MissingCodeError
 from .base import (
-    BaseOAuthConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
+    BaseOAuthConsumerBlueprint,
+    oauth_authorized,
+    oauth_before_login,
+    oauth_error,
 )
 from .requests import OAuth2Session
 
@@ -19,31 +22,38 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     """
     A subclass of :class:`flask.Blueprint` that sets up OAuth 2 authentication.
     """
-    def __init__(self, name, import_name,
-            client_id=None,
-            client_secret=None,
-            client=None,
-            auto_refresh_url=None,
-            auto_refresh_kwargs=None,
-            scope=None,
-            state=None,
 
-            static_folder=None, static_url_path=None, template_folder=None,
-            url_prefix=None, subdomain=None, url_defaults=None, root_path=None,
-
-            login_url=None,
-            authorized_url=None,
-            base_url=None,
-            authorization_url=None,
-            authorization_url_params=None,
-            token_url=None,
-            token_url_params=None,
-            redirect_url=None,
-            redirect_to=None,
-            session_class=None,
-            backend=None,
-
-            **kwargs):
+    def __init__(
+        self,
+        name,
+        import_name,
+        client_id=None,
+        client_secret=None,
+        client=None,
+        auto_refresh_url=None,
+        auto_refresh_kwargs=None,
+        scope=None,
+        state=None,
+        static_folder=None,
+        static_url_path=None,
+        template_folder=None,
+        url_prefix=None,
+        subdomain=None,
+        url_defaults=None,
+        root_path=None,
+        login_url=None,
+        authorized_url=None,
+        base_url=None,
+        authorization_url=None,
+        authorization_url_params=None,
+        token_url=None,
+        token_url_params=None,
+        redirect_url=None,
+        redirect_to=None,
+        session_class=None,
+        backend=None,
+        **kwargs
+    ):
         """
         Most of the constructor arguments are forwarded either to the
         :class:`flask.Blueprint` constructor or the
@@ -102,12 +112,16 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
         """
         BaseOAuthConsumerBlueprint.__init__(
-            self, name, import_name,
+            self,
+            name,
+            import_name,
             static_folder=static_folder,
             static_url_path=static_url_path,
             template_folder=template_folder,
-            url_prefix=url_prefix, subdomain=subdomain,
-            url_defaults=url_defaults, root_path=root_path,
+            url_prefix=url_prefix,
+            subdomain=subdomain,
+            url_defaults=url_defaults,
+            root_path=root_path,
             login_url=login_url,
             authorized_url=authorized_url,
             backend=backend,
@@ -165,8 +179,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             base_url=self.base_url,
             **self.kwargs
         )
+
         def token_updater(token):
             self.token = token
+
         ret.token_updater = token_updater
         return self.session_created(ret)
 
@@ -179,11 +195,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     def login(self):
         log.debug("client_id = %s", self.client_id)
         self.session.redirect_uri = url_for(
-            ".authorized", next=request.args.get('next'), _external=True,
+            ".authorized", next=request.args.get("next"), _external=True
         )
         url, state = self.session.authorization_url(
-            self.authorization_url, state=self.state,
-            **self.authorization_url_params
+            self.authorization_url, state=self.state, **self.authorization_url_params
         )
         state_key = "{bp.name}_oauth_state".format(bp=self)
         flask.session[state_key] = state
@@ -215,10 +230,12 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             error_uri = request.args.get("error_uri")
             log.warning(
                 "OAuth 2 authorization error: %s description: %s uri: %s",
-                error, error_desc, error_uri,
+                error,
+                error_desc,
+                error_uri,
             )
-            oauth_error.send(self,
-                error=error, error_description=error_desc, error_uri=error_uri,
+            oauth_error.send(
+                self, error=error, error_description=error_desc, error_uri=error_uri
             )
             return redirect(next_url)
 
@@ -234,7 +251,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         del flask.session[state_key]
 
         self.session.redirect_uri = url_for(
-            ".authorized", next=request.args.get('next'), _external=True,
+            ".authorized", next=request.args.get("next"), _external=True
         )
 
         log.debug("client_id = %s", self.client_id)
@@ -251,7 +268,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 e.args[0],
                 "The redirect request did not contain the expected parameters. Instead I got: {}".format(
                     json.dumps(request.args)
-                )
+                ),
             )
             raise
 

@@ -22,6 +22,7 @@ class OAuth1Session(BaseOAuth1Session):
     provider (e.g. Twitter), and *not* a session between a user of your website
     and your website.
     """
+
     def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
         super(OAuth1Session, self).__init__(*args, **kwargs)
         self.blueprint = blueprint
@@ -73,8 +74,8 @@ class OAuth1Session(BaseOAuth1Session):
         :meth:`~flask_dance.consumer.oauth1.OAuth1ConsumerBlueprint.login`
         view to obtain one.
         """
-        def wrapper(func):
 
+        def wrapper(func):
             @wraps(func)
             def check_authorization(*args, **kwargs):
                 if not self.authorized:
@@ -91,8 +92,9 @@ class OAuth1Session(BaseOAuth1Session):
             request.url = self.base_url.relative(request.url)
         return super(OAuth1Session, self).prepare_request(request)
 
-    def request(self, method, url, data=None, headers=None,
-                should_load_token=True, **kwargs):
+    def request(
+        self, method, url, data=None, headers=None, should_load_token=True, **kwargs
+    ):
         if should_load_token:
             self.load_token()
         return super(OAuth1Session, self).request(
@@ -113,6 +115,7 @@ class OAuth2Session(BaseOAuth2Session):
     provider (e.g. Twitter), and *not* a session between a user of your website
     and your website.
     """
+
     def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
         super(OAuth2Session, self).__init__(*args, **kwargs)
         self.blueprint = blueprint
@@ -169,8 +172,8 @@ class OAuth2Session(BaseOAuth2Session):
         :meth:`~flask_dance.consumer.oauth2.OAuth2ConsumerBlueprint.login`
         view to obtain one.
         """
-        def wrapper(func):
 
+        def wrapper(func):
             @wraps(func)
             def check_authorization(*args, **kwargs):
                 if not self.authorized:
@@ -188,7 +191,10 @@ class OAuth2Session(BaseOAuth2Session):
 
         self.load_token()
         return super(OAuth2Session, self).request(
-            method=method, url=url, data=data, headers=headers,
+            method=method,
+            url=url,
+            data=data,
+            headers=headers,
             client_id=self.blueprint.client_id,
             client_secret=self.blueprint.client_secret,
             **kwargs

@@ -4,6 +4,7 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -19,9 +20,16 @@ class SlackBlueprint(OAuth2ConsumerBlueprint):
 
 
 def make_slack_blueprint(
-        client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    client_id=None,
+    client_secret=None,
+    scope=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Slack using OAuth 2. This requires
     a client ID and client secret from Slack. You should either pass them to
@@ -52,7 +60,9 @@ def make_slack_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify", "chat:write:bot"]
-    slack_bp = SlackBlueprint("slack", __name__,
+    slack_bp = SlackBlueprint(
+        "slack",
+        __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
@@ -75,5 +85,6 @@ def make_slack_blueprint(
         ctx.slack_oauth = slack_bp.session
 
     return slack_bp
+
 
 slack = LocalProxy(partial(_lookup_app_object, "slack_oauth"))

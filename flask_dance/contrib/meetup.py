@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,10 +14,16 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 
 def make_meetup_blueprint(
-        key=None, secret=None, scope=None,
-        redirect_url=None, redirect_to=None,
-        login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    key=None,
+    secret=None,
+    scope=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Meetup using OAuth 2. This requires
     an OAuth consumer from Meetup. You should either pass the key and secret to
@@ -47,7 +54,9 @@ def make_meetup_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["basic"]
-    meetup_bp = OAuth2ConsumerBlueprint("meetup", __name__,
+    meetup_bp = OAuth2ConsumerBlueprint(
+        "meetup",
+        __name__,
         client_id=key,
         client_secret=secret,
         scope=scope,
@@ -70,5 +79,6 @@ def make_meetup_blueprint(
         ctx.meetup_oauth = meetup_bp.session
 
     return meetup_bp
+
 
 meetup = LocalProxy(partial(_lookup_app_object, "meetup_oauth"))

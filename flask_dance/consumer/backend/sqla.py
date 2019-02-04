@@ -7,6 +7,7 @@ from sqlalchemy_utils import JSONType
 from sqlalchemy.orm.exc import NoResultFound
 from flask_dance.utils import FakeCache, first
 from flask_dance.consumer.backend import BaseBackend
+
 try:
     from flask_login import AnonymousUserMixin
 except ImportError:
@@ -30,6 +31,7 @@ class OAuthConsumerMixin(object):
         a :class:`JSON <sqlalchemy_utils.types.json.JSONType>` field to store
         the actual token received from the OAuth provider
     """
+
     @declared_attr
     def __tablename__(cls):
         return "flask_dance_{}".format(cls.__name__.lower())
@@ -56,9 +58,17 @@ class SQLAlchemyBackend(BaseBackend):
 
     .. _SQLAlchemy: http://www.sqlalchemy.org/
     """
-    def __init__(self, model, session,
-                 user=None, user_id=None, user_required=None, anon_user=None,
-                 cache=None):
+
+    def __init__(
+        self,
+        model,
+        session,
+        user=None,
+        user_id=None,
+        user_required=None,
+        anon_user=None,
+        cache=None,
+    ):
         """
         Args:
             model: The SQLAlchemy model class that represents the OAuth token
@@ -120,11 +130,13 @@ class SQLAlchemyBackend(BaseBackend):
     def make_cache_key(self, blueprint, user=None, user_id=None):
         uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
         if not uid:
-            u = first(_get_real_user(ref, self.anon_user)
-                      for ref in (user, self.user, blueprint.config.get("user")))
+            u = first(
+                _get_real_user(ref, self.anon_user)
+                for ref in (user, self.user, blueprint.config.get("user"))
+            )
             uid = getattr(u, "id", u)
         return "flask_dance_token|{name}|{user_id}".format(
-            name=blueprint.name, user_id=uid,
+            name=blueprint.name, user_id=uid
         )
 
     def get(self, blueprint, user=None, user_id=None):
@@ -150,13 +162,12 @@ class SQLAlchemyBackend(BaseBackend):
             return token
 
         # if not cached, make database queries
-        query = (
-            self.session.query(self.model)
-            .filter_by(provider=blueprint.name)
-        )
+        query = self.session.query(self.model).filter_by(provider=blueprint.name)
         uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
-        u = first(_get_real_user(ref, self.anon_user)
-                  for ref in (user, self.user, blueprint.config.get("user")))
+        u = first(
+            _get_real_user(ref, self.anon_user)
+            for ref in (user, self.user, blueprint.config.get("user"))
+        )
 
         if self.user_required and not u and not uid:
             raise ValueError("Cannot get OAuth token without an associated user")
@@ -183,16 +194,17 @@ class SQLAlchemyBackend(BaseBackend):
 
     def set(self, blueprint, token, user=None, user_id=None):
         uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
-        u = first(_get_real_user(ref, self.anon_user)
-                      for ref in (user, self.user, blueprint.config.get("user")))
+        u = first(
+            _get_real_user(ref, self.anon_user)
+            for ref in (user, self.user, blueprint.config.get("user"))
+        )
 
         if self.user_required and not u and not uid:
             raise ValueError("Cannot set OAuth token without an associated user")
 
         # if there was an existing model, delete it
-        existing_query = (
-            self.session.query(self.model)
-            .filter_by(provider=blueprint.name)
+        existing_query = self.session.query(self.model).filter_by(
+            provider=blueprint.name
         )
         # check for user ID
         has_user_id = hasattr(self.model, "user_id")
@@ -205,10 +217,7 @@ class SQLAlchemyBackend(BaseBackend):
         # queue up delete query -- won't be run until commit()
         existing_query.delete()
         # create a new model for this token
-        kwargs = {
-            "provider": blueprint.name,
-            "token": token,
-        }
+        kwargs = {"provider": blueprint.name, "token": token}
         if has_user_id and uid:
             kwargs["user_id"] = uid
         if has_user and u:
@@ -217,18 +226,17 @@ class SQLAlchemyBackend(BaseBackend):
         # commit to delete and add simultaneously
         self.session.commit()
         # invalidate cache
-        self.cache.delete(self.make_cache_key(
-            blueprint=blueprint, user=user, user_id=user_id
-        ))
+        self.cache.delete(
+            self.make_cache_key(blueprint=blueprint, user=user, user_id=user_id)
+        )
 
     def delete(self, blueprint, user=None, user_id=None):
-        query = (
-            self.session.query(self.model)
-            .filter_by(provider=blueprint.name)
-        )
+        query = self.session.query(self.model).filter_by(provider=blueprint.name)
         uid = first([user_id, self.user_id, blueprint.config.get("user_id")])
-        u = first(_get_real_user(ref, self.anon_user)
-                  for ref in (user, self.user, blueprint.config.get("user")))
+        u = first(
+            _get_real_user(ref, self.anon_user)
+            for ref in (user, self.user, blueprint.config.get("user"))
+        )
 
         if self.user_required and not u and not uid:
             raise ValueError("Cannot delete OAuth token without an associated user")
@@ -246,9 +254,9 @@ class SQLAlchemyBackend(BaseBackend):
         query.delete()
         self.session.commit()
         # invalidate cache
-        self.cache.delete(self.make_cache_key(
-            blueprint=blueprint, user=user, user_id=user_id,
-        ))
+        self.cache.delete(
+            self.make_cache_key(blueprint=blueprint, user=user, user_id=user_id)
+        )
 
 
 def _get_real_user(user, anon_user=None):

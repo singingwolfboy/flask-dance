@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,9 +14,16 @@ __maintainer__ = "Michael Delpech <michaeldel@protonmail.com>"
 
 
 def make_discord_blueprint(
-        client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    client_id=None,
+    client_secret=None,
+    scope=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Discord using OAuth 2. This requires
     a client ID and client secret from Discord. You should either pass them to
@@ -46,7 +54,9 @@ def make_discord_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify"]
-    discord_bp = OAuth2ConsumerBlueprint("discord", __name__,
+    discord_bp = OAuth2ConsumerBlueprint(
+        "discord",
+        __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
@@ -69,5 +79,6 @@ def make_discord_blueprint(
         ctx.discord_oauth = discord_bp.session
 
     return discord_bp
+
 
 discord = LocalProxy(partial(_lookup_app_object, "discord_oauth"))

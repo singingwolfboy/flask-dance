@@ -4,6 +4,7 @@ from oauthlib.oauth2.rfc6749.clients.web_application import WebApplicationClient
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -11,15 +12,24 @@ except ImportError:
 
 __maintainer__ = "Ryan Schaffer <schaffer.ry@gmail.com>"
 
-AUTH_HEADER = 'auth_header'
-URI_QUERY = 'query'
-BODY = 'body'
-ZOHO_TOKEN_HEADER = 'Zoho-oauthtoken'
+AUTH_HEADER = "auth_header"
+URI_QUERY = "query"
+BODY = "body"
+ZOHO_TOKEN_HEADER = "Zoho-oauthtoken"
 
 
 def make_zoho_blueprint(
-        client_id=None, client_secret=None, scope=None, redirect_url=None, offline=False,
-        redirect_to=None, login_url=None, session_class=None, backend=None, reprompt_consent=False):
+    client_id=None,
+    client_secret=None,
+    scope=None,
+    redirect_url=None,
+    offline=False,
+    redirect_to=None,
+    login_url=None,
+    session_class=None,
+    backend=None,
+    reprompt_consent=False,
+):
     """
     Make a blueprint for authenticating with Zoho using OAuth 2. This requires
     a client ID and client secret from Zoho. You should either pass them to
@@ -54,33 +64,34 @@ def make_zoho_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    scope = scope or ['ZohoCRM.users.all']
+    scope = scope or ["ZohoCRM.users.all"]
     base_url = "https://www.zohoapis.com/"
     client = ZohoWebClient(client_id, token_type=ZOHO_TOKEN_HEADER)
     authorization_url_params = {}
-    authorization_url_params['access_type'] = 'offline' if offline else 'online'
+    authorization_url_params["access_type"] = "offline" if offline else "online"
     if reprompt_consent:
         authorization_url_params["prompt"] = "consent"
-    zoho_bp = OAuth2ConsumerBlueprint('zoho', __name__,
-                                      client_id=client_id,
-                                      client_secret=client_secret,
-                                      client=client,
-                                      scope=scope,
-                                      base_url=base_url,
-                                      token_url="https://accounts.zoho.com/oauth/v2/token",
-                                      authorization_url="https://accounts.zoho.com/oauth/v2/auth",
-                                      authorization_url_params=authorization_url_params,
-                                      redirect_url=redirect_url,
-                                      redirect_to=redirect_to,
-                                      login_url=login_url,
-                                      session_class=session_class,
-                                      backend=backend
-                                      )
+    zoho_bp = OAuth2ConsumerBlueprint(
+        "zoho",
+        __name__,
+        client_id=client_id,
+        client_secret=client_secret,
+        client=client,
+        scope=scope,
+        base_url=base_url,
+        token_url="https://accounts.zoho.com/oauth/v2/token",
+        authorization_url="https://accounts.zoho.com/oauth/v2/auth",
+        authorization_url_params=authorization_url_params,
+        redirect_url=redirect_url,
+        redirect_to=redirect_to,
+        login_url=login_url,
+        session_class=session_class,
+        backend=backend,
+    )
     if not client_id:
         zoho_bp.from_config["client_id"] = "ZOHO_OAUTH_CLIENT_ID"
     if not client_secret:
         zoho_bp.from_config["client_secret"] = "ZOHO_OAUTH_CLIENT_SECRET"
-
 
     @zoho_bp.before_app_request
     def set_applocal_session():
@@ -97,16 +108,18 @@ class ZohoWebClient(WebApplicationClient):
     """
     Remove the requirement that token_types adhere to OAuth Standard
     """
+
     @property
     def token_types(self):
         return {
-            'Bearer': self._add_bearer_token,
-            'MAC': self._add_mac_token,
-            ZOHO_TOKEN_HEADER: self._add_zoho_token
+            "Bearer": self._add_bearer_token,
+            "MAC": self._add_mac_token,
+            ZOHO_TOKEN_HEADER: self._add_zoho_token,
         }
 
-    def _add_zoho_token(self, uri, http_method='GET', body=None,
-                          headers=None, token_placement=None):
+    def _add_zoho_token(
+        self, uri, http_method="GET", body=None, headers=None, token_placement=None
+    ):
         """Add a zoho token to the request uri, body or authorization header. follows bearer pattern"""
         headers = self.prepare_zoho_headers(self.access_token, headers)
         return uri, headers, body
@@ -121,5 +134,7 @@ class ZohoWebClient(WebApplicationClient):
         .. _`Zoho-oauthtoken Token`: custom zoho token
         """
         headers = headers or {}
-        headers['Authorization'] = '{token_header} {token}'.format(token_header=ZOHO_TOKEN_HEADER, token=token)
+        headers["Authorization"] = "{token_header} {token}".format(
+            token_header=ZOHO_TOKEN_HEADER, token=token
+        )
         return headers

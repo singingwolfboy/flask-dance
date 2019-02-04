@@ -27,13 +27,23 @@ class RedditOAuth2Session(OAuth2Session):
     def fetch_token(self, *args, **kwargs):
         # Pass client_id to session so it could trigger Basic Auth
         return super(RedditOAuth2Session, self).fetch_token(
-            client_id=self.blueprint.client_id, *args, **kwargs)
+            client_id=self.blueprint.client_id, *args, **kwargs
+        )
 
 
 def make_reddit_blueprint(
-        client_id=None, client_secret=None, scope="identity", permanent=False,
-        redirect_url=None, redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None, user_agent=None):
+    client_id=None,
+    client_secret=None,
+    scope="identity",
+    permanent=False,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+    user_agent=None,
+):
     """
     Make a blueprint for authenticating with Reddit using OAuth 2. This requires
     a client ID and client secret from Reddit. You should either pass them to
@@ -88,7 +98,8 @@ def make_reddit_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class or RedditOAuth2Session,
-        backend=backend)
+        backend=backend,
+    )
 
     reddit_bp.from_config["client_id"] = "REDDIT_OAUTH_CLIENT_ID"
     reddit_bp.from_config["client_secret"] = "REDDIT_OAUTH_CLIENT_SECRET"

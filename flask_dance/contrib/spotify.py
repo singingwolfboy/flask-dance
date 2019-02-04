@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
+
 try:
     from flask import _app_ctx_stack as stack
 except ImportError:
@@ -13,9 +14,16 @@ __maintainer__ = "Nick DiRienzo <me@nickdirienzo.com>"
 
 
 def make_spotify_blueprint(
-        client_id=None, client_secret=None, scope=None, redirect_url=None,
-        redirect_to=None, login_url=None, authorized_url=None,
-        session_class=None, backend=None):
+    client_id=None,
+    client_secret=None,
+    scope=None,
+    redirect_url=None,
+    redirect_to=None,
+    login_url=None,
+    authorized_url=None,
+    session_class=None,
+    backend=None,
+):
     """
     Make a blueprint for authenticating with Spotify using OAuth 2. This requires
     a client ID and client secret from Spotify. You should either pass them to
@@ -45,7 +53,9 @@ def make_spotify_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    spotify_bp = OAuth2ConsumerBlueprint("spotify", __name__,
+    spotify_bp = OAuth2ConsumerBlueprint(
+        "spotify",
+        __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
@@ -68,5 +78,6 @@ def make_spotify_blueprint(
         ctx.spotify_oauth = spotify_bp.session
 
     return spotify_bp
+
 
 spotify = LocalProxy(partial(_lookup_app_object, "spotify_oauth"))
