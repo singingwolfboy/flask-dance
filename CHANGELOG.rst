@@ -4,6 +4,16 @@ Changelog
 `unreleased`_
 -------------
 
+Changed
+~~~~~~~
+* "Backends" are now called "Storages", since the word "backend" means
+  something different in the context of web development. This release
+  is fully backwards-compatible, but deprecation warnings have been
+  added anywhere that you import and use a backend (rather than a
+  storage).
+
+Added
+~~~~~
 * Add ``oauth_before_login`` signal
 
 `1.3.0`_ (2019-01-14)
