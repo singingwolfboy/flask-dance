@@ -5,17 +5,17 @@ The fastest way to get up and running with Flask-Dance is to start from
 an example project. First, decide which :doc:`token storage
 <storages>` you want to use:
 
-* :class:`~flask_dance.consumer.backend.session.SessionBackend` is the default
+* :class:`~flask_dance.consumer.storage.session.SessionStorage` is the default
   because it requires zero configuration. It uses the
   :ref:`Flask session <flask:sessions>` to store OAuth tokens.
   It's the easiest for getting started, but it's not a good choice for
   production applications.
-* :class:`~flask_dance.consumer.backend.sqla.SQLAlchemyBackend` uses a
+* :class:`~flask_dance.consumer.storage.sqla.SQLAlchemyStorage` uses a
   relational database to store OAuth tokens. It's great for production usage,
   but it requires a relational database with `SQLAlchemy`_
   and it's more complicated to set up.
 
-If you're not sure which to pick, start with ``SessionBackend``.
+If you're not sure which to pick, start with ``SessionStorage``.
 You can switch later, if you want.
 
 Next, check the lists below to find the OAuth provider you're interested in

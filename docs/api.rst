@@ -22,7 +22,7 @@ of the user.
       This instance is automatically created the first time it is referenced
       for each request to your Flask application.
 
-   .. attribute:: backend
+   .. attribute:: storage
 
       The :doc:`token storage <storages>` that this blueprint
       uses.
@@ -69,7 +69,7 @@ of the user.
       This instance is automatically created the first time it is referenced
       for each request to your Flask application.
 
-   .. attribute:: backend
+   .. attribute:: storage
 
       The :doc:`token storage <storages>` that this blueprint
       uses.
@@ -108,12 +108,12 @@ of the user.
 Storages
 --------
 
-.. autoclass:: flask_dance.consumer.backend.session.SessionBackend(...)
+.. autoclass:: flask_dance.consumer.storage.session.SessionStorage(...)
    :members:
    :special-members:
 
 
-.. autoclass:: flask_dance.consumer.backend.sqla.SQLAlchemyBackend(...)
+.. autoclass:: flask_dance.consumer.storage.sqla.SQLAlchemyStorage(...)
    :members:
    :special-members:
 

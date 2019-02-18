@@ -21,11 +21,11 @@ whether Flask-Dance believes the current user is authorized
 with the OAuth provider or not. Flask-Dance provides two
 mock token storages:
 
-.. currentmodule:: flask_dance.consumer.backend
+.. currentmodule:: flask_dance.consumer.storage
 
-.. autoclass:: NullBackend
+.. autoclass:: NullStorage
 
-.. autoclass:: MemoryBackend
+.. autoclass:: MemoryStorage
 
 Let's say you are testing the following code::
 
@@ -44,14 +44,14 @@ Let's say you are testing the following code::
 
 You want to write tests to cover two cases: what happens when the user
 is authorized with the OAuth provider, and what happens when they are not.
-Here's how you could do that with `pytest`_ and the :class:`MemoryBackend`::
+Here's how you could do that with `pytest`_ and the :class:`MemoryStorage`::
 
-    from flask_dance.consumer.backend import MemoryBackend
+    from flask_dance.consumer.storage import MemoryStorage
     from myapp import app, github_bp
 
     def test_index_unauthorized(monkeypatch):
-        backend = MemoryBackend()
-        monkeypatch.setattr(github_bp, "backend", backend)
+        storage = MemoryStorage()
+        monkeypatch.setattr(github_bp, "storage", storage)
 
         with app.test_client() as client:
             response = client.get("/", base_url="https://example.com")
@@ -60,8 +60,8 @@ Here's how you could do that with `pytest`_ and the :class:`MemoryBackend`::
         assert response.headers["Location"] == "https://example.com/login/github"
 
     def test_index_authorized(monkeypatch):
-        backend = MemoryBackend({"access_token": "fake-token"})
-        monkeypatch.setattr(github_bp, "backend", backend)
+        storage = MemoryStorage({"access_token": "fake-token"})
+        monkeypatch.setattr(github_bp, "storage", storage)
 
         with app.test_client() as client:
             response = client.get("/", base_url="https://example.com")
@@ -72,11 +72,11 @@ Here's how you could do that with `pytest`_ and the :class:`MemoryBackend`::
 
 In this example, we're using the
 `monkeypatch fixture <https://docs.pytest.org/en/latest/monkeypatch.html>`__
-to set a mock backend on the Flask-Dance blueprint. This fixture will
-ensure that the original backend is put back on the blueprint after the
+to set a mock storage on the Flask-Dance blueprint. This fixture will
+ensure that the original storage is put back on the blueprint after the
 test is finished, so that the test doesn't change the code being tested.
 Then, we create a test client and access the ``index`` view.
-The mock backend will control whether ``github.authorized`` is ``True``
+The mock storage will control whether ``github.authorized`` is ``True``
 or ``False``, and the rest of the test asserts that the result is what
 we expect.
 
@@ -109,7 +109,7 @@ view looks like this::
 Here's how you could test this view using Betamax::
 
     import os
-    from flask_dance.consumer.backend import MemoryBackend
+    from flask_dance.consumer.storage import MemoryStorage
     from flask_dance.contrib.github import github
     from betamax import Betamax
     from myapp import app, github_bp
@@ -139,8 +139,8 @@ Here's how you could test this view using Betamax::
 
     def test_index_authorized(monkeypatch, request):
         access_token = os.environ.get("GITHUB_OAUTH_ACCESS_TOKEN", "fake-token")
-        backend = MemoryBackend({"access_token": access_token})
-        monkeypatch.setattr(github_bp, "backend", backend)
+        storage = MemoryStorage({"access_token": access_token})
+        monkeypatch.setattr(github_bp, "storage", storage)
 
         setup_betamax(app, request, "test_index_authorized")
 

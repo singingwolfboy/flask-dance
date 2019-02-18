@@ -16,7 +16,7 @@ Just the basics:
 
     $ pip install Flask-Dance
 
-Or if you're planning on using the `SQLAlchemy`_ backend:
+Or if you're planning on using the `SQLAlchemy`_ storage:
 
 .. code-block:: bash
 
@@ -79,7 +79,7 @@ set it up like this:
 .. code-block:: python
 
     from flask_sqlalchemy import SQLAlchemy
-    from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
+    from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
 
     db = SQLAlchemy()
 
@@ -92,7 +92,7 @@ set it up like this:
         user = db.relationship(User)
 
     # get_current_user() is a function that returns the current logged in user
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=get_current_user)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=get_current_user)
 
 The SQLAlchemy storage seamlessly integrates with `Flask-SQLAlchemy`_,
 as well as `Flask-Login`_ for user management, and `Flask-Caching`_ for caching.
