@@ -1,155 +1,187 @@
-Testing
-=======
+Testing Apps That Use Flask-Dance
+=================================
 
-When building Flask apps that have integrated Flask-Dance you'll eventually run
-into the need to test your app. But if routes are guarded by the requirement of
-having a valid OAuth2 session, i.e getting past the ``.authorized()`` call on
-a provider, how do you test this?
+Automated tests are a great way to keep your Flask app stable
+and working smoothly. The Flask documentation has
+:doc:`some great information on how to write automated tests
+for Flask apps <flask:testing>`.
 
-One possible way of solving this is by injecting the necessary information into
-the Flask session. The following examples assume you're using `py.test`_ and the
-Google provider, but the same trick applies to any of the supported providers.
+However, Flask-Dance presents some challenges for writing tests.
+What happens when you have a view function that requires OAuth
+authorization? How do you handle cases where the user has a valid
+OAuth token, an expired token, or no token at all?
+Fortunately, we've got you covered.
 
-Creating a session
+Mock Storages
+-------------
+
+The simplest way to write tests with Flask-Dance is to use a
+mock token storage. This allows you to easily control
+whether Flask-Dance believes the current user is authorized
+with the OAuth provider or not. Flask-Dance provides two
+mock token storages:
+
+.. currentmodule:: flask_dance.consumer.backend
+
+.. autoclass:: NullBackend
+
+.. autoclass:: MemoryBackend
+
+Let's say you are testing the following code::
+
+    from flask import redirect, url_for
+    from flask_dance.contrib.github import make_github_blueprint, github
+
+    app = Flask(__name__)
+    github_bp = make_github_blueprint()
+    app.register_blueprint(github_bp, url_prefix="/login")
+
+    @app.route("/")
+    def index():
+        if github.authorized:
+            return redirect(url_for("github.login"))
+        return "You are authorized"
+
+You want to write tests to cover two cases: what happens when the user
+is authorized with the OAuth provider, and what happens when they are not.
+Here's how you could do that with `pytest`_ and the :class:`MemoryBackend`::
+
+    from flask_dance.consumer.backend import MemoryBackend
+    from myapp import app, github_bp
+
+    def test_index_unauthorized(monkeypatch):
+        backend = MemoryBackend()
+        monkeypatch.setattr(github_bp, "backend", backend)
+
+        with app.test_client() as client:
+            response = client.get("/", base_url="https://example.com")
+
+        assert response.status_code == 302
+        assert response.headers["Location"] == "https://example.com/login/github"
+
+    def test_index_authorized(monkeypatch):
+        backend = MemoryBackend({"access_token": "fake-token"})
+        monkeypatch.setattr(github_bp, "backend", backend)
+
+        with app.test_client() as client:
+            response = client.get("/", base_url="https://example.com")
+
+        assert response.status_code == 200
+        text = response.get_data(as_text=True)
+        assert text == "You are authorized"
+
+In this example, we're using the
+`monkeypatch fixture <https://docs.pytest.org/en/latest/monkeypatch.html>`__
+to set a mock backend on the Flask-Dance blueprint. This fixture will
+ensure that the original backend is put back on the blueprint after the
+test is finished, so that the test doesn't change the code being tested.
+Then, we create a test client and access the ``index`` view.
+The mock backend will control whether ``github.authorized`` is ``True``
+or ``False``, and the rest of the test asserts that the result is what
+we expect.
+
+Mock API Responses
 ------------------
 
-In your ``conftest.py`` create two fixtures, like this:
+Once you've gotten past the question of whether the current user is
+authorized or not, you still have to account for any API calls that
+your view makes. It's usually a bad idea to make real API calls in an
+automated test: not only does it make your tests run significantly
+more slowly, but external factors like rate limits can affect whether
+your tests pass or fail.
 
-.. code-block:: python
+There are several other libraries that you can use to mock API responses,
+but I recommend Betamax_. It's powerful, flexible, and it's designed
+to work with Requests_, the HTTP library that Flask-Dance is built on.
+Betamax is also created and maintained by one of the primary maintainers
+of the Requests, `@sigmavirus24`_.
 
-    import time
+Let's say your testing the same code as before, but now the ``index``
+view looks like this::
 
-    import pytest
+    @app.route("/")
+    def index():
+        if github.authorized:
+            return redirect(url_for("github.login"))
+        resp = github.get("/user")
+        return "You are @{login} on GitHub".format(login=resp.json()["login"])
 
-    from your_app import create_app
-    from your_app.settings import Testing
+Here's how you could test this view using Betamax::
 
-    fake_time = time.time()
+    import os
+    from flask_dance.consumer.backend import MemoryBackend
+    from flask_dance.contrib.github import github
+    from betamax import Betamax
+    from myapp import app, github_bp
 
+    with Betamax.configure() as config:
+        config.cassette_library_dir = 'cassettes'
 
-    @pytest.fixture
-    def app():
-        """Returns an app fixture with the testing configuration."""
-        app = create_app(config_object=Testing)
-        yield app
+    def setup_betamax(app, request, cassette):
+        @app.before_request
+        def wrap_github_with_betamax():
+            recorder = Betamax(github)
+            recorder.use_cassette(cassette)
+            recorder.start()
 
+            @app.after_request
+            def unwrap(response):
+                recorder.stop()
+                return response
 
-    @pytest.fixture
-    def loggedin_app(app):
-        """Creates a logged-in test client instance."""
+            request.addfinalizer(
+                lambda: app.after_request_funcs[None].remove(unwrap)
+            )
+
+        request.addfinalizer(
+            lambda: app.before_request_funcs[None].remove(wrap_github_with_betamax)
+        )
+
+    def test_index_authorized(monkeypatch, request):
+        access_token = os.environ.get("GITHUB_OAUTH_ACCESS_TOKEN", "fake-token")
+        backend = MemoryBackend({"access_token": access_token})
+        monkeypatch.setattr(github_bp, "backend", backend)
+
+        setup_betamax(app, request, "test_index_authorized")
+
         with app.test_client() as client:
-            with client.session_transaction() as sess:
-                sess['google_oauth_token'] = {
-                    'access_token': 'this is totally fake',
-                    'id_token': 'this is not a real token',
-                    'token_type': 'Bearer',
-                    'expires_in': '3600',
-                    'expires_at': fake_time + 3600,
-                }
-            yield client
-    
-This will inject the necessary information in order to ensure that Flask-Dance,
-requests-oauthlib and oauthlib believe there is a valid session, and one that
-won't need to be refreshed for another hour (3600 seconds). If your tests run
-longer than that, you'll need to adjust that value.
+            response = client.get("/", base_url="https://example.com")
 
-The ``fake_time`` is created so that you can always refer to the same point in
-time throughout tests, and in any other fixture you might create. Alternatively
-you can use something like `pytest-freezegun`_ and then call any of the ``time``
-and ``datetime`` functions as you normally would:
+        assert response.status_code == 200
+        text = response.get_data(as_text=True)
+        assert text == "You are @singingwolfboy on GitHub"
 
-.. code-block:: python
+In this example, we first
+:doc:`configure Betamax globally <betamax:configuring>`
+so that it stores cassettes (recorded HTTP interactions) in the ``cassettes``
+directory. Betamax expects you to commit these cassettes to your repository,
+so that if the HTTP interactions change, that will show up in code review.
 
-    @pytest.fixture
-    @pytest.mark.freeze_time('2018-05-04')
-    def loggedin_app(app):
-        """Creates a logged-in test client instance."""
-        with app.test_client() as client:
-            with client.session_transaction() as sess:
-                sess['domain'] = 'example.com'
-                sess['google_oauth_token'] = {
-                    'access_token': 'this is totally fake',
-                    'id_token': 'this is not a real token',
-                    'token_type': 'Bearer',
-                    'expires_in': '3600',
-                    'expires_at': time.time() + 3600,
-                }
-            yield client
+Next, we define a utility function that will wrap Betamax around the ``github``
+:class:`~requests.Session` object at the start of the incoming HTTP request, and
+unwrap it afterwards. This allows Betamax to record and intercept HTTP requests
+during the test. Note that we also use ``request.addfinalizer`` to remove
+these "before_request" and "after_request" functions, so that they don't
+interfere with other tests. If you are recreating your ``app`` object
+from scratch each time using
+:ref:`the application factory pattern <flask:app-factories>`,
+you don't need to include these ``request.addfinalizer`` lines.
 
-Now that we have a logged-in client you can call any of the routes using the
-test client and check their responses.
+In the actual test, we check for the :envvar:`GITHUB_OAUTH_ACCESS_TOKEN`
+environment variable. When recording a cassette with Betamax, it will
+send real HTTP requests to the OAuth provider, so you'll need to include
+a real OAuth access token if you expect the API call to succeed.
+However, once the cassette has been recorded, you can re-run the tests
+without setting this environment variable.
 
-.. code-block:: python
+Also notice that you can (and should!) make assertions in your test that
+expect a particular API response. In this test, I assert that the current
+user is named ``@singingwolfboy``. I can do that, because when I recorded
+the cassette, that was the GitHub user that I used. When the cassette is
+replayed in the future, the API response will always be the same, so
+I can write my assertions expecting that.
 
-    def test_not_logged_in(app):
-        """Test that we redirect to Google to login."""
-        res = app.test_client().get('/')
-        assert ('redirected automatically to target URL: <a href="/login/'
-                'google">/login/google</a>').lower() in res.get_data(as_text=True).lower()
-        assert res.status_code == 302
-
-
-    def test_logged_in_index(loggedin_app):
-        """Tests getting the index route.
-
-        This will render the normal template as we have a valid oauth2 session.
-        """
-        res = loggedin_app.get('/')
-        assert res.content_type == 'text/html; charset=utf-8'
-        assert res.status_code == 200
-        assert 'something only shown when logged in' in res.get_data(as_text=True).lower()
-
-
-Calling authenticated APIs
---------------------------
-
-Though we've managed to create a working session a problem now arises if you
-try to actually call an API, by using ``google.get('some url')`` for example.
-Your token will fail to validate and the request will be denied.
-
-This can be handled by a Python library called `responses`_, which lets us control
-the full HTTP request cycle.
-
-.. warning::
-    Note that this means we're essentially mocking the API we're calling, so
-    your tests will continue passing even if the real API has changed behaviour.
-
-Let's assume the index route calls out to the `Google Plus API`_ and displays some
-profile information. Here's how you could handle that.
-
-.. code-block:: python
-
-    import pytest
-    import responses
-
-
-    @responses.activate
-    def test_getting_profile(loggedin_app):
-        """Test displaying profile information."""
-        responses.add(
-            responses.GET,
-            'https://www.googleapis.com/plus/v1/people/me',
-            status=200,
-            json={
-              'kind': 'plus#person',
-              'id': '118051310819094153327',
-              'displayName': 'Chirag Shah',
-              'url': 'https://plus.google.com/118051310819094153327',
-              'image': {
-                'url': 'https://lh5.googleusercontent.com/-XnZDEoiF09Y/AAAAAAAAAAI/AAAAAAAAYCI/7fow4a2UTMU/photo.jpg'
-              }
-            })
-        res = loggedin_app.get('/')
-        assert len(responses.calls) == 1
-        assert res.status_code == 200
-        assert res.content_type == 'text/html; charset=utf-8'
-        assert 'some profile information we fetched' in res.get_data(as_text=True).lower()
-
-
-Responses can do a lot more for you, but you'll have to refer to its
-documentation instead.
-
-.. _`py.test`: https://docs.pytest.org/
-.. _`pytest-freezegun`: https://github.com/ktosiek/pytest-freezegun
-.. _`responses`: https://github.com/getsentry/responses
-.. _`Google Plus API`: https://developers.google.com/+/web/api/rest/
+.. _pytest: https://docs.pytest.org/
+.. _Betamax: https://github.com/betamaxpy/betamax
+.. _Requests: http://docs.python-requests.org
+.. _@sigmavirus24: https://github.com/sigmavirus24/

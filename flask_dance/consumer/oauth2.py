@@ -107,8 +107,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 between the consumer (your website) and the provider (e.g.
                 Twitter). Defaults to
                 :class:`~flask_dance.consumer.requests.OAuth2Session`.
-            backend: A storage backend class, or an instance of a storage
-                backend class, to use for this blueprint. Defaults to
+            backend: A token storage class, or an instance of a token storage
+                class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.backend.session.SessionBackend`.
         """
         BaseOAuthConsumerBlueprint.__init__(

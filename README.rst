@@ -50,9 +50,6 @@ If you want your users to be able to log in to your app from any of the
         assert resp.ok
         return "You are @{login} on GitHub".format(login=resp.json()["login"])
 
-    if __name__ == "__main__":
-        app.run()
-
 If you're itching to try it out, check out the `flask-dance-github`_ example
 repository, with detailed instructions for how to run this code.
 
@@ -69,13 +66,14 @@ providers. <http://flask-dance.readthedocs.io/en/latest/providers.html>`_
 .. _flask-dance-github: https://github.com/singingwolfboy/flask-dance-github
 .. _context local: http://flask.pocoo.org/docs/latest/quickstart/#context-locals
 
-Backends
+Storages
 ========
-By default, OAuth access tokens are stored in Flask's session object. This means
-that if the user ever clears their browser cookies, they will have to go through
-the OAuth dance again, which is not good. You're better off storing access tokens
+By default, OAuth access tokens are stored in Flask's session object.
+This means that if the user ever clears their browser cookies, they will
+have to go through the OAuth dance again, which is not good.
+You're better off storing access tokens
 in a database or some other persistent store, and Flask-Dance has support for
-swapping out the storage backend. For example, if you're using `SQLAlchemy`_,
+swapping out the token storage. For example, if you're using `SQLAlchemy`_,
 set it up like this:
 
 .. code-block:: python
@@ -96,7 +94,7 @@ set it up like this:
     # get_current_user() is a function that returns the current logged in user
     blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=get_current_user)
 
-The SQLAlchemy backend seamlessly integrates with `Flask-SQLAlchemy`_,
+The SQLAlchemy storage seamlessly integrates with `Flask-SQLAlchemy`_,
 as well as `Flask-Login`_ for user management, and `Flask-Caching`_ for caching.
 
 Full Documentation

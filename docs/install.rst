@@ -7,7 +7,7 @@ Use `pip`_ to install Flask-Dance. To use basic functionality, run this:
 
     $ pip install Flask-Dance
 
-To also use the :ref:`SQLAlchemy backend <sqlalchemy-backend>`, specify the
+To also use the :ref:`SQLAlchemy storage <sqlalchemy-storage>`, specify the
 ``sqla`` extra, like this:
 
 .. code-block:: bash
@@ -15,12 +15,3 @@ To also use the :ref:`SQLAlchemy backend <sqlalchemy-backend>`, specify the
     $ pip install Flask-Dance[sqla]
 
 .. _pip: https://pip.pypa.io
-
-Library development
-===================
-
-Use `tox`_ to execute unit tests on multiple python versions. You can also use
-`tox`_ to build the documentation.
-
-
-.. _tox: https://tox.readthedocs.io/
