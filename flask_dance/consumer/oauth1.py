@@ -51,6 +51,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         redirect_to=None,
         session_class=None,
         backend=None,
+        storage=None,
         **kwargs
     ):
         """
@@ -103,9 +104,9 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 between the consumer (your website) and the provider (e.g.
                 Twitter). Defaults to
                 :class:`~flask_dance.consumer.requests.OAuth1Session`.
-            backend: A token storage class, or an instance of a token storage
+            storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
-                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+                :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self,
@@ -121,6 +122,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             login_url=login_url,
             authorized_url=authorized_url,
             backend=backend,
+            storage=storage,
         )
 
         self.base_url = base_url

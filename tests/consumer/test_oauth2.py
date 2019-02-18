@@ -20,7 +20,7 @@ from flask_dance.consumer import (
     OAuth2ConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
 )
 from flask_dance.consumer.requests import OAuth2Session
-from flask_dance.consumer.backend import MemoryBackend
+from flask_dance.consumer.storage import MemoryStorage
 
 try:
     import blinker
@@ -394,7 +394,7 @@ def test_authorization_required_decorator_allowed():
     def restricted_view():
         return "allowed"
 
-    blueprint.backend = MemoryBackend({"access_token": "faketoken"})
+    blueprint.storage = MemoryStorage({"access_token": "faketoken"})
 
     with app.test_client() as client:
         resp = client.get(

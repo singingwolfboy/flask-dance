@@ -13,7 +13,7 @@ class OAuth1Session(BaseOAuth1Session):
     """
     A :class:`requests.Session` subclass that can do some special things:
 
-    * lazy-loads OAuth1 tokens from the backend via the blueprint
+    * lazy-loads OAuth1 tokens from the storage via the blueprint
     * handles OAuth1 authentication
       (from :class:`requests_oauthlib.OAuth1Session` superclass)
     * has a ``base_url`` property used for relative URL resolution
@@ -57,9 +57,9 @@ class OAuth1Session(BaseOAuth1Session):
         To load the token, it calls the load_token() function within this class,
         which in turn checks the 'token' property of this class (another
         function), which in turn checks the 'token' property of the blueprint
-        (see base.py), which calls 'backend.get()' to actually try to load
+        (see base.py), which calls 'storage.get()' to actually try to load
         the token from the cache/db (see the 'get()' function in
-        backend/sqla.py).
+        storage/sqla.py).
         """
         self.load_token()
         return super(OAuth1Session, self).authorized
@@ -106,7 +106,7 @@ class OAuth2Session(BaseOAuth2Session):
     """
     A :class:`requests.Session` subclass that can do some special things:
 
-    * lazy-loads OAuth2 tokens from the backend via the blueprint
+    * lazy-loads OAuth2 tokens from the storage via the blueprint
     * handles OAuth2 authentication
       (from :class:`requests_oauthlib.OAuth2Session` superclass)
     * has a ``base_url`` property used for relative URL resolution
@@ -155,9 +155,9 @@ class OAuth2Session(BaseOAuth2Session):
         To load the token, it calls the load_token() function within this class,
         which in turn checks the 'token' property of this class (another
         function), which in turn checks the 'token' property of the blueprint
-        (see base.py), which calls 'backend.get()' to actually try to load
+        (see base.py), which calls 'storage.get()' to actually try to load
         the token from the cache/db (see the 'get()' function in
-        backend/sqla.py).
+        storage/sqla.py).
         """
         self.load_token()
         return super(OAuth2Session, self).authorized
