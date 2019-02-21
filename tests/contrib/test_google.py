@@ -109,96 +109,63 @@ def test_context_local():
         assert request.headers["Authorization"] == "Bearer app2"
 
 
-def test_offline():
-    app = Flask(__name__)
-    app.secret_key = "backups"
-    goog_bp = make_google_blueprint("foo", "bar", offline=True)
-    app.register_blueprint(goog_bp)
+@pytest.fixture
+def make_google_blueprint_fixture():
+    def _make_google_blueprint_fixture(**kwargs):
+        app = Flask(__name__)
+        app.secret_key = "backups"
+        goog_bp = make_google_blueprint("foo", "bar", **kwargs)
+        app.register_blueprint(goog_bp)
 
-    with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        with app.test_client() as client:
+            return client.get(
+                "/google",
+                base_url="https://a.b.c",
+                follow_redirects=False,
+            )
+
+    return _make_google_blueprint_fixture
+
+
+def test_offline(make_google_blueprint_fixture):
+    resp = make_google_blueprint_fixture(offline=True)
+
     # check that there is a `access_type=offline` query param in the redirect URL
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
 
 
-def test_hd():
-    app = Flask(__name__)
-    app.secret_key = "backups"
-    goog_bp = make_google_blueprint("foo", "bar", hosted_domain="example.com")
-    app.register_blueprint(goog_bp)
+def test_hd(make_google_blueprint_fixture):
+    resp = make_google_blueprint_fixture(hosted_domain="example.com")
 
-    with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
     # check that there is a `hd=example.com` query param in the redirect URL
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["hd"] == "example.com"
 
 
-def test_offline_consent():
-    app = Flask(__name__)
-    app.secret_key = "backups"
-    goog_bp = make_google_blueprint(
-        "foo", "bar", offline=True, reprompt_consent=True,
-    )
-    app.register_blueprint(goog_bp)
+def test_offline_consent(make_google_blueprint_fixture):
+    resp = make_google_blueprint_fixture(offline=True, reprompt_consent=True)
 
-    with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
     assert location.query_dict["prompt"] == "consent"
 
 
-def test_offline_select_account():
-    app = Flask(__name__)
-    app.secret_key = "backups"
-    goog_bp = make_google_blueprint(
-        "foo", "bar", offline=True, reprompt_select_account=True,
-    )
-    app.register_blueprint(goog_bp)
+def test_offline_select_account(make_google_blueprint_fixture):
+    resp = make_google_blueprint_fixture(offline=True, reprompt_select_account=True)
 
-    with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
     assert location.query_dict["prompt"] == "select_account"
 
 
-def test_offline_select_account_and_consent():
-    app = Flask(__name__)
-    app.secret_key = "backups"
-    goog_bp = make_google_blueprint(
-        "foo", "bar", offline=True, reprompt_consent=True, reprompt_select_account=True,
-    )
-    app.register_blueprint(goog_bp)
+def test_offline_select_account_and_consent(make_google_blueprint_fixture):
+    resp = make_google_blueprint_fixture(offline=True, reprompt_consent=True, reprompt_select_account=True)
 
-    with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
