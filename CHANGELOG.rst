@@ -4,6 +4,11 @@ Changelog
 `unreleased`_
 -------------
 
+nothing yet
+
+`1.4.0`_ (2019-02-22)
+---------------------
+
 Changed
 ~~~~~~~
 * "Backends" are now called "Storages", since the word "backend" means
@@ -280,7 +285,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.3.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v1.4.0...HEAD
+.. _1.4.0: https://github.com/singingwolfboy/flask-dance/compare/v1.3.0...v1.4.0
 .. _1.3.0: https://github.com/singingwolfboy/flask-dance/compare/v1.2.0...v1.3.0
 .. _1.2.0: https://github.com/singingwolfboy/flask-dance/compare/v1.1.0...v1.2.0
 .. _1.1.0: https://github.com/singingwolfboy/flask-dance/compare/v1.0.0...v1.1.0
