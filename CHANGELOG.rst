@@ -15,6 +15,7 @@ Changed
 Added
 ~~~~~
 * Add ``oauth_before_login`` signal
+* Add ``reprompt_select_account`` parameter to google blueprint
 
 `1.3.0`_ (2019-01-14)
 ---------------------
