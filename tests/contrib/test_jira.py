@@ -23,19 +23,27 @@ def test_blueprint_factory():
     assert jira_bp.session.base_url == "https://flask.atlassian.net"
     assert jira_bp.session.auth.client.client_key == "foobar"
     assert jira_bp.session.auth.client.rsa_key == "supersecret"
-    assert jira_bp.request_token_url == "https://flask.atlassian.net/plugins/servlet/oauth/request-token"
-    assert jira_bp.access_token_url == "https://flask.atlassian.net/plugins/servlet/oauth/access-token"
-    assert jira_bp.authorization_url == "https://flask.atlassian.net/plugins/servlet/oauth/authorize"
+    assert (
+        jira_bp.request_token_url
+        == "https://flask.atlassian.net/plugins/servlet/oauth/request-token"
+    )
+    assert (
+        jira_bp.access_token_url
+        == "https://flask.atlassian.net/plugins/servlet/oauth/access-token"
+    )
+    assert (
+        jira_bp.authorization_url
+        == "https://flask.atlassian.net/plugins/servlet/oauth/authorize"
+    )
 
 
 def test_rsa_key_file():
     key_fd, key_file_path = tempfile.mkstemp()
-    with os.fdopen(key_fd, 'w') as key_file:
+    with os.fdopen(key_fd, "w") as key_file:
         key_file.write("my-fake-key")
 
     jira_bp = make_jira_blueprint(
-        rsa_key=key_file_path,
-        base_url="https://flask.atlassian.net",
+        rsa_key=key_file_path, base_url="https://flask.atlassian.net"
     )
     assert jira_bp.rsa_key == "my-fake-key"
 
@@ -58,9 +66,11 @@ def test_load_from_config(sign_func):
     app.register_blueprint(jira_bp)
 
     resp = app.test_client().get("/jira")
-    auth_header = dict(parse_authorization_header(
-        responses.calls[0].request.headers['Authorization'].decode('utf-8')
-    ))
+    auth_header = dict(
+        parse_authorization_header(
+            responses.calls[0].request.headers["Authorization"].decode("utf-8")
+        )
+    )
     assert auth_header["oauth_consumer_key"] == "foo"
     assert sign_func.call_args[0][1] == "bar"
 
@@ -73,13 +83,15 @@ def test_content_type(sign_func):
     app = Flask(__name__)
     app.secret_key = "anything"
     app.debug = True
-    backend = MemoryBackend({
-        "oauth_token": "faketoken",
-        "oauth_token_secret": "fakesecret",
-        "oauth_session_handle": "fakehandle",
-        "oauth_expires_in": "157680000",
-        "oauth_authorization_expires_in": "160272000",
-    })
+    backend = MemoryBackend(
+        {
+            "oauth_token": "faketoken",
+            "oauth_token_secret": "fakesecret",
+            "oauth_session_handle": "fakehandle",
+            "oauth_expires_in": "157680000",
+            "oauth_authorization_expires_in": "160272000",
+        }
+    )
     jira_bp = make_jira_blueprint(
         "https://flask.atlassian.net",
         rsa_key="fakersa",
@@ -96,7 +108,7 @@ def test_content_type(sign_func):
     resp = app.test_client().get("/test")
     headers = responses.calls[0].request.headers
     assert "Content-Type" in headers
-    assert headers["Content-Type"] == "application/json".encode('utf-8')
+    assert headers["Content-Type"] == "application/json".encode("utf-8")
 
 
 @responses.activate
@@ -105,13 +117,16 @@ def test_context_local():
 
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
-    jbp1 = make_jira_blueprint("https://t1.atlassian.com", "foo1", "bar1", redirect_to="url1")
+    jbp1 = make_jira_blueprint(
+        "https://t1.atlassian.com", "foo1", "bar1", redirect_to="url1"
+    )
     app1.register_blueprint(jbp1)
 
     app2 = Flask(__name__)
-    jbp2 = make_jira_blueprint("https://t2.atlassian.com", "foo2", "bar2", redirect_to="url2")
+    jbp2 = make_jira_blueprint(
+        "https://t2.atlassian.com", "foo2", "bar2", redirect_to="url2"
+    )
     app2.register_blueprint(jbp2)
-
 
     # outside of a request context, referencing functions on the `jira` object
     # will raise an exception
@@ -126,9 +141,11 @@ def test_context_local():
 
         app1.preprocess_request()
         jira.get("https://google.com")
-        auth_header = dict(parse_authorization_header(
-            responses.calls[0].request.headers['Authorization'].decode('utf-8')
-        ))
+        auth_header = dict(
+            parse_authorization_header(
+                responses.calls[0].request.headers["Authorization"].decode("utf-8")
+            )
+        )
         assert auth_header["oauth_consumer_key"] == "foo1"
         assert auth_header["oauth_signature"] == "sig1"
 
@@ -138,8 +155,10 @@ def test_context_local():
 
         app2.preprocess_request()
         jira.get("https://google.com")
-        auth_header = dict(parse_authorization_header(
-            responses.calls[1].request.headers['Authorization'].decode('utf-8')
-        ))
+        auth_header = dict(
+            parse_authorization_header(
+                responses.calls[1].request.headers["Authorization"].decode("utf-8")
+            )
+        )
         assert auth_header["oauth_consumer_key"] == "foo2"
         assert auth_header["oauth_signature"] == "sig2"

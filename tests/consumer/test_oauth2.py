@@ -17,7 +17,10 @@ import flask
 from freezegun import freeze_time
 from werkzeug.contrib.fixers import ProxyFix
 from flask_dance.consumer import (
-    OAuth2ConsumerBlueprint, oauth_authorized, oauth_before_login, oauth_error
+    OAuth2ConsumerBlueprint,
+    oauth_authorized,
+    oauth_before_login,
+    oauth_error,
 )
 from flask_dance.consumer.requests import OAuth2Session
 from flask_dance.consumer.storage import MemoryStorage
@@ -30,7 +33,9 @@ requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
 
 def make_app(login_url=None, debug=False):
-    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+    blueprint = OAuth2ConsumerBlueprint(
+        "test-service",
+        __name__,
         client_id="client_id",
         client_secret="client_secret",
         scope="admin",
@@ -52,11 +57,13 @@ def make_app(login_url=None, debug=False):
 
     return app, blueprint
 
+
 def test_generate_login_url():
     app, _ = make_app()
     with app.test_request_context("/"):
         login_url = flask.url_for("test-service.login")
         assert login_url == "/login/test-service"
+
 
 def test_override_login_url():
     app, _ = make_app(login_url="/crazy/custom/url")
@@ -70,9 +77,7 @@ def test_login_url():
     app, _ = make_app()
     with app.test_client() as client:
         resp = client.get(
-            "/login/test-service",
-            base_url="https://a.b.c",
-            follow_redirects=False,
+            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
         )
         # check that we saved the state in the session
         assert flask.session["test-service_oauth_state"] == "random-string"
@@ -81,7 +86,10 @@ def test_login_url():
     location = URLObject(resp.headers["Location"])
     assert location.without_query() == "https://example.com/oauth/authorize"
     assert location.query_dict["client_id"] == "client_id"
-    assert location.query_dict["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+    assert (
+        location.query_dict["redirect_uri"]
+        == "https://a.b.c/login/test-service/authorized"
+    )
     assert location.query_dict["scope"] == "admin"
     assert location.query_dict["state"] == "random-string"
 
@@ -100,7 +108,10 @@ def test_login_url_forwarded_proto():
     # check that we redirected the client with a https redirect_uri
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
-    assert location.query_dict["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+    assert (
+        location.query_dict["redirect_uri"]
+        == "https://a.b.c/login/test-service/authorized"
+    )
 
 
 @responses.activate
@@ -126,12 +137,16 @@ def test_authorized_url():
         # check that we obtained an access token
         assert len(responses.calls) == 1
         request_data = dict(parse_qsl(responses.calls[0].request.body))
-        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
-        # check that we stored the access token in the session
         assert (
-            flask.session["test-service_oauth_token"] ==
-            {'access_token': 'foobar', 'scope': ['admin'], 'token_type': 'bearer'}
+            request_data["redirect_uri"]
+            == "https://a.b.c/login/test-service/authorized"
         )
+        # check that we stored the access token in the session
+        assert flask.session["test-service_oauth_token"] == {
+            "access_token": "foobar",
+            "scope": ["admin"],
+            "token_type": "bearer",
+        }
 
 
 def test_authorized_url_no_state():
@@ -170,7 +185,10 @@ def test_authorized_url_behind_proxy():
         )
         request_data = dict(parse_qsl(responses.calls[0].request.body))
         # this should be https
-        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+        assert (
+            request_data["redirect_uri"]
+            == "https://a.b.c/login/test-service/authorized"
+        )
 
 
 def test_authorized_url_invalid_response():
@@ -215,13 +233,16 @@ def test_authorized_url_token_lifetime():
         # check that we obtained an access token
         assert len(responses.calls) == 1
         request_data = dict(parse_qsl(responses.calls[0].request.body))
-        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+        assert (
+            request_data["redirect_uri"]
+            == "https://a.b.c/login/test-service/authorized"
+        )
         # check that we stored the access token and expiration date in the session
         expected_stored_token = {
-            'access_token': 'foobar',
-            'token_type': 'bearer',
-            'expires_in': 300,
-            'expires_at': 1451649901,
+            "access_token": "foobar",
+            "token_type": "bearer",
+            "expires_in": 300,
+            "expires_at": 1451649901,
         }
         assert flask.session["test-service_oauth_token"] == expected_stored_token
 
@@ -232,11 +253,11 @@ def test_return_expired_token(request):
     time2 = "2016-01-01 12:05:00"  # 299 sec in future
     time3 = "2016-01-01 12:10:01"  # 600 sec in future
     token = {
-        'access_token': 'foobar',
-        'token_type': 'bearer',
-        'expires_in': 300,  # expires in 300 seconds
+        "access_token": "foobar",
+        "token_type": "bearer",
+        "expires_in": 300,  # expires in 300 seconds
     }
-    ctx = app.test_request_context('/')
+    ctx = app.test_request_context("/")
     request.addfinalizer(ctx.pop)
     ctx.push()
 
@@ -285,7 +306,9 @@ def test_redirect_url():
         "https://example.com/oauth/access_token",
         body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
     )
-    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+    blueprint = OAuth2ConsumerBlueprint(
+        "test-service",
+        __name__,
         client_id="client_id",
         client_secret="client_secret",
         state="random-string",
@@ -319,7 +342,9 @@ def test_redirect_to():
         "https://example.com/oauth/access_token",
         body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
     )
-    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+    blueprint = OAuth2ConsumerBlueprint(
+        "test-service",
+        __name__,
         client_id="client_id",
         client_secret="client_secret",
         state="random-string",
@@ -357,7 +382,9 @@ def test_redirect_fallback():
         "https://example.com/oauth/access_token",
         body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
     )
-    blueprint = OAuth2ConsumerBlueprint("test-service", __name__,
+    blueprint = OAuth2ConsumerBlueprint(
+        "test-service",
+        __name__,
         client_id="client_id",
         client_secret="client_secret",
         state="random-string",
@@ -386,6 +413,7 @@ def test_redirect_fallback():
         assert resp.status_code == 302
         assert resp.headers["Location"] == "https://a.b.c/"
 
+
 def test_authorization_required_decorator_allowed():
     app, blueprint = make_app()
 
@@ -397,10 +425,7 @@ def test_authorization_required_decorator_allowed():
     blueprint.storage = MemoryStorage({"access_token": "faketoken"})
 
     with app.test_client() as client:
-        resp = client.get(
-            "/restricted",
-            base_url="https://a.b.c",
-        )
+        resp = client.get("/restricted", base_url="https://a.b.c")
         assert resp.status_code == 200
         text = resp.get_data(as_text=True)
         assert text == "allowed"
@@ -415,10 +440,7 @@ def test_authorization_required_decorator_redirect():
         return "allowed"
 
     with app.test_client() as client:
-        resp = client.get(
-            "/restricted",
-            base_url="https://a.b.c",
-        )
+        resp = client.get("/restricted", base_url="https://a.b.c")
         # check that we redirected the client
         assert resp.status_code == 302
         assert resp.headers["Location"] == "https://a.b.c/login/test-service"
@@ -429,6 +451,7 @@ def test_signal_oauth_authorized(request):
     app, bp = make_app()
 
     calls = []
+
     def callback(*args, **kwargs):
         calls.append((args, kwargs))
 
@@ -442,7 +465,7 @@ def test_signal_oauth_authorized(request):
 
         bp.session.fetch_token = mock.Mock(return_value=fake_token)
         resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
+            "/login/test-service/authorized?code=secret-code&state=random-string"
         )
         assert resp.status_code == 302
         # check that we stored the token
@@ -456,25 +479,26 @@ def test_signal_oauth_authorized(request):
 @requires_blinker
 def test_signal_oauth_before_login(request):
     app, bp = make_app()
+
     def callback(*args, **kwargs):
         del flask.session["user_id"]
+
     oauth_before_login.connect(callback)
-    request.addfinalizer(
-        lambda: oauth_before_login.disconnect(callback))
+    request.addfinalizer(lambda: oauth_before_login.disconnect(callback))
     with app.test_request_context():
         with app.test_client() as client:
             flask.session["user_id"] = 1
             assert flask.session["user_id"] == 1
-            client.get(
-                "/login/test-service",
-            )
+            client.get("/login/test-service")
             assert "user_id" not in flask.session
+
 
 @requires_blinker
 def test_signal_oauth_authorized_abort(request):
     app, bp = make_app()
 
     calls = []
+
     def callback(*args, **kwargs):
         calls.append((args, kwargs))
         return False
@@ -490,7 +514,7 @@ def test_signal_oauth_authorized_abort(request):
         bp.session.fetch_token = mock.Mock(return_value=fake_token)
 
         resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
+            "/login/test-service/authorized?code=secret-code&state=random-string"
         )
         # check that we did NOT store the token
         assert "test-service_oauth_token" not in flask.session
@@ -504,6 +528,7 @@ def test_signal_oauth_authorized_response(request):
     app, bp = make_app()
 
     calls = []
+
     def callback(*args, **kwargs):
         calls.append((args, kwargs))
         return flask.redirect("/url")
@@ -519,7 +544,7 @@ def test_signal_oauth_authorized_response(request):
         bp.session.fetch_token = mock.Mock(return_value=fake_token)
 
         resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
+            "/login/test-service/authorized?code=secret-code&state=random-string"
         )
         assert resp.status_code == 302
         assert resp.headers["Location"] == "http://localhost/url"
@@ -533,7 +558,9 @@ def test_signal_oauth_authorized_response(request):
 @requires_blinker
 def test_signal_sender_oauth_authorized(request):
     app, bp = make_app()
-    bp2 = OAuth2ConsumerBlueprint("test2", __name__,
+    bp2 = OAuth2ConsumerBlueprint(
+        "test2",
+        __name__,
         client_id="client_id",
         client_secret="client_secret",
         scope="admin",
@@ -546,6 +573,7 @@ def test_signal_sender_oauth_authorized(request):
     app.register_blueprint(bp2, url_prefix="/login")
 
     calls = []
+
     def callback(*args, **kwargs):
         calls.append((args, kwargs))
 
@@ -562,7 +590,7 @@ def test_signal_sender_oauth_authorized(request):
         bp2.session.fetch_token = mock.Mock(return_value=fake_token2)
 
         resp = client.get(
-            "/login/test2/authorized?code=secret-code&state=random-string",
+            "/login/test2/authorized?code=secret-code&state=random-string"
         )
 
     assert len(calls) == 0
@@ -575,7 +603,7 @@ def test_signal_sender_oauth_authorized(request):
         bp2.session.fetch_token = mock.Mock(return_value="test2-token")
 
         resp = client.get(
-            "/login/test-service/authorized?code=secret-code&state=random-string",
+            "/login/test-service/authorized?code=secret-code&state=random-string"
         )
 
     assert len(calls) == 1
@@ -590,7 +618,7 @@ def test_signal_sender_oauth_authorized(request):
         bp2.session.fetch_token = mock.Mock(return_value=fake_token2)
 
         resp = client.get(
-            "/login/test2/authorized?code=secret-code&state=random-string",
+            "/login/test2/authorized?code=secret-code&state=random-string"
         )
 
     assert len(calls) == 1  # unchanged
@@ -601,6 +629,7 @@ def test_signal_oauth_error(request):
     app, bp = make_app()
 
     calls = []
+
     def callback(*args, **kwargs):
         calls.append((args, kwargs))
 
@@ -631,7 +660,9 @@ class CustomOAuth2Session(OAuth2Session):
 
 
 def test_custom_session_class():
-    bp = OAuth2ConsumerBlueprint("test", __name__,
+    bp = OAuth2ConsumerBlueprint(
+        "test",
+        __name__,
         client_id="client_id",
         client_secret="client_secret",
         scope="admin",

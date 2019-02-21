@@ -12,18 +12,21 @@ from flask_dance.contrib.azure import make_azure_blueprint, azure
 
 def test_blueprint_factory():
     azure_bp = make_azure_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        scope="user.read",
-        redirect_to="index",
+        client_id="foo", client_secret="bar", scope="user.read", redirect_to="index"
     )
     assert isinstance(azure_bp, OAuth2ConsumerBlueprint)
     assert azure_bp.session.scope == "user.read"
     assert azure_bp.session.base_url == "https://graph.microsoft.com"
     assert azure_bp.session.client_id == "foo"
     assert azure_bp.client_secret == "bar"
-    assert azure_bp.authorization_url == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
-    assert azure_bp.token_url == "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    assert (
+        azure_bp.authorization_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+    )
+    assert (
+        azure_bp.token_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    )
 
 
 def test_blueprint_factory_with_organization_tenant():
@@ -32,15 +35,21 @@ def test_blueprint_factory_with_organization_tenant():
         client_secret="bar",
         scope="user.read",
         redirect_to="index",
-        tenant='organizations'
+        tenant="organizations",
     )
     assert isinstance(azure_orgs_bp, OAuth2ConsumerBlueprint)
     assert azure_orgs_bp.session.scope == "user.read"
     assert azure_orgs_bp.session.base_url == "https://graph.microsoft.com"
     assert azure_orgs_bp.session.client_id == "foo"
     assert azure_orgs_bp.client_secret == "bar"
-    assert azure_orgs_bp.authorization_url == "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize"
-    assert azure_orgs_bp.token_url == "https://login.microsoftonline.com/organizations/oauth2/v2.0/token"
+    assert (
+        azure_orgs_bp.authorization_url
+        == "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize"
+    )
+    assert (
+        azure_orgs_bp.token_url
+        == "https://login.microsoftonline.com/organizations/oauth2/v2.0/token"
+    )
 
 
 def test_load_from_config():
@@ -64,14 +73,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     ghbp1 = make_azure_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(ghbp1)
 
     app2 = Flask(__name__)
     ghbp2 = make_azure_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(ghbp2)

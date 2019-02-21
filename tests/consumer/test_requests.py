@@ -7,10 +7,7 @@ import responses
 from flask_dance.consumer.requests import OAuth1Session, OAuth2Session
 
 
-FAKE_OAUTH1_TOKEN = {
-    "oauth_token": "abcdefg",
-    "oauth_token_secret": "hijklmnop",
-}
+FAKE_OAUTH1_TOKEN = {"oauth_token": "abcdefg", "oauth_token_secret": "hijklmnop"}
 FAKE_OAUTH2_TOKEN = {
     "access_token": "deadbeef",
     "scope": ["custom"],
@@ -36,10 +33,7 @@ def test_oauth1session_not_authorized():
 
 @responses.activate
 def test_oauth1session_request():
-    responses.add(
-        responses.GET,
-        "https://example.com/test",
-    )
+    responses.add(responses.GET, "https://example.com/test")
 
     bp = mock.Mock(token=None)
     sess = OAuth1Session(client_key="ckey", client_secret="csec", blueprint=bp)
@@ -50,16 +44,14 @@ def test_oauth1session_request():
 
 @responses.activate
 def test_oauth1session_should_load_token():
-    responses.add(
-        responses.GET,
-        "https://example.com/test",
-    )
+    responses.add(responses.GET, "https://example.com/test")
 
     bp = mock.Mock(token=None)
     sess = OAuth1Session(client_key="ckey", client_secret="csec", blueprint=bp)
     sess.load_token = mock.Mock(wraps=sess.load_token)
     sess.get("https://example.com/test", should_load_token=False)
     assert not sess.load_token.called
+
 
 def test_oauth2session_authorized():
     bp = mock.Mock(token=FAKE_OAUTH2_TOKEN)

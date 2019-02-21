@@ -12,10 +12,7 @@ from flask_dance.consumer.backend import MemoryBackend
 def test_blueprint_factory_default():
     # Test with gitlab.com
     glbp1 = make_gitlab_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        scope="read_user",
-        redirect_to="index"
+        client_id="foo", client_secret="bar", scope="read_user", redirect_to="index"
     )
     assert isinstance(glbp1, OAuth2ConsumerBlueprint)
     assert glbp1.session.scope == "read_user"
@@ -32,7 +29,7 @@ def test_blueprint_factory_custom():
         client_secret="bar",
         scope="read_user",
         redirect_to="index",
-        hostname="git.example.com"
+        hostname="git.example.com",
     )
     assert isinstance(glbp2, OAuth2ConsumerBlueprint)
     assert glbp2.session.scope == "read_user"
@@ -64,14 +61,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     glbp1 = make_gitlab_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(glbp1)
 
     app2 = Flask(__name__)
     glbp2 = make_gitlab_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(glbp2)

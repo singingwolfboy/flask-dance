@@ -11,10 +11,7 @@ from flask_dance.consumer.backend import MemoryBackend
 
 def test_blueprint_factory():
     github_bp = make_github_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        scope="user:email",
-        redirect_to="index",
+        client_id="foo", client_secret="bar", scope="user:email", redirect_to="index"
     )
     assert isinstance(github_bp, OAuth2ConsumerBlueprint)
     assert github_bp.session.scope == "user:email"
@@ -46,14 +43,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     ghbp1 = make_github_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(ghbp1)
 
     app2 = Flask(__name__)
     ghbp2 = make_github_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(ghbp2)
