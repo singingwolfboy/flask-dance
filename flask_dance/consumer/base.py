@@ -139,6 +139,24 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
         self.storage.delete(self)
         lazy.invalidate(self.session, "token")
 
+    @property
+    def backend(self):
+        warnings.warn(
+            "The `backend` property is deprecated. "
+            "Please use the `storage` property instead.",
+            DeprecationWarning,
+        )
+        return self.storage
+
+    @backend.setter
+    def backend(self, value):
+        warnings.warn(
+            "The `backend` property is deprecated. "
+            "Please use the `storage` property instead.",
+            DeprecationWarning,
+        )
+        self.storage = value
+
     @abstractproperty
     def session(self):
         """
