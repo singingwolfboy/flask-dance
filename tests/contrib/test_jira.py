@@ -54,7 +54,7 @@ def test_rsa_key_file(tmp_path):
     rsa_key.write_text("my-fake-key")
 
     jira_bp = make_jira_blueprint(
-        rsa_key=rsa_key, base_url="https://flask.atlassian.net"
+        rsa_key=str(rsa_key), base_url="https://flask.atlassian.net"
     )
     assert jira_bp.rsa_key == "my-fake-key"
 
