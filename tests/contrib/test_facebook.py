@@ -11,10 +11,7 @@ from flask_dance.consumer.backend import MemoryBackend
 
 def test_blueprint_factory():
     facebook_bp = make_facebook_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        scope="user:email",
-        redirect_to="index",
+        client_id="foo", client_secret="bar", scope="user:email", redirect_to="index"
     )
     assert isinstance(facebook_bp, OAuth2ConsumerBlueprint)
     assert facebook_bp.session.scope == "user:email"
@@ -46,14 +43,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     fbbp1 = make_facebook_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(fbbp1)
 
     app2 = Flask(__name__)
     fbbp2 = make_facebook_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(fbbp2)
@@ -89,14 +90,11 @@ def test_rerequest_declined_scopes(rerequest):
     app = Flask(__name__)
     app.secret_key = "backups"
     bp = make_facebook_blueprint(
-        scope='user_posts', rerequest_declined_permissions=rerequest)
+        scope="user_posts", rerequest_declined_permissions=rerequest
+    )
     app.register_blueprint(bp)
     with app.test_client() as client:
-        resp = client.get(
-            "/facebook",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/facebook", base_url="https://a.b.c", follow_redirects=False)
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     if rerequest:

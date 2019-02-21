@@ -46,14 +46,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     discord_bp1 = make_discord_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(discord_bp1)
 
     app2 = Flask(__name__)
     discord_bp2 = make_discord_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(discord_bp2)

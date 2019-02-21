@@ -10,10 +10,7 @@ from flask_dance.consumer.backend import MemoryBackend
 
 
 def test_blueprint_factory():
-    meetup_bp = make_meetup_blueprint(
-        key="foo",
-        secret="bar",
-    )
+    meetup_bp = make_meetup_blueprint(key="foo", secret="bar")
     assert isinstance(meetup_bp, OAuth2ConsumerBlueprint)
     assert meetup_bp.session.scope == ["basic"]
     assert meetup_bp.session.base_url == "https://api.meetup.com/2/"
@@ -38,10 +35,7 @@ def test_load_from_config():
 
 
 def test_blueprint_factory_scope():
-    meetup_bp = make_meetup_blueprint(
-        key="foo", secret="bar",
-        scope="customscope",
-    )
+    meetup_bp = make_meetup_blueprint(key="foo", secret="bar", scope="customscope")
     assert meetup_bp.session.scope == "customscope"
 
 
@@ -52,14 +46,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     meetup_bp1 = make_meetup_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(meetup_bp1)
 
     app2 = Flask(__name__)
     meetup_bp2 = make_meetup_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(meetup_bp2)

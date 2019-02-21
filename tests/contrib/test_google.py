@@ -11,12 +11,12 @@ from flask_dance.consumer.backend import MemoryBackend
 
 def test_blueprint_factory():
     google_bp = make_google_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        redirect_to="index",
+        client_id="foo", client_secret="bar", redirect_to="index"
     )
     assert isinstance(google_bp, OAuth2ConsumerBlueprint)
-    assert google_bp.session.scope == ["https://www.googleapis.com/auth/userinfo.profile"]
+    assert google_bp.session.scope == [
+        "https://www.googleapis.com/auth/userinfo.profile"
+    ]
     assert google_bp.session.base_url == "https://www.googleapis.com/"
     assert google_bp.session.client_id == "foo"
     assert google_bp.client_secret == "bar"
@@ -41,20 +41,14 @@ def test_load_from_config():
 
 def test_blueprint_factory_scope():
     google_bp = make_google_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        scope="customscope",
-        redirect_to="index",
+        client_id="foo", client_secret="bar", scope="customscope", redirect_to="index"
     )
     assert google_bp.session.scope == "customscope"
 
 
 def test_blueprint_factory_offline():
     google_bp = make_google_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        redirect_to="index",
-        offline=True,
+        client_id="foo", client_secret="bar", redirect_to="index", offline=True
     )
     assert google_bp.auto_refresh_url == "https://accounts.google.com/o/oauth2/token"
 
@@ -77,14 +71,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     goog_bp1 = make_google_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(goog_bp1)
 
     app2 = Flask(__name__)
     goog_bp2 = make_google_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(goog_bp2)
@@ -109,9 +107,6 @@ def test_context_local():
         assert request.headers["Authorization"] == "Bearer app2"
 
 
-
-
-
 def test_offline():
     app = Flask(__name__)
     app.secret_key = "backups"
@@ -119,11 +114,7 @@ def test_offline():
     app.register_blueprint(goog_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/google", base_url="https://a.b.c", follow_redirects=False)
     # check that there is a `access_type=offline` query param in the redirect URL
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
@@ -137,11 +128,7 @@ def test_hd():
     app.register_blueprint(goog_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/google", base_url="https://a.b.c", follow_redirects=False)
     # check that there is a `hd=example.com` query param in the redirect URL
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
@@ -151,17 +138,11 @@ def test_hd():
 def test_offline_consent():
     app = Flask(__name__)
     app.secret_key = "backups"
-    goog_bp = make_google_blueprint(
-        "foo", "bar", offline=True, reprompt_consent=True,
-    )
+    goog_bp = make_google_blueprint("foo", "bar", offline=True, reprompt_consent=True)
     app.register_blueprint(goog_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/google", base_url="https://a.b.c", follow_redirects=False)
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
@@ -172,16 +153,12 @@ def test_offline_select_account():
     app = Flask(__name__)
     app.secret_key = "backups"
     goog_bp = make_google_blueprint(
-        "foo", "bar", offline=True, reprompt_select_account=True,
+        "foo", "bar", offline=True, reprompt_select_account=True
     )
     app.register_blueprint(goog_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/google", base_url="https://a.b.c", follow_redirects=False)
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"
@@ -192,16 +169,12 @@ def test_offline_select_account_and_consent():
     app = Flask(__name__)
     app.secret_key = "backups"
     goog_bp = make_google_blueprint(
-        "foo", "bar", offline=True, reprompt_consent=True, reprompt_select_account=True,
+        "foo", "bar", offline=True, reprompt_consent=True, reprompt_select_account=True
     )
     app.register_blueprint(goog_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/google",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/google", base_url="https://a.b.c", follow_redirects=False)
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["access_type"] == "offline"

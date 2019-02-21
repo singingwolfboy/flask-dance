@@ -10,8 +10,9 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
 
 import requests_oauthlib
+
 requires_overridable_fixer = pytest.mark.skipif(
-    requests_oauthlib.__version__ <= '0.6.0',
+    requests_oauthlib.__version__ <= "0.6.0",
     reason="requires an overridable Slack fixer",
 )
 
@@ -53,14 +54,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     sbp1 = make_slack_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(sbp1)
 
     app2 = Flask(__name__)
     sbp2 = make_slack_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(sbp2)
@@ -92,18 +97,18 @@ def test_auto_token_get():
 
     app = Flask(__name__)
     slack_bp = make_slack_blueprint(
-        client_id="foo", client_secret="bar",
+        client_id="foo",
+        client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
     app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
-        resp = slack.get("chat.postMessage", data={
-            "channel": "#general",
-            "text": "ping",
-            "icon_emoji": ":robot_face:",
-        })
+        resp = slack.get(
+            "chat.postMessage",
+            data={"channel": "#general", "text": "ping", "icon_emoji": ":robot_face:"},
+        )
     request_data = url_decode(resp.request.body)
     assert request_data["channel"] == "#general"
     assert request_data["text"] == "ping"
@@ -119,18 +124,18 @@ def test_auto_token_post():
 
     app = Flask(__name__)
     slack_bp = make_slack_blueprint(
-        client_id="foo", client_secret="bar",
+        client_id="foo",
+        client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
     app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
-        resp = slack.post("chat.postMessage", data={
-            "channel": "#general",
-            "text": "ping",
-            "icon_emoji": ":robot_face:",
-        })
+        resp = slack.post(
+            "chat.postMessage",
+            data={"channel": "#general", "text": "ping", "icon_emoji": ":robot_face:"},
+        )
     request_data = url_decode(resp.request.body)
     assert request_data["channel"] == "#general"
     assert request_data["text"] == "ping"
@@ -144,18 +149,15 @@ def test_auto_token_post_no_token():
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
 
     app = Flask(__name__)
-    slack_bp = make_slack_blueprint(
-        client_id="foo", client_secret="bar",
-    )
+    slack_bp = make_slack_blueprint(client_id="foo", client_secret="bar")
     app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
-        resp = slack.post("chat.postMessage", data={
-            "channel": "#general",
-            "text": "ping",
-            "icon_emoji": ":robot_face:",
-        })
+        resp = slack.post(
+            "chat.postMessage",
+            data={"channel": "#general", "text": "ping", "icon_emoji": ":robot_face:"},
+        )
     request_data = url_decode(resp.request.body)
     assert request_data["channel"] == "#general"
     assert request_data["text"] == "ping"
@@ -172,19 +174,23 @@ def test_override_token_get():
 
     app = Flask(__name__)
     slack_bp = make_slack_blueprint(
-        client_id="foo", client_secret="bar",
+        client_id="foo",
+        client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
     app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
-        resp = slack.get("chat.postMessage", data={
-            "token": "xyz",
-            "channel": "#general",
-            "text": "ping",
-            "icon_emoji": ":robot_face:",
-        })
+        resp = slack.get(
+            "chat.postMessage",
+            data={
+                "token": "xyz",
+                "channel": "#general",
+                "text": "ping",
+                "icon_emoji": ":robot_face:",
+            },
+        )
     request_data = url_decode(resp.request.body)
     assert request_data["token"] == "xyz"
     assert request_data["channel"] == "#general"
@@ -202,19 +208,23 @@ def test_override_token_post():
 
     app = Flask(__name__)
     slack_bp = make_slack_blueprint(
-        client_id="foo", client_secret="bar",
+        client_id="foo",
+        client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
     app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
-        resp = slack.post("chat.postMessage", data={
-            "token": "xyz",
-            "channel": "#general",
-            "text": "ping",
-            "icon_emoji": ":robot_face:",
-        })
+        resp = slack.post(
+            "chat.postMessage",
+            data={
+                "token": "xyz",
+                "channel": "#general",
+                "text": "ping",
+                "icon_emoji": ":robot_face:",
+            },
+        )
     request_data = url_decode(resp.request.body)
     assert request_data["token"] == "xyz"
     assert request_data["channel"] == "#general"

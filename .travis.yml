@@ -17,7 +17,7 @@ matrix:
   - name: "Black"
     python: 3.6
     install: travis_retry pip install black
-    script: black --check flask_dance
+    script: black --check .
     after_success: skip
 
 branches:

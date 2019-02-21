@@ -10,10 +10,7 @@ from flask_dance.consumer.backend import MemoryBackend
 
 
 def test_blueprint_factory():
-    dropbox_bp = make_dropbox_blueprint(
-        app_key="foo",
-        app_secret="bar",
-    )
+    dropbox_bp = make_dropbox_blueprint(app_key="foo", app_secret="bar")
     assert isinstance(dropbox_bp, OAuth2ConsumerBlueprint)
     assert dropbox_bp.session.base_url == "https://api.dropbox.com/2/"
     assert dropbox_bp.session.client_id == "foo"
@@ -43,14 +40,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     dropbox_bp1 = make_dropbox_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(dropbox_bp1)
 
     app2 = Flask(__name__)
     dropbox_bp2 = make_dropbox_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(dropbox_bp2)
@@ -82,11 +83,7 @@ def test_force_reapprove():
     app.register_blueprint(dropbox_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/dropbox",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
     # check that there is a `force_reapprove=true` query param in the redirect URL
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
@@ -96,17 +93,11 @@ def test_force_reapprove():
 def test_disable_signup():
     app = Flask(__name__)
     app.secret_key = "apple-app-store"
-    dropbox_bp = make_dropbox_blueprint(
-        "foo", "bar", disable_signup=True,
-    )
+    dropbox_bp = make_dropbox_blueprint("foo", "bar", disable_signup=True)
     app.register_blueprint(dropbox_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/dropbox",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["disable_signup"] == "true"
@@ -115,17 +106,11 @@ def test_disable_signup():
 def test_require_role():
     app = Flask(__name__)
     app.secret_key = "apple-app-store"
-    dropbox_bp = make_dropbox_blueprint(
-        "foo", "bar", require_role="work",
-    )
+    dropbox_bp = make_dropbox_blueprint("foo", "bar", require_role="work")
     app.register_blueprint(dropbox_bp)
 
     with app.test_client() as client:
-        resp = client.get(
-            "/dropbox",
-            base_url="https://a.b.c",
-            follow_redirects=False,
-        )
+        resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.query_dict["require_role"] == "work"

@@ -11,9 +11,7 @@ from flask_dance.consumer.backend import MemoryBackend
 
 def test_blueprint_factory():
     nylas_bp = make_nylas_blueprint(
-        client_id="foo",
-        client_secret="bar",
-        redirect_to="index",
+        client_id="foo", client_secret="bar", redirect_to="index"
     )
     assert isinstance(nylas_bp, OAuth2ConsumerBlueprint)
     assert nylas_bp.session.scope == "email"
@@ -45,14 +43,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     nbp1 = make_nylas_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(nbp1)
 
     app2 = Flask(__name__)
     nbp2 = make_nylas_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(nbp2)

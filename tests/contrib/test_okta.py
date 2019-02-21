@@ -19,14 +19,17 @@ def test_blueprint_factory():
         scope="openid:email:profile",
         redirect_to="index",
         authorization_url="https://dev.oktapreview.com/oauth2/default/v1/authorize",
-        token_url="https://dev.oktapreview.com/oauth2/default/v1/token"
+        token_url="https://dev.oktapreview.com/oauth2/default/v1/token",
     )
     assert isinstance(okta_bp, OAuth2ConsumerBlueprint)
     assert okta_bp.session.scope == "openid:email:profile"
     assert okta_bp.session.base_url == "https://dev.oktapreview.com"
     assert okta_bp.session.client_id == "foo"
     assert okta_bp.client_secret == "bar"
-    assert okta_bp.authorization_url == "https://dev.oktapreview.com/oauth2/default/v1/authorize"
+    assert (
+        okta_bp.authorization_url
+        == "https://dev.oktapreview.com/oauth2/default/v1/authorize"
+    )
     assert okta_bp.token_url == "https://dev.oktapreview.com/oauth2/default/v1/token"
 
 
@@ -42,7 +45,7 @@ def test_load_from_config():
         scope="openid:email:profile",
         redirect_to="index",
         authorization_url="https://dev.oktapreview.com/oauth2/default/v1/authorize",
-        token_url="https://dev.oktapreview.com/oauth2/default/v1/token"
+        token_url="https://dev.oktapreview.com/oauth2/default/v1/token",
     )
     app.register_blueprint(okta_bp)
 
@@ -59,14 +62,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     okta_bp1 = make_okta_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(okta_bp1)
 
     app2 = Flask(__name__)
     okta_bp2 = make_okta_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(okta_bp2)

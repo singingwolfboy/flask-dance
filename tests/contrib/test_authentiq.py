@@ -16,7 +16,7 @@ def test_blueprint_factory_default():
         client_id="foo",
         client_secret="bar",
         scope="openid profile",
-        redirect_to="index"
+        redirect_to="index",
     )
     assert isinstance(aqbp1, OAuth2ConsumerBlueprint)
     assert aqbp1.session.scope == "openid profile"
@@ -33,7 +33,7 @@ def test_blueprint_factory_custom():
         client_secret="bar",
         scope="openid profile",
         redirect_to="index",
-        hostname="local.example.com"
+        hostname="local.example.com",
     )
     assert isinstance(aqbp2, OAuth2ConsumerBlueprint)
     assert aqbp2.session.scope == "openid profile"
@@ -65,14 +65,18 @@ def test_context_local():
     # set up two apps with two different set of auth tokens
     app1 = Flask(__name__)
     aqbp1 = make_authentiq_blueprint(
-        "foo1", "bar1", redirect_to="url1",
+        "foo1",
+        "bar1",
+        redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
     app1.register_blueprint(aqbp1)
 
     app2 = Flask(__name__)
     aqbp2 = make_authentiq_blueprint(
-        "foo2", "bar2", redirect_to="url2",
+        "foo2",
+        "bar2",
+        redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
     app2.register_blueprint(aqbp2)

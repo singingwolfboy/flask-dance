@@ -11,9 +11,7 @@ from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 def test_blueprint_factory():
     twitter_bp = make_twitter_blueprint(
-        api_key="foobar",
-        api_secret="supersecret",
-        redirect_to="index",
+        api_key="foobar", api_secret="supersecret", redirect_to="index"
     )
     assert isinstance(twitter_bp, OAuth1ConsumerBlueprint)
     assert twitter_bp.session.base_url == "https://api.twitter.com/1.1/"
@@ -39,9 +37,11 @@ def test_load_from_config():
     app.register_blueprint(twitter_bp)
 
     app.test_client().get("/twitter")
-    auth_header = dict(parse_authorization_header(
-        responses.calls[0].request.headers['Authorization'].decode('utf-8')
-    ))
+    auth_header = dict(
+        parse_authorization_header(
+            responses.calls[0].request.headers["Authorization"].decode("utf-8")
+        )
+    )
     assert auth_header["oauth_consumer_key"] == "foo"
 
 
@@ -53,13 +53,12 @@ def test_context_local():
     app1 = Flask(__name__)
     tbp1 = make_twitter_blueprint("foo1", "bar1", redirect_to="url1")
     app1.register_blueprint(tbp1)
-    #tbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
+    # tbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
 
     app2 = Flask(__name__)
     tbp2 = make_twitter_blueprint("foo2", "bar2", redirect_to="url2")
     app2.register_blueprint(tbp2)
-    #tbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
-
+    # tbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
 
     # outside of a request context, referencing functions on the `twitter` object
     # will raise an exception
@@ -74,9 +73,11 @@ def test_context_local():
 
         app1.preprocess_request()
         twitter.get("https://google.com")
-        auth_header = dict(parse_authorization_header(
-            responses.calls[0].request.headers['Authorization'].decode('utf-8')
-        ))
+        auth_header = dict(
+            parse_authorization_header(
+                responses.calls[0].request.headers["Authorization"].decode("utf-8")
+            )
+        )
         assert auth_header["oauth_consumer_key"] == "foo1"
         assert auth_header["oauth_signature"] == "sig1"
 
@@ -86,8 +87,10 @@ def test_context_local():
 
         app2.preprocess_request()
         twitter.get("https://google.com")
-        auth_header = dict(parse_authorization_header(
-            responses.calls[1].request.headers['Authorization'].decode('utf-8')
-        ))
+        auth_header = dict(
+            parse_authorization_header(
+                responses.calls[1].request.headers["Authorization"].decode("utf-8")
+            )
+        )
         assert auth_header["oauth_consumer_key"] == "foo2"
         assert auth_header["oauth_signature"] == "sig2"

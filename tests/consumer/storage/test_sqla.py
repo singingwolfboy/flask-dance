@@ -1,4 +1,5 @@
 import pytest
+
 sa = pytest.importorskip("sqlalchemy")
 
 import os
@@ -10,20 +11,21 @@ from flask_caching import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
 from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
+
 try:
     import blinker
 except ImportError:
     blinker = None
 requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
-pytestmark = [
-    pytest.mark.usefixtures("responses"),
-]
+pytestmark = [pytest.mark.usefixtures("responses")]
 
 
 @pytest.fixture
 def blueprint():
-    bp = OAuth2ConsumerBlueprint("test-service", __name__,
+    bp = OAuth2ConsumerBlueprint(
+        "test-service",
+        __name__,
         client_id="client_id",
         client_secret="client_secret",
         state="random-string",
@@ -66,6 +68,7 @@ class record_queries(object):
     A context manager for recording the SQLAlchemy queries that were executed
     in a given context block.
     """
+
     def __init__(self, target, identifier="before_cursor_execute"):
         self.target = target
         self.identifier = identifier
@@ -83,16 +86,17 @@ class record_queries(object):
 
 
 def test_sqla_storage_without_user(app, db, blueprint, request):
-
     class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     with record_queries(db.engine) as queries:
@@ -129,9 +133,11 @@ def test_sqla_model_repr(app, db, request):
         pass
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     o = MyAwesomeOAuth()
@@ -148,7 +154,6 @@ def test_sqla_model_repr(app, db, request):
 
 
 def test_sqla_storage(app, db, blueprint, request):
-
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
@@ -158,9 +163,11 @@ def test_sqla_storage(app, db, blueprint, request):
         user = db.relationship(User)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # for now, we'll assume that Alice is the only user
@@ -204,7 +211,6 @@ def test_sqla_storage(app, db, blueprint, request):
 
 
 def test_sqla_load_token_for_user(app, db, blueprint, request):
-
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
         name = db.Column(db.String(80))
@@ -214,9 +220,11 @@ def test_sqla_load_token_for_user(app, db, blueprint, request):
         user = db.relationship(User)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # set token storage
@@ -273,6 +281,7 @@ def test_sqla_load_token_for_user(app, db, blueprint, request):
     assert sess.token == alice_token
     assert blueprint.token == alice_token
 
+
 def test_sqla_flask_login(app, db, blueprint, request):
     login_manager = LoginManager(app)
 
@@ -287,9 +296,11 @@ def test_sqla_flask_login(app, db, blueprint, request):
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # create some users
@@ -383,9 +394,11 @@ def test_sqla_flask_login_misconfigured(app, db, blueprint, request):
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # configure login manager
@@ -394,6 +407,7 @@ def test_sqla_flask_login_misconfigured(app, db, blueprint, request):
         return User.query.get(userid)
 
     calls = []
+
     def callback(*args, **kwargs):
         calls.append((args, kwargs))
 
@@ -415,9 +429,9 @@ def test_sqla_flask_login_misconfigured(app, db, blueprint, request):
 
     assert len(calls) == 1
     assert calls[0][0] == (blueprint,)
-    error = calls[0][1]['error']
+    error = calls[0][1]["error"]
     assert isinstance(error, ValueError)
-    assert str(error) == 'Cannot set OAuth token without an associated user'
+    assert str(error) == "Cannot set OAuth token without an associated user"
 
 
 @requires_blinker
@@ -435,9 +449,11 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # configure login manager
@@ -461,9 +477,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
 
     # mock out the `/user` API call
     responses.add(
-        responses.GET,
-        "https://example.com/user",
-        body='{"name":"josephine"}',
+        responses.GET, "https://example.com/user", body='{"name":"josephine"}'
     )
 
     with record_queries(db.engine) as queries:
@@ -501,10 +515,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
 
 def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
     # need a URL to hit, so that tokens will be loaded, but result is irrelevant
-    responses.add(
-        responses.GET,
-        "https://example.com/noop",
-    )
+    responses.add(responses.GET, "https://example.com/noop")
 
     login_manager = LoginManager(app)
 
@@ -519,9 +530,11 @@ def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # create some users, and tokens for some of them
@@ -576,10 +589,7 @@ def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
 
 def test_sqla_flask_login_no_user_required(app, db, blueprint, request):
     # need a URL to hit, so that tokens will be loaded, but result is irrelevant
-    responses.add(
-        responses.GET,
-        "https://example.com/noop",
-    )
+    responses.add(responses.GET, "https://example.com/noop")
 
     login_manager = LoginManager(app)
 
@@ -592,13 +602,15 @@ def test_sqla_flask_login_no_user_required(app, db, blueprint, request):
         user = db.relationship(User)
 
     blueprint.storage = SQLAlchemyStorage(
-        OAuth, db.session, user=current_user, user_required=False,
+        OAuth, db.session, user=current_user, user_required=False
     )
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # configure login manager
@@ -620,26 +632,23 @@ def test_sqla_flask_login_no_user_required(app, db, blueprint, request):
 
 
 def test_sqla_delete_token(app, db, blueprint, request):
-
     class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # Create an existing OAuth token for the service
     existing = OAuth(
         provider="test-service",
-        token={
-            "access_token": "something",
-            "token_type": "bearer",
-            "scope": ["blah"],
-        },
+        token={"access_token": "something", "token_type": "bearer", "scope": ["blah"]},
     )
     db.session.add(existing)
     db.session.commit()
@@ -656,26 +665,23 @@ def test_sqla_delete_token(app, db, blueprint, request):
 
 
 def test_sqla_overwrite_token(app, db, blueprint, request):
-
     class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     # Create an existing OAuth token for the service
     existing = OAuth(
         provider="test-service",
-        token={
-            "access_token": "something",
-            "token_type": "bearer",
-            "scope": ["blah"],
-        },
+        token={"access_token": "something", "token_type": "bearer", "scope": ["blah"]},
     )
     db.session.add(existing)
     db.session.commit()
@@ -719,9 +725,11 @@ def test_sqla_cache(app, db, blueprint, request):
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session, cache=cache)
 
     db.create_all()
+
     def done():
         db.session.remove()
         db.drop_all()
+
     request.addfinalizer(done)
 
     with record_queries(db.engine) as queries:
@@ -740,11 +748,7 @@ def test_sqla_cache(app, db, blueprint, request):
 
     assert len(queries) == 2
 
-    expected_token = {
-        "access_token": "foobar",
-        "token_type": "bearer",
-        "scope": [""],
-    }
+    expected_token = {"access_token": "foobar", "token_type": "bearer", "scope": [""]}
 
     # check the database
     authorizations = OAuth.query.all()
