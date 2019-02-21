@@ -48,7 +48,6 @@ def make_google_blueprint(
             consent. Defaults to False
         reprompt_select_account (bool): If True, force Google to re-prompt the select account page,
          even if there is a single logged-in user. Defaults to False
-            consent. Defaults to False
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
