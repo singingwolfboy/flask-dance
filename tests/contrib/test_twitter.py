@@ -9,6 +9,18 @@ from flask_dance.consumer import OAuth1ConsumerBlueprint
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_twitter_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory():
     twitter_bp = make_twitter_blueprint(
         api_key="foobar", api_secret="supersecret", redirect_to="index"
@@ -23,18 +35,15 @@ def test_blueprint_factory():
 
 
 @responses.activate
-def test_load_from_config():
+def test_load_from_config(make_app):
     responses.add(
         responses.POST,
         "https://api.twitter.com/oauth/request_token",
         body="oauth_token=faketoken&oauth_token_secret=fakesecret",
     )
-    app = Flask(__name__)
-    app.secret_key = "anything"
+    app = make_app()
     app.config["TWITTER_OAUTH_API_KEY"] = "foo"
     app.config["TWITTER_OAUTH_API_SECRET"] = "bar"
-    twitter_bp = make_twitter_blueprint(redirect_to="index")
-    app.register_blueprint(twitter_bp)
 
     app.test_client().get("/twitter")
     auth_header = dict(
@@ -53,12 +62,10 @@ def test_context_local():
     app1 = Flask(__name__)
     tbp1 = make_twitter_blueprint("foo1", "bar1", redirect_to="url1")
     app1.register_blueprint(tbp1)
-    # tbp1.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig1")
 
     app2 = Flask(__name__)
     tbp2 = make_twitter_blueprint("foo2", "bar2", redirect_to="url2")
     app2.register_blueprint(tbp2)
-    # tbp2.session.auth.client.get_oauth_signature = mock.Mock(return_value="sig2")
 
     # outside of a request context, referencing functions on the `twitter` object
     # will raise an exception

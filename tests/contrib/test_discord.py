@@ -9,6 +9,18 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_discord_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory():
     discord_bp = make_discord_blueprint(
         client_id="foo",
@@ -25,13 +37,10 @@ def test_blueprint_factory():
     assert discord_bp.token_url == "https://discordapp.com/api/oauth2/token"
 
 
-def test_load_from_config():
-    app = Flask(__name__)
-    app.secret_key = "anything"
+def test_load_from_config(make_app):
+    app = make_app(redirect_to="index")
     app.config["DISCORD_OAUTH_CLIENT_ID"] = "foo"
     app.config["DISCORD_OAUTH_CLIENT_SECRET"] = "bar"
-    discord_bp = make_discord_blueprint(redirect_to="index")
-    app.register_blueprint(discord_bp)
 
     resp = app.test_client().get("/discord")
     url = resp.headers["Location"]
@@ -40,27 +49,22 @@ def test_load_from_config():
 
 
 @responses.activate
-def test_context_local():
+def test_context_local(make_app):
     responses.add(responses.GET, "https://google.com")
 
     # set up two apps with two different set of auth tokens
-    app1 = Flask(__name__)
-    discord_bp1 = make_discord_blueprint(
+    app1 = make_app(
         "foo1",
         "bar1",
         redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
-    app1.register_blueprint(discord_bp1)
-
-    app2 = Flask(__name__)
-    discord_bp2 = make_discord_blueprint(
+    app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
-    app2.register_blueprint(discord_bp2)
 
     # outside of a request context, referencing functions on the `discord` object
     # will raise an exception

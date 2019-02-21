@@ -9,6 +9,18 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_dropbox_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory():
     dropbox_bp = make_dropbox_blueprint(app_key="foo", app_secret="bar")
     assert isinstance(dropbox_bp, OAuth2ConsumerBlueprint)
@@ -19,13 +31,10 @@ def test_blueprint_factory():
     assert dropbox_bp.token_url == "https://api.dropbox.com/oauth2/token"
 
 
-def test_load_from_config():
-    app = Flask(__name__)
-    app.secret_key = "anything"
+def test_load_from_config(make_app):
+    app = make_app()
     app.config["DROPBOX_OAUTH_APP_KEY"] = "foo"
     app.config["DROPBOX_OAUTH_APP_SECRET"] = "bar"
-    dropbox_bp = make_dropbox_blueprint()
-    app.register_blueprint(dropbox_bp)
 
     resp = app.test_client().get("/dropbox")
     url = resp.headers["Location"]
@@ -34,27 +43,22 @@ def test_load_from_config():
 
 
 @responses.activate
-def test_context_local():
+def test_context_local(make_app):
     responses.add(responses.GET, "https://dropbox.com")
 
     # set up two apps with two different set of auth tokens
-    app1 = Flask(__name__)
-    dropbox_bp1 = make_dropbox_blueprint(
+    app1 = make_app(
         "foo1",
         "bar1",
         redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
-    app1.register_blueprint(dropbox_bp1)
-
-    app2 = Flask(__name__)
-    dropbox_bp2 = make_dropbox_blueprint(
+    app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
-    app2.register_blueprint(dropbox_bp2)
 
     # outside of a request context, referencing functions on the `dropbox` object
     # will raise an exception
@@ -76,11 +80,8 @@ def test_context_local():
         assert request.headers["Authorization"] == "Bearer app2"
 
 
-def test_force_reapprove():
-    app = Flask(__name__)
-    app.secret_key = "forced"
-    dropbox_bp = make_dropbox_blueprint("foo", "bar", force_reapprove=True)
-    app.register_blueprint(dropbox_bp)
+def test_force_reapprove(make_app):
+    app = make_app("foo", "bar", force_reapprove=True)
 
     with app.test_client() as client:
         resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
@@ -90,11 +91,8 @@ def test_force_reapprove():
     assert location.query_dict["force_reapprove"] == "true"
 
 
-def test_disable_signup():
-    app = Flask(__name__)
-    app.secret_key = "apple-app-store"
-    dropbox_bp = make_dropbox_blueprint("foo", "bar", disable_signup=True)
-    app.register_blueprint(dropbox_bp)
+def test_disable_signup(make_app):
+    app = make_app("foo", "bar", disable_signup=True)
 
     with app.test_client() as client:
         resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
@@ -103,11 +101,8 @@ def test_disable_signup():
     assert location.query_dict["disable_signup"] == "true"
 
 
-def test_require_role():
-    app = Flask(__name__)
-    app.secret_key = "apple-app-store"
-    dropbox_bp = make_dropbox_blueprint("foo", "bar", require_role="work")
-    app.register_blueprint(dropbox_bp)
+def test_require_role(make_app):
+    app = make_app("foo", "bar", require_role="work")
 
     with app.test_client() as client:
         resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)

@@ -12,6 +12,18 @@ from flask_dance.consumer.backend import MemoryBackend
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_jira_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory():
     jira_bp = make_jira_blueprint(
         consumer_key="foobar",
@@ -37,33 +49,27 @@ def test_blueprint_factory():
     )
 
 
-def test_rsa_key_file():
-    key_fd, key_file_path = tempfile.mkstemp()
-    with os.fdopen(key_fd, "w") as key_file:
-        key_file.write("my-fake-key")
+def test_rsa_key_file(tmp_path):
+    rsa_key = tmp_path / "fake.key"
+    rsa_key.write_text("my-fake-key")
 
     jira_bp = make_jira_blueprint(
-        rsa_key=key_file_path, base_url="https://flask.atlassian.net"
+        rsa_key=rsa_key, base_url="https://flask.atlassian.net"
     )
     assert jira_bp.rsa_key == "my-fake-key"
-
-    os.remove(key_file_path)
 
 
 @responses.activate
 @mock.patch("oauthlib.oauth1.rfc5849.signature.sign_rsa_sha1", return_value="fakesig")
-def test_load_from_config(sign_func):
+def test_load_from_config(sign_func, make_app):
     responses.add(
         responses.POST,
         "https://flask.atlassian.net/plugins/servlet/oauth/request-token",
         body="oauth_token=faketoken&oauth_token_secret=fakesecret",
     )
-    app = Flask(__name__)
-    app.secret_key = "anything"
+    app = make_app("https://flask.atlassian.net", redirect_to="index")
     app.config["JIRA_OAUTH_CONSUMER_KEY"] = "foo"
     app.config["JIRA_OAUTH_RSA_KEY"] = "bar"
-    jira_bp = make_jira_blueprint("https://flask.atlassian.net", redirect_to="index")
-    app.register_blueprint(jira_bp)
 
     resp = app.test_client().get("/jira")
     auth_header = dict(
@@ -77,12 +83,9 @@ def test_load_from_config(sign_func):
 
 @responses.activate
 @mock.patch("oauthlib.oauth1.rfc5849.signature.sign_rsa_sha1", return_value="fakesig")
-def test_content_type(sign_func):
+def test_content_type(sign_func, make_app):
     responses.add(responses.GET, "https://flask.atlassian.net/")
 
-    app = Flask(__name__)
-    app.secret_key = "anything"
-    app.debug = True
     backend = MemoryBackend(
         {
             "oauth_token": "faketoken",
@@ -92,17 +95,16 @@ def test_content_type(sign_func):
             "oauth_authorization_expires_in": "160272000",
         }
     )
-    jira_bp = make_jira_blueprint(
+    app = make_app(
         "https://flask.atlassian.net",
         rsa_key="fakersa",
         consumer_key="fakekey",
         backend=backend,
     )
-    app.register_blueprint(jira_bp)
 
     @app.route("/test")
     def api_request():
-        jira_bp.session.get("/")
+        jira.get("/")
         return "success"
 
     resp = app.test_client().get("/test")

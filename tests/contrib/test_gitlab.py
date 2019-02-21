@@ -9,44 +9,53 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_gitlab_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory_default():
     # Test with gitlab.com
-    glbp1 = make_gitlab_blueprint(
+    glbp = make_gitlab_blueprint(
         client_id="foo", client_secret="bar", scope="read_user", redirect_to="index"
     )
-    assert isinstance(glbp1, OAuth2ConsumerBlueprint)
-    assert glbp1.session.scope == "read_user"
-    assert glbp1.session.base_url == "https://gitlab.com/api/v4/"
-    assert glbp1.session.client_id == "foo"
-    assert glbp1.client_secret == "bar"
-    assert glbp1.authorization_url == "https://gitlab.com/oauth/authorize"
-    assert glbp1.token_url == "https://gitlab.com/oauth/token"
+    assert isinstance(glbp, OAuth2ConsumerBlueprint)
+    assert glbp.session.scope == "read_user"
+    assert glbp.session.base_url == "https://gitlab.com/api/v4/"
+    assert glbp.session.client_id == "foo"
+    assert glbp.client_secret == "bar"
+    assert glbp.authorization_url == "https://gitlab.com/oauth/authorize"
+    assert glbp.token_url == "https://gitlab.com/oauth/token"
 
 
 def test_blueprint_factory_custom():
-    glbp2 = make_gitlab_blueprint(
+    glbp = make_gitlab_blueprint(
         client_id="foo",
         client_secret="bar",
         scope="read_user",
         redirect_to="index",
         hostname="git.example.com",
     )
-    assert isinstance(glbp2, OAuth2ConsumerBlueprint)
-    assert glbp2.session.scope == "read_user"
-    assert glbp2.session.base_url == "https://git.example.com/api/v4/"
-    assert glbp2.session.client_id == "foo"
-    assert glbp2.client_secret == "bar"
-    assert glbp2.authorization_url == "https://git.example.com/oauth/authorize"
-    assert glbp2.token_url == "https://git.example.com/oauth/token"
+    assert isinstance(glbp, OAuth2ConsumerBlueprint)
+    assert glbp.session.scope == "read_user"
+    assert glbp.session.base_url == "https://git.example.com/api/v4/"
+    assert glbp.session.client_id == "foo"
+    assert glbp.client_secret == "bar"
+    assert glbp.authorization_url == "https://git.example.com/oauth/authorize"
+    assert glbp.token_url == "https://git.example.com/oauth/token"
 
 
-def test_load_from_config():
-    app = Flask(__name__)
-    app.secret_key = "anything"
+def test_load_from_config(make_app):
+    app = make_app()
     app.config["GITLAB_OAUTH_CLIENT_ID"] = "foo"
     app.config["GITLAB_OAUTH_CLIENT_SECRET"] = "bar"
-    gitlab_bp = make_gitlab_blueprint(redirect_to="index")
-    app.register_blueprint(gitlab_bp)
 
     resp = app.test_client().get("/gitlab")
     url = resp.headers["Location"]
@@ -55,27 +64,22 @@ def test_load_from_config():
 
 
 @responses.activate
-def test_context_local():
+def test_context_local(make_app):
     responses.add(responses.GET, "https://google.com")
 
     # set up two apps with two different set of auth tokens
-    app1 = Flask(__name__)
-    glbp1 = make_gitlab_blueprint(
+    app1 = make_app(
         "foo1",
         "bar1",
         redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
-    app1.register_blueprint(glbp1)
-
-    app2 = Flask(__name__)
-    glbp2 = make_gitlab_blueprint(
+    app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
-    app2.register_blueprint(glbp2)
 
     # outside of a request context, referencing functions on the `gitlab` object
     # will raise an exception

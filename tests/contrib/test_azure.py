@@ -10,6 +10,18 @@ from flask_dance.consumer.backend import MemoryBackend
 from flask_dance.contrib.azure import make_azure_blueprint, azure
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_azure_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory():
     azure_bp = make_azure_blueprint(
         client_id="foo", client_secret="bar", scope="user.read", redirect_to="index"
@@ -52,13 +64,10 @@ def test_blueprint_factory_with_organization_tenant():
     )
 
 
-def test_load_from_config():
-    app = Flask(__name__)
-    app.secret_key = "anything"
+def test_load_from_config(make_app):
+    app = make_app(redirect_to="index")
     app.config["AZURE_OAUTH_CLIENT_ID"] = "foo"
     app.config["AZURE_OAUTH_CLIENT_SECRET"] = "bar"
-    azure_bp = make_azure_blueprint(redirect_to="index")
-    app.register_blueprint(azure_bp)
 
     resp = app.test_client().get("/azure")
     url = resp.headers["Location"]
@@ -67,27 +76,23 @@ def test_load_from_config():
 
 
 @responses.activate
-def test_context_local():
+def test_context_local(make_app):
     responses.add(responses.GET, "https://google.com")
 
     # set up two apps with two different set of auth tokens
-    app1 = Flask(__name__)
-    ghbp1 = make_azure_blueprint(
+    app1 = make_app(
         "foo1",
         "bar1",
         redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
-    app1.register_blueprint(ghbp1)
 
-    app2 = Flask(__name__)
-    ghbp2 = make_azure_blueprint(
+    app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
-    app2.register_blueprint(ghbp2)
 
     # outside of a request context, referencing functions on the `azure` object
     # will raise an exception

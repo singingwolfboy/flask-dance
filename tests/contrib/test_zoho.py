@@ -9,6 +9,18 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.backend import MemoryBackend
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_zoho_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory():
     zoho_bp = make_zoho_blueprint(client_id="foobar", client_secret="supersecret")
     assert isinstance(zoho_bp, OAuth2ConsumerBlueprint)
@@ -19,13 +31,11 @@ def test_blueprint_factory():
 
 
 @responses.activate
-def test_load_from_config():
-    app = Flask(__name__)
-    app.secret_key = "anything"
+def test_load_from_config(make_app):
+    app = make_app()
     app.config["ZOHO_OAUTH_CLIENT_ID"] = "foo"
     app.config["ZOHO_OAUTH_CLIENT_SECRET"] = "bar"
-    zoho_bp = make_zoho_blueprint()
-    app.register_blueprint(zoho_bp)
+
     resp = app.test_client().get("/zoho")
     url = resp.headers["Location"]
     client_id = URLObject(url).query.dict.get("client_id")
@@ -33,13 +43,11 @@ def test_load_from_config():
 
 
 @responses.activate
-def test_load_from_params():
-    app = Flask(__name__)
-    app.secret_key = "anything"
+def test_load_from_params(make_app):
+    app = make_app(client_id="not_foo", client_secret="not_bar")
     app.config["ZOHO_OAUTH_CLIENT_ID"] = "foo"
     app.config["ZOHO_OAUTH_CLIENT_SECRET"] = "bar"
-    zoho_bp = make_zoho_blueprint(client_id="not_foo", client_secret="not_bar")
-    app.register_blueprint(zoho_bp)
+
     resp = app.test_client().get("/zoho")
     url = resp.headers["Location"]
     client_id = URLObject(url).query.dict.get("client_id")
@@ -47,25 +55,21 @@ def test_load_from_params():
 
 
 @responses.activate
-def test_context_local():
+def test_context_local(make_app):
     responses.add(responses.GET, "https://google.com")
     # set up two apps with two different set of auth tokens
-    app1 = Flask(__name__)
-    zoho_bp1 = make_zoho_blueprint(
+    app1 = make_app(
         "foo1",
         "bar1",
         redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
-    app1.register_blueprint(zoho_bp1)
-    app2 = Flask(__name__)
-    zoho_bp2 = make_zoho_blueprint(
+    app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
-    app2.register_blueprint(zoho_bp2)
     # outside of a request context, referencing functions on the `zoho` object
     # will raise an exception
     with pytest.raises(RuntimeError):

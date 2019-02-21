@@ -17,6 +17,18 @@ requires_overridable_fixer = pytest.mark.skipif(
 )
 
 
+@pytest.fixture
+def make_app():
+    def _make_app(*args, **kwargs):
+        app = Flask(__name__)
+        app.secret_key = "whatever"
+        blueprint = make_slack_blueprint(*args, **kwargs)
+        app.register_blueprint(blueprint)
+        return app
+
+    return _make_app
+
+
 def test_blueprint_factory():
     slack_bp = make_slack_blueprint(
         client_id="foo",
@@ -33,13 +45,10 @@ def test_blueprint_factory():
     assert slack_bp.token_url == "https://slack.com/api/oauth.access"
 
 
-def test_load_from_config():
-    app = Flask(__name__)
-    app.secret_key = "anything"
+def test_load_from_config(make_app):
+    app = make_app()
     app.config["SLACK_OAUTH_CLIENT_ID"] = "foo"
     app.config["SLACK_OAUTH_CLIENT_SECRET"] = "bar"
-    slack_bp = make_slack_blueprint(redirect_to="index")
-    app.register_blueprint(slack_bp)
 
     resp = app.test_client().get("/slack")
     url = resp.headers["Location"]
@@ -48,27 +57,22 @@ def test_load_from_config():
 
 
 @responses.activate
-def test_context_local():
+def test_context_local(make_app):
     responses.add(responses.GET, "https://slack.com")
 
     # set up two apps with two different set of auth tokens
-    app1 = Flask(__name__)
-    sbp1 = make_slack_blueprint(
+    app1 = make_app(
         "foo1",
         "bar1",
         redirect_to="url1",
         backend=MemoryBackend({"access_token": "app1"}),
     )
-    app1.register_blueprint(sbp1)
-
-    app2 = Flask(__name__)
-    sbp2 = make_slack_blueprint(
+    app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
         backend=MemoryBackend({"access_token": "app2"}),
     )
-    app2.register_blueprint(sbp2)
 
     # outside of a request context, referencing functions on the `slack` object
     # will raise an exception
@@ -92,16 +96,14 @@ def test_context_local():
 
 @requires_overridable_fixer
 @responses.activate
-def test_auto_token_get():
+def test_auto_token_get(make_app):
     responses.add(responses.GET, "https://slack.com/api/chat.postMessage")
 
-    app = Flask(__name__)
-    slack_bp = make_slack_blueprint(
+    app = make_app(
         client_id="foo",
         client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
-    app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
@@ -119,16 +121,14 @@ def test_auto_token_get():
 
 @requires_overridable_fixer
 @responses.activate
-def test_auto_token_post():
+def test_auto_token_post(make_app):
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
 
-    app = Flask(__name__)
-    slack_bp = make_slack_blueprint(
+    app = make_app(
         client_id="foo",
         client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
-    app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
@@ -145,12 +145,10 @@ def test_auto_token_post():
 
 
 @responses.activate
-def test_auto_token_post_no_token():
+def test_auto_token_post_no_token(make_app):
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
 
-    app = Flask(__name__)
-    slack_bp = make_slack_blueprint(client_id="foo", client_secret="bar")
-    app.register_blueprint(slack_bp, url_prefix="/login")
+    app = make_app(client_id="foo", client_secret="bar")
 
     with app.test_request_context("/"):
         app.preprocess_request()
@@ -169,16 +167,14 @@ def test_auto_token_post_no_token():
 
 @requires_overridable_fixer
 @responses.activate
-def test_override_token_get():
+def test_override_token_get(make_app):
     responses.add(responses.GET, "https://slack.com/api/chat.postMessage")
 
-    app = Flask(__name__)
-    slack_bp = make_slack_blueprint(
+    app = make_app(
         client_id="foo",
         client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
-    app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
@@ -203,16 +199,14 @@ def test_override_token_get():
 
 @requires_overridable_fixer
 @responses.activate
-def test_override_token_post():
+def test_override_token_post(make_app):
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
 
-    app = Flask(__name__)
-    slack_bp = make_slack_blueprint(
+    app = make_app(
         client_id="foo",
         client_secret="bar",
         backend=MemoryBackend({"access_token": "abcde"}),
     )
-    app.register_blueprint(slack_bp, url_prefix="/login")
 
     with app.test_request_context("/"):
         app.preprocess_request()
