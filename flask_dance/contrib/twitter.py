@@ -22,6 +22,7 @@ def make_twitter_blueprint(
     authorized_url=None,
     session_class=None,
     backend=None,
+    storage=None,
 ):
     """
     Make a blueprint for authenticating with Twitter using OAuth 1. This requires
@@ -44,9 +45,9 @@ def make_twitter_blueprint(
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth1Session`.
-        backend: A token storage class, or an instance of a token storage
+        storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
-                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+                :class:`~flask_dance.consumer.storage.session.SessionStorage`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -66,6 +67,7 @@ def make_twitter_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         backend=backend,
+        storage=storage,
     )
     twitter_bp.from_config["client_key"] = "TWITTER_OAUTH_API_KEY"
     twitter_bp.from_config["client_secret"] = "TWITTER_OAUTH_API_SECRET"

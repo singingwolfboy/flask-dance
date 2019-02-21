@@ -73,7 +73,7 @@ connections with the local user that is currently logged in.
 
 What happens if there no local user is currently logged in? That depends
 on the ``user_required`` parameter of the
-:class:`~flask_dance.consumer.backend.sqla.SQLAlchemyBackend` class. If it is
+:class:`~flask_dance.consumer.storage.sqla.SQLAlchemyStorage` class. If it is
 ``False``, Flask-Dance will create an association that isn't linked to
 any particular user in your application.
 This is handy if you don't actually *have* local user accounts in your
@@ -134,14 +134,14 @@ behavior in order to create user accounts automatically:
     from flask import flash
     from flask_security import current_user, login_user
     from flask_dance.consumer import oauth_authorized
-    from flask_dance.consumer.backend.sqla import SQLAlchemyBackend
+    from flask_dance.consumer.storage.sqla import SQLAlchemyStorage
     from flask_dance.contrib.github import make_github_blueprint
     from sqlalchemy.orm.exc import NoResultFound
     from myapp.models import db, OAuth, User
 
 
     github_bp = make_github_blueprint(
-        backend=SQLAlchemyBackend(OAuth, db.session, user=current_user)
+        storage=SQLAlchemyStorage(OAuth, db.session, user=current_user)
     )
 
 

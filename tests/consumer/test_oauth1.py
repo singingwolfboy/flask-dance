@@ -15,7 +15,7 @@ from flask_dance.consumer import (
 )
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 from flask_dance.consumer.requests import OAuth1Session
-from flask_dance.consumer.backend import MemoryBackend
+from flask_dance.consumer.storage import MemoryStorage
 
 try:
     import blinker
@@ -241,11 +241,10 @@ def test_authorization_required_decorator_allowed():
     def restricted_view():
         return "allowed"
 
-    blueprint.backend = MemoryBackend()
-    blueprint.token = {
+    blueprint.storage = MemoryStorage({
         "oauth_token": "test1",
         "oauth_token_secret": "test2",
-    }
+    })
 
     with app.test_client() as client:
         resp = client.get(
@@ -327,7 +326,7 @@ def test_signal_oauth_authorized_abort(request):
 def test_signal_oauth_before_login(request):
     app, bp = make_app()
     bp.session.fetch_request_token = mock.Mock(return_value="test-token")
-    
+
     def callback(*args, **kwargs):
         del flask.session["user_id"]
         return False

@@ -9,7 +9,7 @@ from sqlalchemy import event
 from flask_caching import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
-from flask_dance.consumer.backend.sqla import OAuthConsumerMixin, SQLAlchemyBackend
+from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
 try:
     import blinker
 except ImportError:
@@ -82,12 +82,12 @@ class record_queries(object):
         event.remove(self.target, self.identifier, self.record_query)
 
 
-def test_sqla_backend_without_user(app, db, blueprint, request):
+def test_sqla_storage_without_user(app, db, blueprint, request):
 
     class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
     db.create_all()
     def done():
@@ -147,7 +147,7 @@ def test_sqla_model_repr(app, db, request):
     assert "secret" not in repr(o)
 
 
-def test_sqla_backend(app, db, blueprint, request):
+def test_sqla_storage(app, db, blueprint, request):
 
     class User(db.Model):
         id = db.Column(db.Integer, primary_key=True)
@@ -170,7 +170,7 @@ def test_sqla_backend(app, db, blueprint, request):
     # load alice's ID -- this issues a database query
     alice.id
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=alice)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=alice)
 
     with record_queries(db.engine) as queries:
         with app.test_client() as client:
@@ -220,7 +220,7 @@ def test_sqla_load_token_for_user(app, db, blueprint, request):
     request.addfinalizer(done)
 
     # set token storage
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
     # make users and OAuth tokens for several people
     alice = User(name="Alice")
@@ -284,7 +284,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
     def done():
@@ -380,7 +380,7 @@ def test_sqla_flask_login_misconfigured(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
     def done():
@@ -432,7 +432,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
     def done():
@@ -516,7 +516,7 @@ def test_sqla_flask_login_preload_logged_in_user(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, user=current_user)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
 
     db.create_all()
     def done():
@@ -591,7 +591,7 @@ def test_sqla_flask_login_no_user_required(app, db, blueprint, request):
         user_id = db.Column(db.Integer, db.ForeignKey(User.id))
         user = db.relationship(User)
 
-    blueprint.backend = SQLAlchemyBackend(
+    blueprint.storage = SQLAlchemyStorage(
         OAuth, db.session, user=current_user, user_required=False,
     )
 
@@ -624,7 +624,7 @@ def test_sqla_delete_token(app, db, blueprint, request):
     class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
     db.create_all()
     def done():
@@ -660,7 +660,7 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
     class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
     db.create_all()
     def done():
@@ -716,7 +716,7 @@ def test_sqla_cache(app, db, blueprint, request):
     class OAuth(OAuthConsumerMixin, db.Model):
         pass
 
-    blueprint.backend = SQLAlchemyBackend(OAuth, db.session, cache=cache)
+    blueprint.storage = SQLAlchemyStorage(OAuth, db.session, cache=cache)
 
     db.create_all()
     def done():

@@ -33,6 +33,7 @@ def make_jira_blueprint(
     authorized_url=None,
     session_class=None,
     backend=None,
+    storage=None,
 ):
     """
     Make a blueprint for authenticating with JIRA using OAuth 1. This requires
@@ -61,9 +62,9 @@ def make_jira_blueprint(
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.contrib.jira.JsonOAuth1Session`.
-        backend: A token storage class, or an instance of a token storage
+        storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
-                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+                :class:`~flask_dance.consumer.storage.session.SessionStorage`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -89,6 +90,7 @@ def make_jira_blueprint(
         authorized_url=authorized_url,
         session_class=session_class or JsonOAuth1Session,
         backend=backend,
+        storage=storage,
     )
     jira_bp.from_config["client_key"] = "JIRA_OAUTH_CONSUMER_KEY"
     jira_bp.from_config["rsa_key"] = "JIRA_OAUTH_RSA_KEY"

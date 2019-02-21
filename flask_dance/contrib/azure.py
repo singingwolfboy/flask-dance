@@ -23,6 +23,7 @@ def make_azure_blueprint(
     authorized_url=None,
     session_class=None,
     backend=None,
+    storage=None,
     tenant="common",
 ):
     """
@@ -47,9 +48,9 @@ def make_azure_blueprint(
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
-        backend: A token storage class, or an instance of a token storage
+        storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
-                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+                :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         tenant: Determine which accounts are allowed to authenticate with Azure.
                 `See the Azure documentation for more information about this parameter.
                 <https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints>`_
@@ -79,6 +80,7 @@ def make_azure_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         backend=backend,
+        storage=storage,
     )
     azure_bp.from_config["client_id"] = "AZURE_OAUTH_CLIENT_ID"
     azure_bp.from_config["client_secret"] = "AZURE_OAUTH_CLIENT_SECRET"

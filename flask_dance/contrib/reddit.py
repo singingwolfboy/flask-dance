@@ -42,6 +42,7 @@ def make_reddit_blueprint(
     authorized_url=None,
     session_class=None,
     backend=None,
+    storage=None,
     user_agent=None,
 ):
     """
@@ -69,9 +70,9 @@ def make_reddit_blueprint(
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.contrib.reddit.RedditOAuth2Session`.
-        backend: A token storage class, or an instance of a token storage
+        storage: A token storage class, or an instance of a token storage
             class, to use for this blueprint. Defaults to
-            :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+            :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         user_agent (str, optional): User agent for the requests to Reddit API.
             Defaults to ``Flask-Dance/{{version}}``
 
@@ -99,6 +100,7 @@ def make_reddit_blueprint(
         authorized_url=authorized_url,
         session_class=session_class or RedditOAuth2Session,
         backend=backend,
+        storage=storage,
     )
 
     reddit_bp.from_config["client_id"] = "REDDIT_OAUTH_CLIENT_ID"

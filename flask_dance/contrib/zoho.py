@@ -28,6 +28,7 @@ def make_zoho_blueprint(
     login_url=None,
     session_class=None,
     backend=None,
+    storage=None,
     reprompt_consent=False,
 ):
     """
@@ -53,9 +54,9 @@ def make_zoho_blueprint(
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
-        backend: A token storage class, or an instance of a token storage
+        storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
-                :class:`~flask_dance.consumer.backend.session.SessionBackend`.
+                :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         offline (bool): Whether to request `offline access`
             for the OAuth token. Defaults to False
         reprompt_consent (bool): If True, force Zoho to re-prompt the user
@@ -87,6 +88,7 @@ def make_zoho_blueprint(
         login_url=login_url,
         session_class=session_class,
         backend=backend,
+        storage=storage,
     )
     if not client_id:
         zoho_bp.from_config["client_id"] = "ZOHO_OAUTH_CLIENT_ID"
