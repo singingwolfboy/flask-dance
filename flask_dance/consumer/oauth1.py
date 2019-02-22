@@ -181,9 +181,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         invalidate_cached_property(self, "session")
 
     def login(self):
-        callback_uri = url_for(
-            ".authorized", next=request.args.get("next"), _external=True
-        )
+        callback_uri = url_for(".authorized", _external=True)
         self.session._client.client.callback_uri = to_unicode(callback_uri)
 
         try:
@@ -196,9 +194,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             log.warning("OAuth 1 request token error: %s", message)
             oauth_error.send(self, message=message, response=response)
             # can't proceed with OAuth, have to just redirect to next_url
-            if "next" in request.args:
-                next_url = request.args["next"]
-            elif self.redirect_url:
+            if self.redirect_url:
                 next_url = self.redirect_url
             elif self.redirect_to:
                 next_url = url_for(self.redirect_to)
@@ -216,9 +212,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         the provider (e.g. Twitter) after the user has logged into the
         provider's website and authorized your app to access their account.
         """
-        if "next" in request.args:
-            next_url = request.args["next"]
-        elif self.redirect_url:
+        if self.redirect_url:
             next_url = self.redirect_url
         elif self.redirect_to:
             next_url = url_for(self.redirect_to)
