@@ -196,9 +196,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
     def login(self):
         log.debug("client_id = %s", self.client_id)
-        self.session.redirect_uri = url_for(
-            ".authorized", next=request.args.get("next"), _external=True
-        )
+        self.session.redirect_uri = url_for(".authorized", _external=True)
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state, **self.authorization_url_params
         )
@@ -215,9 +213,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         the provider (e.g. Twitter) after the user has logged into the
         provider's website and authorized your app to access their account.
         """
-        if "next" in request.args:
-            next_url = request.args["next"]
-        elif self.redirect_url:
+        if self.redirect_url:
             next_url = self.redirect_url
         elif self.redirect_to:
             next_url = url_for(self.redirect_to)
@@ -252,9 +248,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session._state = state
         del flask.session[state_key]
 
-        self.session.redirect_uri = url_for(
-            ".authorized", next=request.args.get("next"), _external=True
-        )
+        self.session.redirect_uri = url_for(".authorized", _external=True)
 
         log.debug("client_id = %s", self.client_id)
         log.debug("client_secret = %s", self.client_secret)
