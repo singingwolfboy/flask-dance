@@ -42,8 +42,8 @@ def test_load_from_config(make_app):
         body="oauth_token=faketoken&oauth_token_secret=fakesecret",
     )
     app = make_app()
-    app.config["TWITTER_OAUTH_API_KEY"] = "foo"
-    app.config["TWITTER_OAUTH_API_SECRET"] = "bar"
+    app.config["TWITTER_OAUTH_CLIENT_KEY"] = "foo"
+    app.config["TWITTER_OAUTH_CLIENT_SECRET"] = "bar"
 
     app.test_client().get("/twitter")
     auth_header = dict(

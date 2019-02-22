@@ -43,18 +43,6 @@ def test_load_from_config(make_app):
 
 
 @responses.activate
-def test_load_from_params(make_app):
-    app = make_app(client_id="not_foo", client_secret="not_bar")
-    app.config["ZOHO_OAUTH_CLIENT_ID"] = "foo"
-    app.config["ZOHO_OAUTH_CLIENT_SECRET"] = "bar"
-
-    resp = app.test_client().get("/zoho")
-    url = resp.headers["Location"]
-    client_id = URLObject(url).query.dict.get("client_id")
-    assert client_id == "not_foo"
-
-
-@responses.activate
 def test_context_local(make_app):
     responses.add(responses.GET, "https://google.com")
     # set up two apps with two different set of auth tokens

@@ -12,6 +12,10 @@ Changelog
 * Previously, Flask-Dance had an undocumented
   feature where it would automatically redirect based on a ``next``
   parameter in the URL. This undocumented feature has been removed.
+* All pre-set configurations now use a consistent
+  naming scheme for pulling client IDs and client secrets from the app config.
+  The following configurations have changed: Dropbox, Jira, Meetup, Twitter,
+  and Zoho.
 
 `1.4.0`_ (2019-02-22)
 ---------------------

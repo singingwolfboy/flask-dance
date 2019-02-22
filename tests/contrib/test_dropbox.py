@@ -33,8 +33,8 @@ def test_blueprint_factory():
 
 def test_load_from_config(make_app):
     app = make_app()
-    app.config["DROPBOX_OAUTH_APP_KEY"] = "foo"
-    app.config["DROPBOX_OAUTH_APP_SECRET"] = "bar"
+    app.config["DROPBOX_OAUTH_CLIENT_ID"] = "foo"
+    app.config["DROPBOX_OAUTH_CLIENT_SECRET"] = "bar"
 
     resp = app.test_client().get("/dropbox")
     url = resp.headers["Location"]

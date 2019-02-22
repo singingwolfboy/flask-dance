@@ -28,7 +28,8 @@ def make_twitter_blueprint(
     Make a blueprint for authenticating with Twitter using OAuth 1. This requires
     an API key and API secret from Twitter. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables TWITTER_OAUTH_API_KEY and TWITTER_OAUTH_API_SECRET.
+    them, using the variables :envvar:`TWITTER_OAUTH_CLIENT_KEY` and
+    :envvar:`TWITTER_OAUTH_CLIENT_SECRET`.
 
     Args:
         api_key (str): The API key for your Twitter application
@@ -69,8 +70,8 @@ def make_twitter_blueprint(
         backend=backend,
         storage=storage,
     )
-    twitter_bp.from_config["client_key"] = "TWITTER_OAUTH_API_KEY"
-    twitter_bp.from_config["client_secret"] = "TWITTER_OAUTH_API_SECRET"
+    twitter_bp.from_config["client_key"] = "TWITTER_OAUTH_CLIENT_KEY"
+    twitter_bp.from_config["client_secret"] = "TWITTER_OAUTH_CLIENT_SECRET"
 
     @twitter_bp.before_app_request
     def set_applocal_session():
