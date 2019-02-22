@@ -34,8 +34,8 @@ def test_blueprint_factory():
 
 def test_load_from_config(make_app):
     app = make_app()
-    app.config["MEETUP_OAUTH_KEY"] = "foo"
-    app.config["MEETUP_OAUTH_SECRET"] = "bar"
+    app.config["MEETUP_OAUTH_CLIENT_ID"] = "foo"
+    app.config["MEETUP_OAUTH_CLIENT_SECRET"] = "bar"
 
     resp = app.test_client().get("/meetup")
     url = resp.headers["Location"]

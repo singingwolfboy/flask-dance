@@ -32,7 +32,8 @@ def make_dropbox_blueprint(
     Make a blueprint for authenticating with Dropbox using OAuth 2. This requires
     a client ID and client secret from Dropbox. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables DROPBOX_OAUTH_APP_KEY and DROPBOX_OAUTH_APP_SECRET.
+    them, using the variables :envvar:`DROPBOX_OAUTH_CLIENT_ID` and
+    :envvar:`DROPBOX_OAUTH_CLIENT_SECRET`.
 
     For more information about the ``force_reapprove``, ``disable_signup``,
     and ``require_role`` arguments, `check the Dropbox API documentation
@@ -94,8 +95,8 @@ def make_dropbox_blueprint(
         backend=backend,
         storage=storage,
     )
-    dropbox_bp.from_config["client_id"] = "DROPBOX_OAUTH_APP_KEY"
-    dropbox_bp.from_config["client_secret"] = "DROPBOX_OAUTH_APP_SECRET"
+    dropbox_bp.from_config["client_id"] = "DROPBOX_OAUTH_CLIENT_ID"
+    dropbox_bp.from_config["client_secret"] = "DROPBOX_OAUTH_CLIENT_SECRET"
 
     @dropbox_bp.before_app_request
     def set_applocal_session():

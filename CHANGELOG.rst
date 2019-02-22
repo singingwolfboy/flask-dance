@@ -4,7 +4,10 @@ Changelog
 `unreleased`_
 -------------
 
-nothing yet
+* **Backwards incompatible:** All pre-set configurations now use a consistent
+  naming scheme for pulling client IDs and client secrets from the app config.
+  The following configurations have changed: Dropbox, Jira, Meetup, Twitter,
+  and Zoho.
 
 `1.4.0`_ (2019-02-22)
 ---------------------
