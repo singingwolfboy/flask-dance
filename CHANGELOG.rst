@@ -9,6 +9,9 @@ Changelog
   version of Flask-Dance, you may want to do a database migration.
 * Replace ``lazy`` dependency with
   `werkzeug.utils.cached_property <http://werkzeug.pocoo.org/docs/0.14/utils/#werkzeug.utils.cached_property>`__
+* Previously, Flask-Dance had an undocumented
+  feature where it would automatically redirect based on a ``next``
+  parameter in the URL. This undocumented feature has been removed.
 
 `1.4.0`_ (2019-02-22)
 ---------------------
