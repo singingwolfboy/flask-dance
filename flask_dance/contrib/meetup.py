@@ -29,7 +29,8 @@ def make_meetup_blueprint(
     Make a blueprint for authenticating with Meetup using OAuth 2. This requires
     an OAuth consumer from Meetup. You should either pass the key and secret to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables MEETUP_OAUTH_KEY and MEETUP_OAUTH_SECRET.
+    them, using the variables :envvar:`MEETUP_OAUTH_CLIENT_ID` and
+    :envvar:`MEETUP_OAUTH_CLIENT_SECRET`.
 
     Args:
         key (str): The OAuth consumer key for your application on Meetup
@@ -72,8 +73,8 @@ def make_meetup_blueprint(
         backend=backend,
         storage=storage,
     )
-    meetup_bp.from_config["client_id"] = "MEETUP_OAUTH_KEY"
-    meetup_bp.from_config["client_secret"] = "MEETUP_OAUTH_SECRET"
+    meetup_bp.from_config["client_id"] = "MEETUP_OAUTH_CLIENT_ID"
+    meetup_bp.from_config["client_secret"] = "MEETUP_OAUTH_CLIENT_SECRET"
 
     @meetup_bp.before_app_request
     def set_applocal_session():

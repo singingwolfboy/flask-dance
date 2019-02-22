@@ -35,7 +35,8 @@ def make_zoho_blueprint(
     Make a blueprint for authenticating with Zoho using OAuth 2. This requires
     a client ID and client secret from Zoho. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables ZOHO_OAUTH_CLIENT_ID and ZOHO_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`ZOHO_OAUTH_CLIENT_ID` and
+    :envvar:`ZOHO_OAUTH_CLIENT_SECRET`.
     IMPORTANT: Configuring the base_url is not supported in this config.
 
     Args:
@@ -90,10 +91,9 @@ def make_zoho_blueprint(
         backend=backend,
         storage=storage,
     )
-    if not client_id:
-        zoho_bp.from_config["client_id"] = "ZOHO_OAUTH_CLIENT_ID"
-    if not client_secret:
-        zoho_bp.from_config["client_secret"] = "ZOHO_OAUTH_CLIENT_SECRET"
+
+    zoho_bp.from_config["client_id"] = "ZOHO_OAUTH_CLIENT_ID"
+    zoho_bp.from_config["client_secret"] = "ZOHO_OAUTH_CLIENT_SECRET"
 
     @zoho_bp.before_app_request
     def set_applocal_session():
