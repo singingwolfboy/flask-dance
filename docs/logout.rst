@@ -120,6 +120,8 @@ Here's some sample code that works with Google:
         )
         assert resp.ok, resp.text
         logout_user()
+        # delete token from backend
+        blueprint.backend.delete(blueprint)
         return redirect(somewhere)
 
 After the user uses this method to log out, Google will not remember that they
