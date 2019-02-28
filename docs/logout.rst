@@ -119,8 +119,6 @@ Here's some sample code that works with Google:
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
         assert resp.ok, resp.text
-        # delete token from backend
-        blueprint.backend.delete(blueprint)
         logout_user()
         return redirect(somewhere)
 
