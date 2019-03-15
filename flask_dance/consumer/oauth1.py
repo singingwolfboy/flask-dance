@@ -1,9 +1,9 @@
 from __future__ import unicode_literals, print_function
 
 import logging
-from lazy import lazy
 from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response
+from werkzeug.utils import cached_property
 from requests_oauthlib.oauth1_session import TokenRequestDenied, TokenMissing
 from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
 from oauthlib.common import to_unicode
@@ -14,6 +14,15 @@ from .base import (
     oauth_error,
 )
 from .requests import OAuth1Session
+
+try:
+    from werkzeug.utils import invalidate_cached_property
+except ImportError:
+    from werkzeug._internal import _missing
+
+    def invalidate_cached_property(obj, name):
+        obj.__dict__[name] = _missing
+
 
 log = logging.getLogger(__name__)
 
@@ -147,7 +156,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
         self.teardown_app_request(self.teardown_session)
 
-    @lazy
+    @cached_property
     def session(self):
         """
         This is a session between the consumer (your website) and the provider
@@ -169,7 +178,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         )
 
     def teardown_session(self, exception=None):
-        lazy.invalidate(self, "session")
+        invalidate_cached_property(self, "session")
 
     def login(self):
         callback_uri = url_for(

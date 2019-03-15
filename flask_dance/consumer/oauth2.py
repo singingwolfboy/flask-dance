@@ -2,10 +2,10 @@ from __future__ import unicode_literals, print_function
 import json
 
 import logging
-from lazy import lazy
 import flask
 from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response
+from werkzeug.utils import cached_property
 from oauthlib.oauth2 import MissingCodeError
 from .base import (
     BaseOAuthConsumerBlueprint,
@@ -14,6 +14,15 @@ from .base import (
     oauth_error,
 )
 from .requests import OAuth2Session
+
+try:
+    from werkzeug.utils import invalidate_cached_property
+except ImportError:
+    from werkzeug._internal import _missing
+
+    def invalidate_cached_property(obj, name):
+        obj.__dict__[name] = _missing
+
 
 log = logging.getLogger(__name__)
 
@@ -162,7 +171,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         # due to a bug in requests-oauthlib, we need to set this manually
         self.session._client.client_id = value
 
-    @lazy
+    @cached_property
     def session(self):
         """
         This is a session between the consumer (your website) and the provider
@@ -192,7 +201,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         return session
 
     def teardown_session(self, exception=None):
-        lazy.invalidate(self, "session")
+        invalidate_cached_property(self, "session")
 
     def login(self):
         log.debug("client_id = %s", self.client_id)
