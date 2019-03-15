@@ -26,13 +26,15 @@ Flask sessions (easiest)
 
 * `GitHub <https://github.com/singingwolfboy/flask-dance-github>`__
 * `Google <https://github.com/singingwolfboy/flask-dance-google>`__
+* `Facebook <https://github.com/singingwolfboy/flask-dance-facebook>`__
 * `Slack <https://github.com/singingwolfboy/flask-dance-slack>`__
 * `Twitter <https://github.com/singingwolfboy/flask-dance-twitter>`__
 
 SQLAlchemy
 ----------
 
-* `Twitter <https://github.com/singingwolfboy/flask-dance-twitter-multi>`__
+* `Twitter <https://github.com/singingwolfboy/flask-dance-twitter-sqla>`__
+* `Facebook <https://github.com/singingwolfboy/flask-dance-facebook-sqla>`__
 
 .. admonition:: Other Providers
 
