@@ -2,11 +2,19 @@ from __future__ import unicode_literals, print_function
 
 from functools import wraps
 from flask import redirect, url_for
-from lazy import lazy
 from urlobject import URLObject
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib import OAuth2Session as BaseOAuth2Session
 from oauthlib.common import to_unicode
+from werkzeug.utils import cached_property
+
+try:
+    from werkzeug.utils import invalidate_cached_property
+except ImportError:
+    from werkzeug._internal import _missing
+
+    def invalidate_cached_property(obj, name):
+        obj.__dict__[name] = _missing
 
 
 class OAuth1Session(BaseOAuth1Session):
@@ -28,7 +36,7 @@ class OAuth1Session(BaseOAuth1Session):
         self.blueprint = blueprint
         self.base_url = URLObject(base_url)
 
-    @lazy
+    @cached_property
     def token(self):
         """
         Get and set the values in the OAuth token, structured as a dictionary.
@@ -120,9 +128,9 @@ class OAuth2Session(BaseOAuth2Session):
         super(OAuth2Session, self).__init__(*args, **kwargs)
         self.blueprint = blueprint
         self.base_url = URLObject(base_url)
-        lazy.invalidate(self, "token")
+        invalidate_cached_property(self, "token")
 
-    @lazy
+    @cached_property
     def token(self):
         """
         Get and set the values in the OAuth token, structured as a dictionary.

@@ -4,7 +4,8 @@ Changelog
 `unreleased`_
 -------------
 
-nothing yet
+* Replace ``lazy`` dependency with
+  `werkzeug.utils.cached_property <http://werkzeug.pocoo.org/docs/0.14/utils/#werkzeug.utils.cached_property>`__
 
 `1.4.0`_ (2019-02-22)
 ---------------------
