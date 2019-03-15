@@ -3,13 +3,20 @@ from __future__ import unicode_literals, print_function
 import warnings
 from datetime import datetime, timedelta
 import six
-from lazy import lazy
 from abc import ABCMeta, abstractmethod, abstractproperty
 from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
 from flask_dance.consumer.storage.session import SessionStorage
 from flask_dance.utils import getattrd, timestamp_from_datetime
+
+try:
+    from werkzeug.utils import invalidate_cached_property
+except ImportError:
+    from werkzeug._internal import _missing
+
+    def invalidate_cached_property(obj, name):
+        obj.__dict__[name] = _missing
 
 
 _signals = Namespace()
@@ -82,7 +89,7 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
 
         self.logged_in_funcs = []
         self.from_config = {}
-        invalidate_token = lambda d: lazy.invalidate(self.session, "token")
+        invalidate_token = lambda d: invalidate_cached_property(self.session, "token")
         self.config = CallbackDict(on_update=invalidate_token)
         self.before_app_request(self.load_config)
 
@@ -132,12 +139,12 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
             expires_at = datetime.utcnow() + delta
             _token["expires_at"] = timestamp_from_datetime(expires_at)
         self.storage.set(self, _token)
-        lazy.invalidate(self.session, "token")
+        invalidate_cached_property(self.session, "token")
 
     @token.deleter
     def token(self):
         self.storage.delete(self)
-        lazy.invalidate(self.session, "token")
+        invalidate_cached_property(self.session, "token")
 
     @property
     def backend(self):
