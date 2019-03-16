@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from flask_dance.consumer import OAuth2ConsumerBlueprint
+from flask_dance.consumer import OAuth2ConsumerBlueprint, OAuth2Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
@@ -11,6 +11,14 @@ except ImportError:
 
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
+
+
+class MeetupOAuth2Session(OAuth2Session):
+    def fetch_token(self, *args, **kwargs):
+        # Need to set include_client_id for Meetup
+        return super(MeetupOAuth2Session, self).fetch_token(
+            include_client_id=True, *args, **kwargs
+        )
 
 
 def make_meetup_blueprint(
@@ -68,7 +76,7 @@ def make_meetup_blueprint(
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
-        session_class=session_class,
+        session_class=session_class or MeetupOAuth2Session,
         backend=backend,
         storage=storage,
     )
