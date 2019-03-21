@@ -15,7 +15,7 @@ import responses
 from urlobject import URLObject
 import flask
 from freezegun import freeze_time
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_dance.consumer import (
     OAuth2ConsumerBlueprint,
     oauth_authorized,
@@ -97,7 +97,7 @@ def test_login_url():
 @responses.activate
 def test_login_url_forwarded_proto():
     app, _ = make_app()
-    app.wsgi_app = ProxyFix(app.wsgi_app)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service",
@@ -172,7 +172,7 @@ def test_authorized_url_behind_proxy():
         body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
     )
     app, _ = make_app()
-    app.wsgi_app = ProxyFix(app.wsgi_app)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
     with app.test_client() as client:
         # reset the session before the request
         with client.session_transaction() as sess:
