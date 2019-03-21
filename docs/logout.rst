@@ -119,7 +119,8 @@ Here's some sample code that works with Google:
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
         assert resp.ok, resp.text
-        logout_user()
+        logout_user()        # Delete Flask-Login's session cookie
+        del blueprint.token  # Delete OAuth token from storage
         return redirect(somewhere)
 
 After the user uses this method to log out, Google will not remember that they
