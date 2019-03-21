@@ -64,6 +64,20 @@ It's easy to use Flask-Dance with a user management system if you want to,
 though! Read the documentation on :doc:`multi-user` if you plan to use a
 user management system.
 
+Local Accounts vs Provider Accounts
+-----------------------------------
+
+It's a common misconception that, because a user can log in to your website
+using OAuth instead of creating a new username/password combination,
+that means they do not have a user account on your website. This is false.
+Logging in with OAuth *does create a local user account*, and that user account
+will have some kind of identifier (or ``user_id``). The ``user_id`` on this
+local account does *not* have to match that user's ID on Google,
+or Facebook, or Twitter, or whatever OAuth provider(s) you choose to use.
+
+The distinction between a local account and a provider account is especially
+important when :doc:`implementing logout <logout>`.
+
 Blueprints
 ----------
 
