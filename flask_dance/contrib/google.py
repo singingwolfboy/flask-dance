@@ -25,7 +25,6 @@ def make_google_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
     hosted_domain=None,
 ):
@@ -134,7 +133,6 @@ def make_google_blueprint(
         authorized_url=authorized_url,
         authorization_url_params=authorization_url_params,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     google_bp.from_config["client_id"] = "GOOGLE_OAUTH_CLIENT_ID"

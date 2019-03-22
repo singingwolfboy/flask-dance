@@ -32,7 +32,6 @@ def make_jira_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
 ):
     """
@@ -89,7 +88,6 @@ def make_jira_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class or JsonOAuth1Session,
-        backend=backend,
         storage=storage,
     )
     jira_bp.from_config["client_key"] = "JIRA_OAUTH_CLIENT_KEY"

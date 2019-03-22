@@ -25,7 +25,6 @@ def make_dropbox_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
 ):
     """
@@ -92,7 +91,6 @@ def make_dropbox_blueprint(
         authorized_url=authorized_url,
         authorization_url_params=authorization_url_params,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     dropbox_bp.from_config["client_id"] = "DROPBOX_OAUTH_CLIENT_ID"

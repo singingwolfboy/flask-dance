@@ -22,7 +22,6 @@ def make_meetup_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
 ):
     """
@@ -70,7 +69,6 @@ def make_meetup_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     meetup_bp.from_config["client_id"] = "MEETUP_OAUTH_CLIENT_ID"

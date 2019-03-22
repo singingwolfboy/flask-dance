@@ -22,7 +22,6 @@ def make_spotify_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
 ):
     """
@@ -68,7 +67,6 @@ def make_spotify_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     spotify_bp.from_config["client_id"] = "SPOTIFY_OAUTH_CLIENT_ID"

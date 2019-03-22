@@ -8,7 +8,7 @@ from urlobject import URLObject
 from flask_dance.contrib.okta import make_okta_blueprint, okta
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
-from flask_dance.consumer.backend import MemoryBackend
+from flask_dance.consumer.storage import MemoryStorage
 
 
 @pytest.fixture
@@ -73,13 +73,13 @@ def test_context_local(make_app):
         "foo1",
         "bar1",
         redirect_to="url1",
-        backend=MemoryBackend({"access_token": "app1"}),
+        storage=MemoryStorage({"access_token": "app1"}),
     )
     app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
-        backend=MemoryBackend({"access_token": "app2"}),
+        storage=MemoryStorage({"access_token": "app2"}),
     )
 
     # outside of a request context, referencing functions on the `github` object
