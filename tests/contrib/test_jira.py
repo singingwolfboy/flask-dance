@@ -8,7 +8,7 @@ import responses
 from flask import Flask
 from flask_dance.contrib.jira import make_jira_blueprint, jira
 from flask_dance.consumer import OAuth1ConsumerBlueprint
-from flask_dance.consumer.backend import MemoryBackend
+from flask_dance.consumer.storage import MemoryStorage
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 
@@ -86,7 +86,7 @@ def test_load_from_config(sign_func, make_app):
 def test_content_type(sign_func, make_app):
     responses.add(responses.GET, "https://flask.atlassian.net/")
 
-    backend = MemoryBackend(
+    storage = MemoryStorage(
         {
             "oauth_token": "faketoken",
             "oauth_token_secret": "fakesecret",
@@ -99,7 +99,7 @@ def test_content_type(sign_func, make_app):
         "https://flask.atlassian.net",
         rsa_key="fakersa",
         consumer_key="fakekey",
-        backend=backend,
+        storage=storage,
     )
 
     @app.route("/test")

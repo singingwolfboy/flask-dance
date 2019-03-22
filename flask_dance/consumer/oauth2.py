@@ -51,7 +51,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         redirect_url=None,
         redirect_to=None,
         session_class=None,
-        backend=None,
         storage=None,
         **kwargs
     ):
@@ -125,7 +124,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             root_path=root_path,
             login_url=login_url,
             authorized_url=authorized_url,
-            backend=backend,
             storage=storage,
         )
 

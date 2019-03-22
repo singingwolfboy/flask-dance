@@ -22,7 +22,6 @@ def make_gitlab_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
     hostname="gitlab.com",
 ):
@@ -73,7 +72,6 @@ def make_gitlab_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     gitlab_bp.from_config["client_id"] = "GITLAB_OAUTH_CLIENT_ID"

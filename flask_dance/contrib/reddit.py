@@ -41,7 +41,6 @@ def make_reddit_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
     user_agent=None,
 ):
@@ -99,7 +98,6 @@ def make_reddit_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class or RedditOAuth2Session,
-        backend=backend,
         storage=storage,
     )
 

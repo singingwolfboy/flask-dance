@@ -27,7 +27,6 @@ def make_zoho_blueprint(
     redirect_to=None,
     login_url=None,
     session_class=None,
-    backend=None,
     storage=None,
     reprompt_consent=False,
 ):
@@ -87,7 +86,6 @@ def make_zoho_blueprint(
         redirect_to=redirect_to,
         login_url=login_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     if not client_id:
