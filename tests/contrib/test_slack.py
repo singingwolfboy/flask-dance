@@ -7,7 +7,7 @@ from werkzeug.urls import url_decode
 from flask import Flask
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 from flask_dance.consumer import OAuth2ConsumerBlueprint
-from flask_dance.consumer.backend import MemoryBackend
+from flask_dance.consumer.storage import MemoryStorage
 
 import requests_oauthlib
 
@@ -65,13 +65,13 @@ def test_context_local(make_app):
         "foo1",
         "bar1",
         redirect_to="url1",
-        backend=MemoryBackend({"access_token": "app1"}),
+        storage=MemoryStorage({"access_token": "app1"}),
     )
     app2 = make_app(
         "foo2",
         "bar2",
         redirect_to="url2",
-        backend=MemoryBackend({"access_token": "app2"}),
+        storage=MemoryStorage({"access_token": "app2"}),
     )
 
     # outside of a request context, referencing functions on the `slack` object
@@ -102,7 +102,7 @@ def test_auto_token_get(make_app):
     app = make_app(
         client_id="foo",
         client_secret="bar",
-        backend=MemoryBackend({"access_token": "abcde"}),
+        storage=MemoryStorage({"access_token": "abcde"}),
     )
 
     with app.test_request_context("/"):
@@ -127,7 +127,7 @@ def test_auto_token_post(make_app):
     app = make_app(
         client_id="foo",
         client_secret="bar",
-        backend=MemoryBackend({"access_token": "abcde"}),
+        storage=MemoryStorage({"access_token": "abcde"}),
     )
 
     with app.test_request_context("/"):
@@ -173,7 +173,7 @@ def test_override_token_get(make_app):
     app = make_app(
         client_id="foo",
         client_secret="bar",
-        backend=MemoryBackend({"access_token": "abcde"}),
+        storage=MemoryStorage({"access_token": "abcde"}),
     )
 
     with app.test_request_context("/"):
@@ -205,7 +205,7 @@ def test_override_token_post(make_app):
     app = make_app(
         client_id="foo",
         client_secret="bar",
-        backend=MemoryBackend({"access_token": "abcde"}),
+        storage=MemoryStorage({"access_token": "abcde"}),
     )
 
     with app.test_request_context("/"):

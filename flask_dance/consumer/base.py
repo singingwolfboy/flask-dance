@@ -39,7 +39,6 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
         root_path=None,
         login_url=None,
         authorized_url=None,
-        backend=None,
         storage=None,
     ):
 
@@ -71,14 +70,6 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
             endpoint="authorized",
             view_func=self.authorized,
         )
-
-        if backend is not None:
-            warnings.warn(
-                "The `backend` parameter is deprecated. "
-                "Please use the `storage` parameter instead.",
-                DeprecationWarning,
-            )
-            storage = backend
 
         if storage is None:
             self.storage = SessionStorage()
@@ -145,24 +136,6 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
     def token(self):
         self.storage.delete(self)
         invalidate_cached_property(self.session, "token")
-
-    @property
-    def backend(self):
-        warnings.warn(
-            "The `backend` property is deprecated. "
-            "Please use the `storage` property instead.",
-            DeprecationWarning,
-        )
-        return self.storage
-
-    @backend.setter
-    def backend(self, value):
-        warnings.warn(
-            "The `backend` property is deprecated. "
-            "Please use the `storage` property instead.",
-            DeprecationWarning,
-        )
-        self.storage = value
 
     @abstractproperty
     def session(self):

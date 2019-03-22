@@ -21,7 +21,6 @@ def make_twitter_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
 ):
     """
@@ -67,7 +66,6 @@ def make_twitter_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     twitter_bp.from_config["client_key"] = "TWITTER_OAUTH_CLIENT_KEY"

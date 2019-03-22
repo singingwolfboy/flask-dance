@@ -23,7 +23,6 @@ def make_facebook_blueprint(
     authorized_url=None,
     rerequest_declined_permissions=False,
     session_class=None,
-    backend=None,
     storage=None,
 ):
     """
@@ -75,7 +74,6 @@ def make_facebook_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     facebook_bp.from_config["client_id"] = "FACEBOOK_OAUTH_CLIENT_ID"

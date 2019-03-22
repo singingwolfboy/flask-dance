@@ -24,7 +24,6 @@ def make_okta_blueprint(
     login_url=None,
     authorization_url=None,
     session_class=None,
-    backend=None,
     storage=None,
 ):
     """
@@ -70,7 +69,6 @@ def make_okta_blueprint(
         redirect_to=redirect_to,
         login_url=login_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     okta_bp.from_config["client_id"] = "OKTA_OAUTH_CLIENT_ID"

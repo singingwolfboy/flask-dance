@@ -22,7 +22,6 @@ def make_azure_blueprint(
     login_url=None,
     authorized_url=None,
     session_class=None,
-    backend=None,
     storage=None,
     tenant="common",
 ):
@@ -79,7 +78,6 @@ def make_azure_blueprint(
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
-        backend=backend,
         storage=storage,
     )
     azure_bp.from_config["client_id"] = "AZURE_OAUTH_CLIENT_ID"
