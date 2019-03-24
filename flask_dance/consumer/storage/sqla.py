@@ -37,9 +37,9 @@ class OAuthConsumerMixin(object):
         return "flask_dance_{}".format(cls.__name__.lower())
 
     id = Column(Integer, primary_key=True)
-    provider = Column(String(50))
-    created_at = Column(DateTime, default=datetime.utcnow)
-    token = Column(MutableDict.as_mutable(JSONType))
+    provider = Column(String(50), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    token = Column(MutableDict.as_mutable(JSONType), nullable=False)
 
     def __repr__(self):
         parts = []
