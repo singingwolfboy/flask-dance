@@ -30,11 +30,9 @@ If you want your users to be able to log in to your app from any of the
 .. code-block:: python
 
     from flask import Flask, redirect, url_for
-    from werkzeug.contrib.fixers import ProxyFix
     from flask_dance.contrib.github import make_github_blueprint, github
 
     app = Flask(__name__)
-    app.wsgi_app = ProxyFix(app.wsgi_app)
     app.secret_key = "supersekrit"
     blueprint = make_github_blueprint(
         client_id="my-key-here",
