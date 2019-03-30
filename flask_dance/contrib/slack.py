@@ -34,7 +34,8 @@ def make_slack_blueprint(
     Make a blueprint for authenticating with Slack using OAuth 2. This requires
     a client ID and client secret from Slack. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables SLACK_OAUTH_CLIENT_ID and SLACK_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`SLACK_OAUTH_CLIENT_ID` and
+    :envvar:`SLACK_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on Slack.

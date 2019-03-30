@@ -29,8 +29,8 @@ def make_authentiq_blueprint(
     Make a blueprint for authenticating with authentiq using OAuth 2. This requires
     a client ID and client secret from authentiq. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables AUTHENTIQ_OAUTH_CLIENT_ID and
-    AUTHENTIQ_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`AUTHENTIQ_OAUTH_CLIENT_ID` and
+    :envvar:`AUTHENTIQ_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on Authentiq.

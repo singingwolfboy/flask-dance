@@ -29,7 +29,8 @@ def make_azure_blueprint(
     Make a blueprint for authenticating with Azure AD using OAuth 2. This requires
     a client ID and client secret from Azure AD. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables AZURE_OAUTH_CLIENT_ID and AZURE_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`AZURE_OAUTH_CLIENT_ID` and
+    :envvar:`AZURE_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on Azure AD.

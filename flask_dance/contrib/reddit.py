@@ -48,7 +48,8 @@ def make_reddit_blueprint(
     Make a blueprint for authenticating with Reddit using OAuth 2. This requires
     a client ID and client secret from Reddit. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables REDDIT_OAUTH_CLIENT_ID and REDDIT_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`REDDIT_OAUTH_CLIENT_ID` and
+    :envvar:`REDDIT_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on Reddit.
