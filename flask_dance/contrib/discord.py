@@ -28,7 +28,8 @@ def make_discord_blueprint(
     Make a blueprint for authenticating with Discord using OAuth 2. This requires
     a client ID and client secret from Discord. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables DISCORD_OAUTH_CLIENT_ID and DISCORD_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`DISCORD_OAUTH_CLIENT_ID` and
+    :envvar:`DISCORD_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on Discord.

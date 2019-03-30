@@ -30,7 +30,8 @@ def make_okta_blueprint(
     Make a blueprint for authenticating with Okta using OAuth 2. This requires
     a client ID and client secret from OKta. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables OKTA_OAUTH_CLIENT_ID and OKTA_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`OKTA_OAUTH_CLIENT_ID` and
+    :envvar:`OKTA_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on Okta.

@@ -29,7 +29,8 @@ def make_facebook_blueprint(
     Make a blueprint for authenticating with Facebook using OAuth 2. This requires
     a client ID and client secret from Facebook. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables FACEBOOK_OAUTH_CLIENT_ID and FACEBOOK_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`FACEBOOK_OAUTH_CLIENT_ID` and
+    :envvar:`FACEBOOK_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on Facebook.

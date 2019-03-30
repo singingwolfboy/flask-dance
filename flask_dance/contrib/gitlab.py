@@ -29,7 +29,8 @@ def make_gitlab_blueprint(
     Make a blueprint for authenticating with GitLab using OAuth 2. This requires
     a client ID and client secret from GitLab. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables GITLAB_OAUTH_CLIENT_ID and GITLAB_OAUTH_CLIENT_SECRET.
+    them, using the variables :envvar:`GITLAB_OAUTH_CLIENT_ID` and
+    :envvar:`GITLAB_OAUTH_CLIENT_SECRET`.
 
     Args:
         client_id (str): The client ID for your application on GitLab.
