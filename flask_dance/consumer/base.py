@@ -8,7 +8,11 @@ from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
 from flask_dance.consumer.storage.session import SessionStorage
-from flask_dance.utils import getattrd, timestamp_from_datetime, invalidate_cached_property
+from flask_dance.utils import (
+    getattrd,
+    timestamp_from_datetime,
+    invalidate_cached_property,
+)
 
 
 _signals = Namespace()
