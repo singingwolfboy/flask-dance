@@ -8,15 +8,7 @@ from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
 from flask_dance.consumer.storage.session import SessionStorage
-from flask_dance.utils import getattrd, timestamp_from_datetime
-
-try:
-    from werkzeug.utils import invalidate_cached_property
-except ImportError:
-    from werkzeug._internal import _missing
-
-    def invalidate_cached_property(obj, name):
-        obj.__dict__[name] = _missing
+from flask_dance.utils import getattrd, timestamp_from_datetime, invalidate_cached_property
 
 
 _signals = Namespace()

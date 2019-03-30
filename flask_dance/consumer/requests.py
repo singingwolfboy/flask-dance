@@ -7,14 +7,7 @@ from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib import OAuth2Session as BaseOAuth2Session
 from oauthlib.common import to_unicode
 from werkzeug.utils import cached_property
-
-try:
-    from werkzeug.utils import invalidate_cached_property
-except ImportError:
-    from werkzeug._internal import _missing
-
-    def invalidate_cached_property(obj, name):
-        obj.__dict__[name] = _missing
+from flask_dance.utils import invalidate_cached_property
 
 
 class OAuth1Session(BaseOAuth1Session):
