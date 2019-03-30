@@ -16,7 +16,7 @@ Changed (**backwards incompatible**)
   parameter in the URL. This undocumented feature has been removed.
 * All pre-set configurations now use a consistent
   naming scheme for pulling client IDs and client secrets from the app config.
-  The following configurations have changed: Dropbox, Jira, Meetup, Twitter,
+  The following configurations have changed: Dropbox, Meetup, Twitter,
   and Zoho.
 * Replace ``lazy`` dependency with
   `werkzeug.utils.cached_property <http://werkzeug.pocoo.org/docs/0.14/utils/#werkzeug.utils.cached_property>`__
