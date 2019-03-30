@@ -28,7 +28,7 @@ def make_nylas_blueprint(
     Make a blueprint for authenticating with Nylas using OAuth 2. This requires
     an API ID and API secret from Nylas. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables :envvar:`NYLAS_OAUTH_CLIENT_KEY` and
+    them, using the variables :envvar:`NYLAS_OAUTH_CLIENT_ID` and
     :envvar:`NYLAS_OAUTH_CLIENT_SECRET`.
 
     Args:
