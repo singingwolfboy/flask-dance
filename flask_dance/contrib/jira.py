@@ -38,7 +38,7 @@ def make_jira_blueprint(
     Make a blueprint for authenticating with JIRA using OAuth 1. This requires
     a consumer key and RSA key for the JIRA application link. You should either
     pass them to this constructor, or make sure that your Flask application
-    config defines them, using the variables :envvar:`JIRA_OAUTH_CLIENT_KEY`
+    config defines them, using the variables :envvar:`JIRA_OAUTH_CONSUMER_KEY`
     and :envvar:`JIRA_OAUTH_RSA_KEY`.
 
     Args:
@@ -90,7 +90,7 @@ def make_jira_blueprint(
         session_class=session_class or JsonOAuth1Session,
         storage=storage,
     )
-    jira_bp.from_config["client_key"] = "JIRA_OAUTH_CLIENT_KEY"
+    jira_bp.from_config["client_key"] = "JIRA_OAUTH_CONSUMER_KEY"
     jira_bp.from_config["rsa_key"] = "JIRA_OAUTH_RSA_KEY"
 
     @jira_bp.before_app_request

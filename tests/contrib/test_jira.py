@@ -68,7 +68,7 @@ def test_load_from_config(sign_func, make_app):
         body="oauth_token=faketoken&oauth_token_secret=fakesecret",
     )
     app = make_app("https://flask.atlassian.net", redirect_to="index")
-    app.config["JIRA_OAUTH_CLIENT_KEY"] = "foo"
+    app.config["JIRA_OAUTH_CONSUMER_KEY"] = "foo"
     app.config["JIRA_OAUTH_RSA_KEY"] = "bar"
 
     resp = app.test_client().get("/jira")
