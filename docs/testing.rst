@@ -94,7 +94,7 @@ There are several other libraries that you can use to mock API responses,
 but I recommend Betamax_. It's powerful, flexible, and it's designed
 to work with Requests_, the HTTP library that Flask-Dance is built on.
 Betamax is also created and maintained by one of the primary maintainers
-of the Requests, `@sigmavirus24`_.
+of the Requests library, `@sigmavirus24`_.
 
 Let's say your testing the same code as before, but now the ``index``
 view looks like this::
