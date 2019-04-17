@@ -44,7 +44,10 @@ Let's say you are testing the following code::
 
 You want to write tests to cover two cases: what happens when the user
 is authorized with the OAuth provider, and what happens when they are not.
-Here's how you could do that with `pytest`_ and the :class:`MemoryStorage`::
+Here's how you could do that with `pytest`_ and the :class:`MemoryStorage`:
+
+.. code-block:: python
+    :emphasize-lines: 6, 16
 
     from flask_dance.consumer.storage import MemoryStorage
     from myapp import app, github_bp
@@ -158,8 +161,9 @@ directory. Betamax expects you to commit these cassettes to your repository,
 so that if the HTTP interactions change, that will show up in code review.
 
 Next, we define a utility function that will wrap Betamax around the ``github``
-:class:`~requests.Session` object at the start of the incoming HTTP request, and
-unwrap it afterwards. This allows Betamax to record and intercept HTTP requests
+:class:`~requests.Session` object at the start of the incoming HTTP request,
+and unwrap it afterwards.
+This allows Betamax to record and intercept HTTP requests
 during the test. Note that we also use ``request.addfinalizer`` to remove
 these "before_request" and "after_request" functions, so that they don't
 interfere with other tests. If you are recreating your ``app`` object

@@ -52,6 +52,7 @@ which is built on top of Flask-Login), you can import and call the
 :func:`flask_login.logout_user` function, like this:
 
 .. code-block:: python
+    :emphasize-lines: 6
 
     from flask_login import logout_user
     # other imports as necessary
@@ -101,6 +102,7 @@ Notice that you do indeed need to provide the token in order to revoke it.
 Here's some sample code that works with Google:
 
 .. code-block:: python
+    :emphasize-lines: 12-16
 
     from flask import Flask, redirect
     from flask_dance.contrib.google import make_google_blueprint, google
