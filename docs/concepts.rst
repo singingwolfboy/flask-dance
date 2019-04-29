@@ -19,7 +19,7 @@ a user to an OAuth consumer, the provider must ask the user to grant permission
 to share that information with the consumer.
 
 Before an OAuth provider will even speak to a consumer, the consumer must get
-a **client ID** and **client secret** from that consumer. It's a bit like
+a **client ID** and **client secret** from that provider. It's a bit like
 how some website require you to create an account before you can do anything
 else. OAuth providers do this so that they keep track of which consumers
 they are sharing information with. If a consumer starts using information to do
