@@ -38,7 +38,7 @@ Let's say you are testing the following code::
 
     @app.route("/")
     def index():
-        if github.authorized:
+        if not github.authorized:
             return redirect(url_for("github.login"))
         return "You are authorized"
 
@@ -104,7 +104,7 @@ view looks like this::
 
     @app.route("/")
     def index():
-        if github.authorized:
+        if not github.authorized:
             return redirect(url_for("github.login"))
         resp = github.get("/user")
         return "You are @{login} on GitHub".format(login=resp.json()["login"])
