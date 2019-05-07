@@ -285,6 +285,7 @@ intersphinx_mapping = {
     "sqlalchemy": ("https://docs.sqlalchemy.org/en/latest/", None),
     "sqlalchemy_utils": ("https://sqlalchemy-utils.readthedocs.io/en/latest/", None),
     "betamax": ("https://betamax.readthedocs.io/en/latest", None),
+    "pytest": ("https://docs.pytest.org/en/latest/", None),
 }
 
 autodoc_member_order = "bysource"

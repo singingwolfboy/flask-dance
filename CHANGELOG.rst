@@ -3,6 +3,9 @@ Changelog
 
 `unreleased`_
 -------------
+* Flask-Dance now provides a ``betamax_record_flask_dance`` testing fixture,
+  for recording and replaying HTTP requests using Betamax_. See the testing
+  documentation for more information.
 * Added LinkedIn pre-set configuration
 
 `2.0.0`_ (2019-03-30)
@@ -297,6 +300,7 @@ Fixed
 ----------------
 * Initial release
 
+.. _Betamax: https://betamax.readthedocs.io/
 .. _issue 53: https://github.com/singingwolfboy/flask-dance/issues/53
 .. _issue 149: https://github.com/singingwolfboy/flask-dance/issues/149
 .. _#143: https://github.com/singingwolfboy/flask-dance/issues/143

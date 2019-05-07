@@ -35,6 +35,6 @@ install:
   - travis_retry pip install codecov
   - pip install -e .
 script:
-  - py.test --cov=flask_dance
+  - pytest --cov=flask_dance
 after_success:
   - codecov
