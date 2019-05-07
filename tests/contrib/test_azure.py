@@ -12,6 +12,8 @@ from flask_dance.contrib.azure import make_azure_blueprint, azure
 
 @pytest.fixture
 def make_app():
+    "A callable to create a Flask app with the Azure provider"
+
     def _make_app(*args, **kwargs):
         app = Flask(__name__)
         app.secret_key = "whatever"
