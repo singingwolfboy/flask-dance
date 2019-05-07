@@ -14,6 +14,8 @@ from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 
 @pytest.fixture
 def make_app():
+    "A callable to create a Flask app with the JIRA provider"
+
     def _make_app(*args, **kwargs):
         app = Flask(__name__)
         app.secret_key = "whatever"

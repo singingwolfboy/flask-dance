@@ -13,6 +13,8 @@ from flask_dance.consumer.storage import MemoryStorage
 
 @pytest.fixture
 def make_app():
+    "A callable to create a Flask app with the Okta provider"
+
     def _make_app(*args, **kwargs):
         app = Flask(__name__)
         app.secret_key = "whatever"

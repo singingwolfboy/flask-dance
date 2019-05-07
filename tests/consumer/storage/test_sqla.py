@@ -23,6 +23,7 @@ pytestmark = [pytest.mark.usefixtures("responses")]
 
 @pytest.fixture
 def blueprint():
+    "Make a OAuth2 blueprint for a fictional OAuth provider"
     bp = OAuth2ConsumerBlueprint(
         "test-service",
         __name__,
@@ -44,11 +45,13 @@ def blueprint():
 
 @pytest.fixture
 def db():
+    "Make a Flask-SQLAlchemy instance"
     return SQLAlchemy()
 
 
 @pytest.fixture
 def app(blueprint, db, request):
+    "Make a Flask app, attach Flask-SQLAlchemy, and establish an app context"
     app = flask.Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI", "sqlite://")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

@@ -12,6 +12,8 @@ from flask_dance.contrib.authentiq import make_authentiq_blueprint, authentiq
 
 @pytest.fixture
 def make_app():
+    "A callable to create a Flask app with the Authentiq provider"
+
     def _make_app(*args, **kwargs):
         app = Flask(__name__)
         app.secret_key = "whatever"
