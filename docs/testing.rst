@@ -114,17 +114,25 @@ Here's how you could test this view using Betamax::
     import os
     from flask_dance.consumer.storage import MemoryStorage
     from flask_dance.contrib.github import github
+    import pytest
     from betamax import Betamax
-    from myapp import app, github_bp
+    from myapp import app as _app
+    from myapp import github_bp
 
     with Betamax.configure() as config:
         config.cassette_library_dir = 'cassettes'
 
-    def setup_betamax(app, request, cassette):
+    @pytest.fixture
+    def app():
+        return _app
+
+    @pytest.fixture
+    def betamax_github(app, request):
+
         @app.before_request
         def wrap_github_with_betamax():
             recorder = Betamax(github)
-            recorder.use_cassette(cassette)
+            recorder.use_cassette(request.node.name)
             recorder.start()
 
             @app.after_request
@@ -140,12 +148,13 @@ Here's how you could test this view using Betamax::
             lambda: app.before_request_funcs[None].remove(wrap_github_with_betamax)
         )
 
-    def test_index_authorized(monkeypatch, request):
+        return app
+
+    @pytest.mark.usefixtures("betamax_github")
+    def test_index_authorized(app, monkeypatch):
         access_token = os.environ.get("GITHUB_OAUTH_ACCESS_TOKEN", "fake-token")
         storage = MemoryStorage({"access_token": access_token})
         monkeypatch.setattr(github_bp, "storage", storage)
-
-        setup_betamax(app, request, "test_index_authorized")
 
         with app.test_client() as client:
             response = client.get("/", base_url="https://example.com")
@@ -184,6 +193,11 @@ user is named ``@singingwolfboy``. I can do that, because when I recorded
 the cassette, that was the GitHub user that I used. When the cassette is
 replayed in the future, the API response will always be the same, so
 I can write my assertions expecting that.
+
+Provided Pytest Fixture
+-----------------------
+
+.. automodule:: flask_dance.fixtures.pytest
 
 .. _pytest: https://docs.pytest.org/
 .. _Betamax: https://github.com/betamaxpy/betamax

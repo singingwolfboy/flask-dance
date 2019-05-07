@@ -15,3 +15,4 @@ flask-sqlalchemy
 # testing integration with other extensions
 flask-login
 flask-caching
+betamax
