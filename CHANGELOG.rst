@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added LinkedIn pre-set configuration
 
 `2.0.0`_ (2019-03-30)
 ---------------------

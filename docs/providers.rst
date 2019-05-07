@@ -119,6 +119,18 @@ JIRA
     already has the JIRA authentication token loaded (assuming that the user
     has authenticated with JIRA at some point in the past).
 
+LinkedIn
+--------
+.. module:: flask_dance.contrib.linkedin
+
+.. autofunction:: make_linkedin_blueprint
+
+.. data:: linkedin
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the LinkedIn authentication token loaded (assuming that the user
+    has authenticated with LinkedIn at some point in the past).
+
 Meetup
 ------
 .. module:: flask_dance.contrib.meetup
