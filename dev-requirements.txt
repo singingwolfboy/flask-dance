@@ -4,7 +4,6 @@ sphinxcontrib-seqdiag
 Flask-Sphinx-Themes
 # testing tools
 pytest
-pytest-cov
 mock
 responses
 freezegun
