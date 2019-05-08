@@ -71,33 +71,7 @@ def make_google_blueprint(
     .. warning::
        The ``hosted_domain`` argument **only provides UI optimization**. Don't rely on this argument to control
        who can access your application. You must verify that the ``hd`` claim of the response ID token matches the
-       ``hosted_domain`` argument passed to ``make_google_blueprint``. For example:
-
-       .. code-block:: python
-
-            from flask import session, abort
-            from flask_dance.consumer import oauth_authorized
-            from flask_dance.contrib.google import make_google_blueprint, google
-            import requests
-
-            google_bp = make_google_blueprint(
-                client_id="foo",
-                client_secret="bar",
-                scope=["profile", "email"],
-                hosted_domain="example.com"
-            )
-
-            @oauth_authorized.connect_via(google_bp)
-            def logged_in(blueprint, token):
-                resp_json = google.get("/oauth2/v2/userinfo").json()
-                if resp_json["hd"] != blueprint.authorization_url_params["hd"]:
-                    requests.post(
-                        "https://accounts.google.com/o/oauth2/revoke",
-                        params={"token": token["access_token"]}
-                    )
-                    session.clear()
-                    abort(403)
-
+       ``hosted_domain`` argument passed to ``make_google_blueprint``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
