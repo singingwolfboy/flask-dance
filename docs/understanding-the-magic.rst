@@ -55,11 +55,11 @@ context.
 State & Security
 ================
 
-One of the key features of :attr:`~OAuth2ConsumerBlueprint.session` is that 
-the requests it generates use a `state` variable to ensure that the source
+One of the key features of :attr:`OAuth2ConsumerBlueprint.session` is that
+the requests it generates use a ``state`` variable to ensure that the source
 of OAuth authorization callbacks is in fact your intended OAuth provider.
 By default, the state is a random 30-character string, as provided by
-:func:`~oauthlib.common.generate_token`. This protects your app against one
+:func:`oauthlib.common.generate_token`. This protects your app against one
 kind of CSRF attack.
 
 Checking Authorization

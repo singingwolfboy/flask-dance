@@ -281,6 +281,7 @@ intersphinx_mapping = {
     "flask_login": ("https://flask-login.readthedocs.io/en/latest/", None),
     "werkzeug": ("http://werkzeug.pocoo.org/docs/", None),
     "requests": ("http://docs.python-requests.org/en/latest/", None),
+    "oauthlib": ("https://oauthlib.readthedocs.io/en/latest/", None),
     "requests_oauthlib": ("https://requests-oauthlib.readthedocs.io/en/latest/", None),
     "sqlalchemy": ("https://docs.sqlalchemy.org/en/latest/", None),
     "sqlalchemy_utils": ("https://sqlalchemy-utils.readthedocs.io/en/latest/", None),
