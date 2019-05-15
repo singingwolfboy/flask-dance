@@ -52,16 +52,6 @@ This allows you to access the session within the context of an incoming
 HTTP request, but it will *not* allow you access it outside that
 context.
 
-State & Security
-================
-
-One of the key features of :attr:`OAuth2ConsumerBlueprint.session` is that
-the requests it generates use a ``state`` variable to ensure that the source
-of OAuth authorization callbacks is in fact your intended OAuth provider.
-By default, the state is a random 30-character string, as provided by
-:func:`oauthlib.common.generate_token`. This protects your app against one
-kind of CSRF attack.
-
 Checking Authorization
 ----------------------
 
@@ -94,6 +84,17 @@ GitHub contrib:
     def my_view_func():
         # ... implement whatever logic you want here
         return redirect(url_for("github.login"))
+
+State & Security
+~~~~~~~~~~~~~~~~
+
+One of the key features of :attr:`OAuth2ConsumerBlueprint.session` is that
+the requests it generates use a ``state`` variable to ensure that the source
+of OAuth authorization callbacks is in fact your intended OAuth provider.
+By default, the state is a random 30-character string, as provided by
+:func:`oauthlib.common.generate_token`. This protects your app against one
+kind of CSRF attack. For more information, see `section 10.12 of the
+OAuth 2 spec <https://tools.ietf.org/html/rfc6749#section-10.12>`_.
 
 Finishing the Dance
 -------------------
