@@ -32,8 +32,6 @@ def make_cognito_blueprint(
     them, using the variables
     :envvar:`COGNITO_OAUTH_CLIENT_ID`
     :envvar:`COGNITO_OAUTH_CLIENT_SECRET`
-    :envvar:`COGNITO_DOMAIN_NAME`
-    :envvar:`COGNITO_AWS_REGION`
     Args:
         domain_name (str): The Cognito Domain prefix for your cognito user pool
         aws_region (str): The AWS Region that cognito is set to use
@@ -59,7 +57,7 @@ def make_cognito_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["openid", "profile"]
-    aws_region = aws_region or 'us-east-1'
+    aws_region = aws_region or "us-east-1"
 
     cognito_bp = OAuth2ConsumerBlueprint(
         "cognito",
@@ -67,16 +65,13 @@ def make_cognito_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         base_url="https://{domain_name}.auth.{aws_region}.amazoncognito.com".format(
-            domain_name=domain_name,
-            aws_region=aws_region
+            domain_name=domain_name, aws_region=aws_region
         ),
         authorization_url="https://{domain_name}.auth.{aws_region}.amazoncognito.com/oauth2/authorize".format(
-            domain_name=domain_name,
-            aws_region=aws_region,
+            domain_name=domain_name, aws_region=aws_region
         ),
         token_url="https://{domain_name}.auth.{aws_region}.amazoncognito.com/oauth2/token".format(
-            domain_name=domain_name,
-            aws_region=aws_region,
+            domain_name=domain_name, aws_region=aws_region
         ),
         scope=scope,
         redirect_url=redirect_url,
@@ -88,8 +83,6 @@ def make_cognito_blueprint(
     )
     cognito_bp.from_config["client_id"] = "COGNITO_OAUTH_CLIENT_ID"
     cognito_bp.from_config["client_secret"] = "COGNITO_OAUTH_CLIENT_SECRET"
-    cognito_bp.from_config["domain_name"] = "COGNITO_DOMAIN_NAME"
-    cognito_bp.from_config["aws_region"] = "COGNITO_AWS_REGION"
 
     @cognito_bp.before_app_request
     def set_applocal_session():

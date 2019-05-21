@@ -56,7 +56,7 @@ def test_blueprint_factory_custom():
         scope="read_user",
         redirect_to="index",
         domain_name="example2",
-        aws_region='eu-west-1'
+        aws_region="eu-west-1",
     )
     assert isinstance(cognitobp, OAuth2ConsumerBlueprint)
     assert cognitobp.session.scope == "read_user"
