@@ -26,15 +26,27 @@ def make_app():
 def test_blueprint_factory_default():
     # Test with gitlab.com
     cognitobp = make_cognito_blueprint(
-        client_id="foo", client_secret="bar", scope="read_user", redirect_to="index", cognito_domain_suffix='example'
+        client_id="foo",
+        client_secret="bar",
+        scope="read_user",
+        redirect_to="index",
+        cognito_domain_suffix="example",
     )
     assert isinstance(cognitobp, OAuth2ConsumerBlueprint)
     assert cognitobp.session.scope == "read_user"
-    assert cognitobp.session.base_url == "https://example.auth.eu-west-1.amazoncognito.com"
+    assert (
+        cognitobp.session.base_url == "https://example.auth.eu-west-1.amazoncognito.com"
+    )
     assert cognitobp.session.client_id == "foo"
     assert cognitobp.client_secret == "bar"
-    assert cognitobp.authorization_url == "https://example.auth.eu-west-1.amazoncognito.com/oauth2/authorize"
-    assert cognitobp.token_url == "https://example.auth.eu-west-1.amazoncognito.com/oauth2/token"
+    assert (
+        cognitobp.authorization_url
+        == "https://example.auth.eu-west-1.amazoncognito.com/oauth2/authorize"
+    )
+    assert (
+        cognitobp.token_url
+        == "https://example.auth.eu-west-1.amazoncognito.com/oauth2/token"
+    )
 
 
 def test_blueprint_factory_custom():
@@ -47,11 +59,20 @@ def test_blueprint_factory_custom():
     )
     assert isinstance(cognitobp, OAuth2ConsumerBlueprint)
     assert cognitobp.session.scope == "read_user"
-    assert cognitobp.session.base_url == "https://example2.auth.eu-west-1.amazoncognito.com"
+    assert (
+        cognitobp.session.base_url
+        == "https://example2.auth.eu-west-1.amazoncognito.com"
+    )
     assert cognitobp.session.client_id == "foo"
     assert cognitobp.client_secret == "bar"
-    assert cognitobp.authorization_url == "https://example2.auth.eu-west-1.amazoncognito.com/oauth2/authorize"
-    assert cognitobp.token_url == "https://example2.auth.eu-west-1.amazoncognito.com/oauth2/token"
+    assert (
+        cognitobp.authorization_url
+        == "https://example2.auth.eu-west-1.amazoncognito.com/oauth2/authorize"
+    )
+    assert (
+        cognitobp.token_url
+        == "https://example2.auth.eu-west-1.amazoncognito.com/oauth2/token"
+    )
 
 
 def test_load_from_config(make_app):

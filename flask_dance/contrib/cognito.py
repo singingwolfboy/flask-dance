@@ -11,6 +11,7 @@ except ImportError:
 
 __maintainer__ = "Josh Cullum <josh.cullum@eggplant.io>"
 
+
 def make_cognito_blueprint(
     client_id=None,
     client_secret=None,
@@ -21,7 +22,7 @@ def make_cognito_blueprint(
     authorized_url=None,
     session_class=None,
     storage=None,
-    cognito_domain_suffix=None
+    cognito_domain_suffix=None,
 ):
     """
     Make a blueprint for authenticating with Cognito using OAuth 2. This requires
@@ -59,9 +60,15 @@ def make_cognito_blueprint(
         __name__,
         client_id=client_id,
         client_secret=client_secret,
-        base_url="https://{cognito_suffix}.auth.eu-west-1.amazoncognito.com".format(cognito_suffix=cognito_domain_suffix),
-        authorization_url="https://{cognito_suffix}.auth.eu-west-1.amazoncognito.com/oauth2/authorize".format(cognito_suffix=cognito_domain_suffix),
-        token_url="https://{cognito_suffix}.auth.eu-west-1.amazoncognito.com/oauth2/token".format(cognito_suffix=cognito_domain_suffix),
+        base_url="https://{cognito_suffix}.auth.eu-west-1.amazoncognito.com".format(
+            cognito_suffix=cognito_domain_suffix
+        ),
+        authorization_url="https://{cognito_suffix}.auth.eu-west-1.amazoncognito.com/oauth2/authorize".format(
+            cognito_suffix=cognito_domain_suffix
+        ),
+        token_url="https://{cognito_suffix}.auth.eu-west-1.amazoncognito.com/oauth2/token".format(
+            cognito_suffix=cognito_domain_suffix
+        ),
         # scope=["openid", "profile"],
         scope=scope,
         redirect_url=redirect_url,
