@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added cognito provider to use against AWS Cognito User Pools
 
 `2.1.0`_ (2019-05-15)
 ---------------------
