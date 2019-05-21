@@ -11,7 +11,7 @@ from flask_dance.consumer.storage import MemoryStorage
 
 @pytest.fixture
 def make_app():
-    "A callable to create a Flask app with the GitLab provider"
+    "A callable to create a Flask app with the Cognito provider"
 
     def _make_app(*args, **kwargs):
         app = Flask(__name__)
@@ -24,28 +24,28 @@ def make_app():
 
 
 def test_blueprint_factory_default():
-    # Test with gitlab.com
+    # Test with example domain name and default region
     cognitobp = make_cognito_blueprint(
         client_id="foo",
         client_secret="bar",
         scope="read_user",
         redirect_to="index",
-        cognito_domain_suffix="example",
+        domain_name="example",
     )
     assert isinstance(cognitobp, OAuth2ConsumerBlueprint)
     assert cognitobp.session.scope == "read_user"
     assert (
-        cognitobp.session.base_url == "https://example.auth.eu-west-1.amazoncognito.com"
+        cognitobp.session.base_url == "https://example.auth.us-east-1.amazoncognito.com"
     )
     assert cognitobp.session.client_id == "foo"
     assert cognitobp.client_secret == "bar"
     assert (
         cognitobp.authorization_url
-        == "https://example.auth.eu-west-1.amazoncognito.com/oauth2/authorize"
+        == "https://example.auth.us-east-1.amazoncognito.com/oauth2/authorize"
     )
     assert (
         cognitobp.token_url
-        == "https://example.auth.eu-west-1.amazoncognito.com/oauth2/token"
+        == "https://example.auth.us-east-1.amazoncognito.com/oauth2/token"
     )
 
 
@@ -55,7 +55,8 @@ def test_blueprint_factory_custom():
         client_secret="bar",
         scope="read_user",
         redirect_to="index",
-        cognito_domain_suffix="example2",
+        domain_name="example2",
+        aws_region='eu-west-1'
     )
     assert isinstance(cognitobp, OAuth2ConsumerBlueprint)
     assert cognitobp.session.scope == "read_user"
@@ -104,12 +105,12 @@ def test_context_local(make_app):
         storage=MemoryStorage({"access_token": "app2"}),
     )
 
-    # outside of a request context, referencing functions on the `gitlab` object
+    # outside of a request context, referencing functions on the `cognito` object
     # will raise an exception
     with pytest.raises(RuntimeError):
         cognito.get("https://google.com")
 
-    # inside of a request context, `gitlab` should be a proxy to the correct
+    # inside of a request context, `cognito` should be a proxy to the correct
     # blueprint session
     with app1.test_request_context("/"):
         app1.preprocess_request()
