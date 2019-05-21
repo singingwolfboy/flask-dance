@@ -35,6 +35,18 @@ Azure
     already has the Azure AD authentication token loaded (assuming that the user
     has authenticated with Azure AD at some point in the past).
 
+Cognito
+-----------
+.. module:: flask_dance.contrib.cognito
+
+.. autofunction:: make_cognito_blueprint
+
+.. data:: cognito
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Cognito authentication token loaded (assuming that the user
+    has authenticated with Cognito at some point in the past).
+
 Discord
 -------
 .. module:: flask_dance.contrib.discord
