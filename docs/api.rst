@@ -27,9 +27,7 @@ of the user.
       The :doc:`token storage <storages>` that this blueprint
       uses.
 
-   .. attribute:: token
-
-      The OAuth token currently loaded in the :attr:`session` attribute.
+   .. autoattribute:: token
 
    .. attribute:: config
 
@@ -74,9 +72,7 @@ of the user.
       The :doc:`token storage <storages>` that this blueprint
       uses.
 
-   .. attribute:: token
-
-      The OAuth token currently loaded in the :attr:`session` attribute.
+   .. autoattribute:: token
 
    .. attribute:: config
 

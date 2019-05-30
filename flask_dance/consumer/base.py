@@ -106,6 +106,12 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
 
     @property
     def token(self):
+        """
+        This property functions as pass-through to the token storage.
+        If you read from this property, you will receive the current
+        value from the token storage. If you assign a value to this
+        property, it will get set in the token storage.
+        """
         _token = self.storage.get(self)
         if _token and _token.get("expires_in") and _token.get("expires_at"):
             # Update the `expires_in` value, so that requests-oauthlib
