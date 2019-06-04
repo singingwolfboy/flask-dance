@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added Heroku pre-set configuration
 
 `2.1.0`_ (2019-05-15)
 ---------------------

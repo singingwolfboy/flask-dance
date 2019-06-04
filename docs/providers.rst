@@ -107,6 +107,18 @@ Google
     already has the Google authentication token loaded (assuming that the user
     has authenticated with Google at some point in the past).
 
+Heroku
+------
+.. module:: flask_dance.contrib.heroku
+
+.. autofunction:: make_heroku_blueprint
+
+.. data:: heroku
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Heroku authentication token loaded (assuming that the user
+    has authenticated with Heroku at some point in the past).
+
 JIRA
 ----
 .. module:: flask_dance.contrib.jira
