@@ -38,6 +38,7 @@ SQLAlchemy
 * `Google <https://github.com/singingwolfboy/flask-dance-google-sqla>`__
 * `Twitter <https://github.com/singingwolfboy/flask-dance-twitter-sqla>`__
 * `Facebook <https://github.com/singingwolfboy/flask-dance-facebook-sqla>`__
+* `Heroku <https://github.com/singingwolfboy/flask-dance-heroku-sqla>`__
 * `Multiple providers simultaneously <https://github.com/singingwolfboy/flask-dance-multi-provider>`__
 
 .. admonition:: Other Providers
