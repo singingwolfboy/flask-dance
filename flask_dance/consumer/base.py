@@ -105,6 +105,22 @@ class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
                     setattr(self, local_var, value)
 
     @property
+    def storage(self):
+        """
+        The :doc:`token storage <storages>` that this blueprint
+        uses.
+        """
+        return self._storage
+
+    @storage.setter
+    def storage(self, value):
+        self._storage = value
+
+    @storage.deleter
+    def storage(self):
+        del self._storage
+
+    @property
     def token(self):
         """
         This property functions as pass-through to the token storage.

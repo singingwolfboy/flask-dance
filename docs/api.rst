@@ -22,10 +22,7 @@ of the user.
       This instance is automatically created the first time it is referenced
       for each request to your Flask application.
 
-   .. attribute:: storage
-
-      The :doc:`token storage <storages>` that this blueprint
-      uses.
+   .. autoattribute:: storage
 
    .. autoattribute:: token
 
@@ -67,10 +64,7 @@ of the user.
       This instance is automatically created the first time it is referenced
       for each request to your Flask application.
 
-   .. attribute:: storage
-
-      The :doc:`token storage <storages>` that this blueprint
-      uses.
+   .. autoattribute:: storage
 
    .. autoattribute:: token
 
