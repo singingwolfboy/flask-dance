@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+Nothing yet
+
+`2.2.0`_ (2019-06-04)
+---------------------
 * Added Heroku pre-set configuration
 
 `2.1.0`_ (2019-05-15)
@@ -312,7 +316,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v2.1.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v2.2.0...HEAD
+.. _2.2.0: https://github.com/singingwolfboy/flask-dance/compare/v2.1.0...v2.2.0
 .. _2.1.0: https://github.com/singingwolfboy/flask-dance/compare/v2.0.0...v2.1.0
 .. _2.0.0: https://github.com/singingwolfboy/flask-dance/compare/v1.4.0...v2.0.0
 .. _1.4.0: https://github.com/singingwolfboy/flask-dance/compare/v1.3.0...v1.4.0
