@@ -30,6 +30,7 @@ Flask sessions (easiest)
 * `Slack <https://github.com/singingwolfboy/flask-dance-slack>`__
 * `Twitter <https://github.com/singingwolfboy/flask-dance-twitter>`__
 * `LinkedIn <https://github.com/singingwolfboy/flask-dance-linkedin>`__
+* `Heroku <https://github.com/singingwolfboy/flask-dance-heroku>`__
 
 SQLAlchemy
 ----------
