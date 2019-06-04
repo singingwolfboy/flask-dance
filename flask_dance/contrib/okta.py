@@ -14,15 +14,16 @@ __maintainer__ = "Tom Nolan <tomnolan95@gmail.com>"
 
 
 def make_okta_blueprint(
+    base_url,
+    authorization_url=None,
+    token_url=None,
     client_id=None,
     client_secret=None,
-    base_url=None,
     scope=None,
     redirect_url=None,
-    token_url=None,
     redirect_to=None,
     login_url=None,
-    authorization_url=None,
+    authorized_url=None,
     session_class=None,
     storage=None,
 ):
@@ -34,6 +35,9 @@ def make_okta_blueprint(
     :envvar:`OKTA_OAUTH_CLIENT_SECRET`.
 
     Args:
+        base_url (str): The base URL for your Okta configuration.
+        authorization_url (str): The URL used to authenticated with Okta.
+        token_url (str): The URL used to get a token from Okta.
         client_id (str): The client ID for your application on Okta.
         client_secret (str): The client secret for your application on Okta
         scope (list, optional): list of scopes (str) for the OAuth token
@@ -60,18 +64,22 @@ def make_okta_blueprint(
     okta_bp = OAuth2ConsumerBlueprint(
         "okta",
         __name__,
+        authorized_url=authorized_url,
+        authorization_url= authorization_url if authorization_url else 
+                                "{base_url}/authorize".format(base_url=base_url),
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
         base_url=base_url,
-        token_url=token_url,
-        authorization_url=authorization_url,
+        token_url=token_url if token_url else
+                                "{base_url}/token".format(base_url=base_url),
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
         session_class=session_class,
         storage=storage,
     )
+
     okta_bp.from_config["client_id"] = "OKTA_OAUTH_CLIENT_ID"
     okta_bp.from_config["client_secret"] = "OKTA_OAUTH_CLIENT_SECRET"
 

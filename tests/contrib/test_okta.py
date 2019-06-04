@@ -29,15 +29,13 @@ def test_blueprint_factory():
     okta_bp = make_okta_blueprint(
         client_id="foo",
         client_secret="bar",
-        base_url="https://dev.oktapreview.com",
+        base_url="https://dev.oktapreview.com/oauth2/default/v1",
         scope="openid:email:profile",
         redirect_to="index",
-        authorization_url="https://dev.oktapreview.com/oauth2/default/v1/authorize",
-        token_url="https://dev.oktapreview.com/oauth2/default/v1/token",
     )
     assert isinstance(okta_bp, OAuth2ConsumerBlueprint)
     assert okta_bp.session.scope == "openid:email:profile"
-    assert okta_bp.session.base_url == "https://dev.oktapreview.com"
+    assert okta_bp.session.base_url == "https://dev.oktapreview.com/oauth2/default/v1"
     assert okta_bp.session.client_id == "foo"
     assert okta_bp.client_secret == "bar"
     assert (
@@ -49,13 +47,9 @@ def test_blueprint_factory():
 
 def test_load_from_config(make_app):
     app = make_app(
-        client_id="foo",
-        client_secret="bar",
-        base_url="https://dev.oktapreview.com",
+        base_url="https://dev.oktapreview.com/oauth2/default/v1",
         scope="openid:email:profile",
         redirect_to="index",
-        authorization_url="https://dev.oktapreview.com/oauth2/default/v1/authorize",
-        token_url="https://dev.oktapreview.com/oauth2/default/v1/token",
     )
     app.config["OKTA_OAUTH_CLIENT_ID"] = "foo"
     app.config["OKTA_OAUTH_CLIENT_SECRET"] = "bar"
