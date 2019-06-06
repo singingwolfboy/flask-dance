@@ -122,5 +122,9 @@ For example:
 
     @oauth_authorized.connect
     def redirect_to_next_url(blueprint, token):
+        # set OAuth token in the token storage backend
+        blueprint.token = token
+        # retrieve `next_url` from Flask's session cookie
         next_url = flask.session["next_url"]
+        # redirect the user to `next_url`
         return flask.redirect(next_url)
