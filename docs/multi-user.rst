@@ -114,10 +114,11 @@ behavior. To do so, you'll need to hook into the
 Flask-Dance's default behavior comes from storing the OAuth token for you
 automatically. To override the default behavior, write a function that
 subscribes to this signal, handles it the way *you* want,
-and returns ``False`` or a ``Response`` object. Returning ``False`` or a ``Response``
-object from this signal handler indicates to Flask-Dance that it should not try to store
-the OAuth token for you. For example, returning a custom redirect like ``flask.redirect()``
-would override the default behaviour.
+and returns ``False`` or a :class:`~werkzeug.wrappers.Response` object.
+Returning ``False`` or a :class:`~werkzeug.wrappers.Response` object
+from this signal handler indicates to Flask-Dance that it should not
+try to store the OAuth token for you. For example, returning a custom redirect
+like :func:`flask.redirect` would override the default behaviour.
 
 .. warning::
 
