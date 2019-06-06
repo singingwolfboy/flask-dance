@@ -30,11 +30,13 @@ matrix:
     - travis_retry pip install -r requirements.txt
     - travis_retry pip install -r docs/requirements.txt
     - pip install -e .
+    before_script: skip
     script:
     - cd docs
-    - make spelling
     - make linkcheck
+    - make spellcheck
     - make html
+    after_success: skip
 
 branches:
   only:
