@@ -21,9 +21,14 @@ matrix:
     after_success: skip
   - name: "Documentation"
     python: 3.6
+    addons:
+      apt:
+        packages:
+          - python3-enchant
+          - aspell-en
     install:
     - travis_retry pip install -r requirements.txt
-    - travis_retry pip install -r dev-requirements.txt
+    - travis_retry pip install -r docs/requirements.txt
     - pip install -e .
     script:
     - cd docs
@@ -40,7 +45,7 @@ before_script:
 install:
   - travis_retry pip install -U pytest
   - travis_retry pip install -r requirements.txt
-  - travis_retry pip install -r dev-requirements.txt
+  - travis_retry pip install -r tests/requirements.txt
   - if [[ $BLINKER == 1 ]]; then travis_retry pip install blinker; fi
   - if [[ $DATABASE_URI == postgresql* ]]; then travis_retry pip install psycopg2; fi
   - travis_retry pip install codecov
