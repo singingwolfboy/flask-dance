@@ -118,7 +118,7 @@ and returns ``False`` or a :class:`~werkzeug.wrappers.Response` object.
 Returning ``False`` or a :class:`~werkzeug.wrappers.Response` object
 from this signal handler indicates to Flask-Dance that it should not
 try to store the OAuth token for you. For example, returning a custom redirect
-like :func:`flask.redirect` would override the default behaviour.
+like :func:`flask.redirect` would override the default behavior.
 
 .. warning::
 

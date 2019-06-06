@@ -44,6 +44,7 @@ help:
 	@echo "  xml        to make Docutils-native XML files"
 	@echo "  pseudoxml  to make pseudoxml-XML files for display purposes"
 	@echo "  linkcheck  to check all external links for integrity"
+	@echo "  spellcheck to check spelling"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
@@ -160,6 +161,12 @@ linkcheck:
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in $(BUILDDIR)/linkcheck/output.txt."
+
+spellcheck:
+	$(SPHINXBUILD) -b spelling $(ALLSPHINXOPTS) $(BUILDDIR)/spelling
+	@echo
+	@echo "Spelling check complete; look for any errors in the above output " \
+	      "or in $(BUILDDIR)/spelling/output.txt."
 
 doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest

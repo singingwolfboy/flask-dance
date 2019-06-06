@@ -19,6 +19,17 @@ matrix:
     install: travis_retry pip install black
     script: black --check .
     after_success: skip
+  - name: "Documentation"
+    python: 3.6
+    install:
+    - travis_retry pip install -r requirements.txt
+    - travis_retry pip install -r dev-requirements.txt
+    - pip install -e .
+    script:
+    - cd docs
+    - make spelling
+    - make linkcheck
+    - make html
 
 branches:
   only:
