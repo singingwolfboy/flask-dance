@@ -5,3 +5,4 @@ Flask-Sphinx-Themes
 
 # code dependencies, needed for imports
 sqlalchemy>=0.9
+sqlalchemy-utils
