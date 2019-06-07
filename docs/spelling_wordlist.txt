@@ -52,3 +52,10 @@ Pytest
 Werkzeug
 Betamax
 CustomSite
+
+# contractions are buggy
+isn
+aren
+hasn
+doesn
+ve
