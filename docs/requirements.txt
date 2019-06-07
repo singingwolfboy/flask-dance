@@ -2,3 +2,6 @@ sphinx>=1.3
 sphinxcontrib-seqdiag
 sphinxcontrib-spelling
 Flask-Sphinx-Themes
+
+# code dependencies, needed for imports
+sqlalchemy>=0.9

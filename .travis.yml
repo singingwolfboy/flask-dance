@@ -26,6 +26,8 @@ matrix:
         packages:
           - python3-enchant
           - aspell-en
+          - hunspell-en-us
+          - myspell-en-us
     install:
     - travis_retry pip install -r requirements.txt
     - travis_retry pip install -r docs/requirements.txt
@@ -33,9 +35,9 @@ matrix:
     before_script: skip
     script:
     - cd docs
-    - make linkcheck
-    - make spellcheck
-    - make html
+    - sphinx-build -W -b linkcheck -d _build/doctrees . _build/linkcheck
+    - sphinx-build -W -b spelling -d _build/doctrees . _build/spelling
+    - sphinx-build -W -b html -d _build/doctrees . _build/html
     after_success: skip
 
 branches:
