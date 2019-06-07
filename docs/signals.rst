@@ -19,7 +19,7 @@ The following signals exist in Flask-Dance:
 
     This signal is sent before redirecting to the provider login page. The signal
     is sent with a ``url`` parameter specifying the redirect URL. This signal is mostly
-    useful for doing things like session construction / de-construction before the user
+    useful for doing things like session construction/deconstruction before the user
     is redirected.
 
     Example subscriber::

@@ -1,15 +1,10 @@
-# documentation tools
-sphinx>=1.3
-sphinxcontrib-seqdiag
-Flask-Sphinx-Themes
-# testing tools
 pytest
 mock
 responses
 freezegun
 # testing sqlalchemy support
 sqlalchemy>=0.9
-sqlalchemy_utils
+sqlalchemy-utils
 flask-sqlalchemy
 # testing integration with other extensions
 flask-login

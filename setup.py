@@ -60,7 +60,7 @@ setup(
     url="https://github.com/singingwolfboy/flask-dance",
     packages=find_packages(),
     install_requires=get_requirements("requirements.txt"),
-    tests_require=get_requirements("dev-requirements.txt"),
+    tests_require=get_requirements("tests/requirements.txt"),
     extras_require={"sqla": ["sqlalchemy", "sqlalchemy-utils"], "signals": ["blinker"]},
     cmdclass={"test": PyTest},
     entry_points={"pytest11": ["pytest_flask_dance = flask_dance.fixtures.pytest"]},

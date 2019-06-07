@@ -58,11 +58,11 @@ OAuth 2
 
 1.  The client visits the consumer at a special URL, indicating that they
     want to connect to the provider with OAuth. Typically, there is a button
-    on the consumer's website labelled "Log In with Google" or similar, which
+    on the consumer's website labeled "Log In with Google" or similar, which
     takes the user to this special URL.
 
 2.  The consumer decides how much of the user's data they want to access,
-    using specfic keywords called "scopes". The consumer also makes up a random
+    using specific keywords called "scopes". The consumer also makes up a random
     string of letters and numbers, called a "state" token. The consumer crafts
     a special URL that points to the provider, but has the client secret,
     the scopes, the state token embedded in it. The consumer asks the client
@@ -110,7 +110,7 @@ OAuth 1
 
 1.  The client visits the consumer at a special URL, indicating that they
     want to connect to the provider with OAuth. Typically, there is a button
-    on the consumer's website labelled "Log In with Twitter" or similar, which
+    on the consumer's website labeled "Log In with Twitter" or similar, which
     takes the user to this special URL.
 
 2.  The consumer tells the provider that they're about to do the OAuth dance.
