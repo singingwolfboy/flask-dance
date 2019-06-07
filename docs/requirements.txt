@@ -1,7 +1,6 @@
 sphinx>=1.3
 sphinxcontrib-seqdiag
-# sphinxcontrib-spelling
-git+https://github.com/singingwolfboy/spelling.git@more-contractions#egg=sphinxcontrib_spelling
+sphinxcontrib-spelling
 Flask-Sphinx-Themes
 
 # code dependencies, needed for imports
