@@ -64,6 +64,7 @@ def make_meetup_blueprint(
         base_url="https://api.meetup.com/2/",
         authorization_url="https://secure.meetup.com/oauth2/authorize",
         token_url="https://secure.meetup.com/oauth2/access",
+        token_url_params={"include_client_id": True},
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
