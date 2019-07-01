@@ -151,7 +151,7 @@ granted consent to share information with your website.
 
     .. code-block:: python
 
-        token = current_app.blueprints["google"].token["access_token]
+        token = current_app.blueprints["google"].token["access_token"]
 
 
 Log Out Provider Account
