@@ -47,7 +47,7 @@ branches:
 before_script:
   - if [[ $DATABASE_URI == postgresql* ]]; then psql -c 'create database travis_ci_test;' -U postgres; fi
 install:
-  - travis_retry pip install -U pytest
+  - travis_retry pip install -U "pytest<5.0"
   - travis_retry pip install -r requirements.txt
   - travis_retry pip install -r tests/requirements.txt
   - if [[ $BLINKER == 1 ]]; then travis_retry pip install blinker; fi
