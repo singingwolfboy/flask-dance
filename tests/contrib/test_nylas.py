@@ -34,6 +34,7 @@ def test_blueprint_factory():
     assert nylas_bp.client_secret == "bar"
     assert nylas_bp.authorization_url == "https://api.nylas.com/oauth/authorize"
     assert nylas_bp.token_url == "https://api.nylas.com/oauth/token"
+    assert nylas_bp.token_url_params == {"include_client_id": True}
 
 
 def test_load_from_config(make_app):

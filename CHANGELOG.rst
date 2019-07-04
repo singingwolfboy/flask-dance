@@ -3,8 +3,8 @@ Changelog
 
 `unreleased`_
 -------------
-* Updated Meetup pre-set configuration to include the ``client_id`` in the
-  OAuth token request.
+* Updated Meetup and Nylas pre-set configurations
+  to include the ``client_id`` in the OAuth token request.
 
 `2.2.0`_ (2019-06-04)
 ---------------------

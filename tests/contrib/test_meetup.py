@@ -32,6 +32,7 @@ def test_blueprint_factory():
     assert meetup_bp.client_secret == "bar"
     assert meetup_bp.authorization_url == "https://secure.meetup.com/oauth2/authorize"
     assert meetup_bp.token_url == "https://secure.meetup.com/oauth2/access"
+    assert meetup_bp.token_url_params == {"include_client_id": True}
 
 
 def test_load_from_config(make_app):

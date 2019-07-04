@@ -65,6 +65,7 @@ def make_nylas_blueprint(
         base_url="https://api.nylas.com/",
         authorization_url="https://api.nylas.com/oauth/authorize",
         token_url="https://api.nylas.com/oauth/token",
+        token_url_params={"include_client_id": True},
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
