@@ -167,18 +167,6 @@ Nylas
     already has the Nylas authentication token loaded (assuming that the user
     has authenticated with Nylas at some point in the past).
 
-Okta
-----
-.. module:: flask_dance.contrib.okta
-
-.. autofunction:: make_okta_blueprint
-
-.. data:: okta
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Okta authentication token loaded (assuming that the user
-    has authenticated with Okta at some point in the past).
-
 Reddit
 ------
 .. module:: flask_dance.contrib.reddit

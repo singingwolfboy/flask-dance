@@ -5,6 +5,8 @@ Changelog
 -------------
 * Updated Meetup and Nylas pre-set configurations
   to include the ``client_id`` in the OAuth token request.
+* Removed Okta pre-set configuration, since it doesn't add any value over
+  using ``OAuth2ConsumerBlueprint`` directly.
 
 `2.2.0`_ (2019-06-04)
 ---------------------
