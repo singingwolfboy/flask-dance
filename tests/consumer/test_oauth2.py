@@ -200,12 +200,16 @@ def test_authorized_url_invalid_response():
         # make the request
         with pytest.raises(MissingCodeError) as missingError:
             client.get(
-                "/login/test-service/authorized?error_code=1349048&error_message=IMUSEFUL",
+                "/login/test-service/authorized?state=random-string&error_code=1349048&error_message=IMUSEFUL",
                 base_url="https://a.b.c",
             )
         match = re.search(r"{[^}]*}", str(missingError.value))
         err_dict = json.loads(match.group(0))
-        assert err_dict == {"error_message": "IMUSEFUL", "error_code": "1349048"}
+        assert err_dict == {
+            "state": "random-string",
+            "error_message": "IMUSEFUL",
+            "error_code": "1349048",
+        }
 
 
 @responses.activate
