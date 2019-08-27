@@ -30,10 +30,16 @@ def make_google_blueprint(
 ):
     """
     Make a blueprint for authenticating with Google using OAuth 2. This requires
-    a client ID and client secret from Google. You should either pass them to
-    this constructor, or make sure that your Flask application config defines
-    them, using the variables :envvar:`GOOGLE_OAUTH_CLIENT_ID` and
-    :envvar:`GOOGLE_OAUTH_CLIENT_SECRET`.
+    a client ID and client secret from Google. There are three possible ways to
+    define them:
+    * Adding them in your Flask configuration using the variables
+    :envvar:`GOOGLE_OAUTH_CLIENT_ID` and :envvar:`GOOGLE_OAUTH_CLIENT_SECRET`
+    * Defining your own environment variables and telling the blueprint how to
+    find them using :
+        google_bp.from_config["client_id"] = 'MY_CLIENT_ID_VAR_NAME'
+        google_bp.from_config["client_id"] = 'MY_CLIENT_SECRET_VAR_NAME'
+    * Passing them to this constructor, as long as the default environment
+    variables are not be defined, since they will take precedence.
 
     Args:
         client_id (str): The client ID for your application on Google
