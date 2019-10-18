@@ -16,12 +16,14 @@ __maintainer__ = "Steven MARTINS <steven.martins.fr@gmail.com>"
 def make_azure_blueprint(
     client_id=None,
     client_secret=None,
+    domain_hint=None,
     scope=None,
+    prompt=None,
     redirect_url=None,
     redirect_to=None,
+    login_hint=None,
     login_url=None,
     authorized_url=None,
-    authorization_url_params=None,
     session_class=None,
     storage=None,
     tenant="common",
@@ -36,20 +38,32 @@ def make_azure_blueprint(
     Args:
         client_id (str): The client ID for your application on Azure AD.
         client_secret (str): The client secret for your application on Azure AD
+        domain_hint (str, optional): Provides a hint about the tenant or domain that
+            the user should use to sign in. The value of the domain_hint is a
+            registered domain for the tenant. If the tenant is federated to an
+            on-premises directory, AAD redirects to the specified tenant federation server.
+            Defaults to ``None``
         scope (str, optional): comma-separated list of scopes for the OAuth token
+        prompt (str, optional): Indicate the type of user interaction that is required.
+            Valid values are ``login``, ``select_account``, ``consent``, ``admin_consent``.
+            Learn more about the options `here.
+            <https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-protocols-oauth-code#request-an-authorization-code>`_
+            Defaults to ``None``
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
             view to redirect to after the authentication dance is complete.
             The actual URL will be determined by :func:`flask.url_for`
+        login_hint (str, optional): Can be used to pre-fill the username/email
+            address field of the sign-in page for the user, if you know their
+            username ahead of time. Often apps use this parameter during re-authentication,
+            having already extracted the username from a previous sign-in using the
+            preferred_username claim.
+            Defaults to ``None``
         login_url (str, optional): the URL path for the ``login`` view.
             Defaults to ``/azure``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/azure/authorized``.
-        authorization_url_params (dict, optional): A dict of extra
-            key-value pairs to include in the query string of the
-            ``authorization_url``, beyond those necessary for a standard
-            OAuth 2 authorization grant request.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
@@ -66,6 +80,13 @@ def make_azure_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["openid", "email", "profile", "User.Read"]
+    authorization_url_params = {}
+    if login_hint:
+        authorization_url_params["login_hint"] = login_hint
+    if domain_hint:
+        authorization_url_params["domain_hint"] = domain_hint
+    if prompt:
+        authorization_url_params["prompt"] = prompt
     azure_bp = OAuth2ConsumerBlueprint(
         "azure",
         __name__,

@@ -201,5 +201,5 @@ Provided Pytest Fixture
 
 .. _pytest: https://docs.pytest.org/
 .. _Betamax: https://github.com/betamaxpy/betamax
-.. _Requests: http://docs.python-requests.org
+.. _Requests: https://requests.kennethreitz.org/
 .. _@sigmavirus24: https://github.com/sigmavirus24/
