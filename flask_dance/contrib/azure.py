@@ -21,6 +21,7 @@ def make_azure_blueprint(
     redirect_to=None,
     login_url=None,
     authorized_url=None,
+    authorization_url_params=None,
     session_class=None,
     storage=None,
     tenant="common",
@@ -45,6 +46,10 @@ def make_azure_blueprint(
             Defaults to ``/azure``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/azure/authorized``.
+        authorization_url_params (dict, optional): A dict of extra
+            key-value pairs to include in the query string of the
+            ``authorization_url``, beyond those necessary for a standard
+            OAuth 2 authorization grant request.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
@@ -78,6 +83,7 @@ def make_azure_blueprint(
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
+        authorization_url_params=authorization_url_params,
         session_class=session_class,
         storage=storage,
     )

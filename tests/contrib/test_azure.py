@@ -26,13 +26,18 @@ def make_app():
 
 def test_blueprint_factory():
     azure_bp = make_azure_blueprint(
-        client_id="foo", client_secret="bar", scope="user.read", redirect_to="index"
+        client_id="foo",
+        client_secret="bar",
+        scope="user.read",
+        redirect_to="index",
+        authorization_url_params={"prompt": "select_account"},
     )
     assert isinstance(azure_bp, OAuth2ConsumerBlueprint)
     assert azure_bp.session.scope == "user.read"
     assert azure_bp.session.base_url == "https://graph.microsoft.com"
     assert azure_bp.session.client_id == "foo"
     assert azure_bp.client_secret == "bar"
+    assert azure_bp.authorization_url_params["prompt"] == "select_account"
     assert (
         azure_bp.authorization_url
         == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
@@ -50,12 +55,14 @@ def test_blueprint_factory_with_organization_tenant():
         scope="user.read",
         redirect_to="index",
         tenant="organizations",
+        authorization_url_params={"prompt": "select_account"},
     )
     assert isinstance(azure_orgs_bp, OAuth2ConsumerBlueprint)
     assert azure_orgs_bp.session.scope == "user.read"
     assert azure_orgs_bp.session.base_url == "https://graph.microsoft.com"
     assert azure_orgs_bp.session.client_id == "foo"
     assert azure_orgs_bp.client_secret == "bar"
+    assert azure_orgs_bp.authorization_url_params["prompt"] == "select_account"
     assert (
         azure_orgs_bp.authorization_url
         == "https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize"
