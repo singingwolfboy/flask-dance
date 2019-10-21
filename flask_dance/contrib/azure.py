@@ -16,17 +16,17 @@ __maintainer__ = "Steven MARTINS <steven.martins.fr@gmail.com>"
 def make_azure_blueprint(
     client_id=None,
     client_secret=None,
-    domain_hint=None,
     scope=None,
-    prompt=None,
     redirect_url=None,
     redirect_to=None,
-    login_hint=None,
     login_url=None,
     authorized_url=None,
     session_class=None,
     storage=None,
     tenant="common",
+    prompt=None,
+    domain_hint=None,
+    login_hint=None,
 ):
     """
     Make a blueprint for authenticating with Azure AD using OAuth 2. This requires
@@ -38,28 +38,12 @@ def make_azure_blueprint(
     Args:
         client_id (str): The client ID for your application on Azure AD.
         client_secret (str): The client secret for your application on Azure AD
-        domain_hint (str, optional): Provides a hint about the tenant or domain that
-            the user should use to sign in. The value of the domain_hint is a
-            registered domain for the tenant. If the tenant is federated to an
-            on-premises directory, AAD redirects to the specified tenant federation server.
-            Defaults to ``None``
         scope (str, optional): comma-separated list of scopes for the OAuth token
-        prompt (str, optional): Indicate the type of user interaction that is required.
-            Valid values are ``login``, ``select_account``, ``consent``, ``admin_consent``.
-            Learn more about the options `here.
-            <https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-protocols-oauth-code#request-an-authorization-code>`_
-            Defaults to ``None``
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
             view to redirect to after the authentication dance is complete.
             The actual URL will be determined by :func:`flask.url_for`
-        login_hint (str, optional): Can be used to pre-fill the username/email
-            address field of the sign-in page for the user, if you know their
-            username ahead of time. Often apps use this parameter during re-authentication,
-            having already extracted the username from a previous sign-in using the
-            preferred_username claim.
-            Defaults to ``None``
         login_url (str, optional): the URL path for the ``login`` view.
             Defaults to ``/azure``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
@@ -74,6 +58,22 @@ def make_azure_blueprint(
                 `See the Azure documentation for more information about this parameter.
                 <https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints>`_
                 Defaults to ``common``.
+        prompt (str, optional): Indicate the type of user interaction that is required.
+            Valid values are ``login``, ``select_account``, ``consent``, ``admin_consent``.
+            Learn more about the options `here.
+            <https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-protocols-oauth-code#request-an-authorization-code>`_
+            Defaults to ``None``
+        domain_hint (str, optional): Provides a hint about the tenant or domain that
+            the user should use to sign in. The value of the domain_hint is a
+            registered domain for the tenant. If the tenant is federated to an
+            on-premises directory, AAD redirects to the specified tenant federation server.
+            Defaults to ``None``
+        login_hint (str, optional): Can be used to pre-fill the username/email
+            address field of the sign-in page for the user, if you know their
+            username ahead of time. Often apps use this parameter during re-authentication,
+            having already extracted the username from a previous sign-in using the
+            preferred_username claim.
+            Defaults to ``None``
 
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
