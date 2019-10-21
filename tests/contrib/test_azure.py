@@ -43,6 +43,78 @@ def test_blueprint_factory():
     )
 
 
+def test_blueprint_factory_with_domain_hint():
+    azure_domain_bp = make_azure_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="user.read",
+        redirect_to="index",
+        domain_hint="Sample Hint",
+    )
+    assert isinstance(azure_domain_bp, OAuth2ConsumerBlueprint)
+    assert azure_domain_bp.session.scope == "user.read"
+    assert azure_domain_bp.session.base_url == "https://graph.microsoft.com"
+    assert azure_domain_bp.session.client_id == "foo"
+    assert azure_domain_bp.client_secret == "bar"
+    assert azure_domain_bp.authorization_url_params["domain_hint"] == "Sample Hint"
+    assert (
+        azure_domain_bp.authorization_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+    )
+    assert (
+        azure_domain_bp.token_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    )
+
+
+def test_blueprint_factory_with_login_hint():
+    azure_domain_bp = make_azure_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="user.read",
+        redirect_to="index",
+        login_hint="Sample Login Hint",
+    )
+    assert isinstance(azure_domain_bp, OAuth2ConsumerBlueprint)
+    assert azure_domain_bp.session.scope == "user.read"
+    assert azure_domain_bp.session.base_url == "https://graph.microsoft.com"
+    assert azure_domain_bp.session.client_id == "foo"
+    assert azure_domain_bp.client_secret == "bar"
+    assert azure_domain_bp.authorization_url_params["login_hint"] == "Sample Login Hint"
+    assert (
+        azure_domain_bp.authorization_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+    )
+    assert (
+        azure_domain_bp.token_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    )
+
+
+def test_blueprint_factory_with_prompt():
+    azure_domain_bp = make_azure_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="user.read",
+        redirect_to="index",
+        prompt="select_account",
+    )
+    assert isinstance(azure_domain_bp, OAuth2ConsumerBlueprint)
+    assert azure_domain_bp.session.scope == "user.read"
+    assert azure_domain_bp.session.base_url == "https://graph.microsoft.com"
+    assert azure_domain_bp.session.client_id == "foo"
+    assert azure_domain_bp.client_secret == "bar"
+    assert azure_domain_bp.authorization_url_params["prompt"] == "select_account"
+    assert (
+        azure_domain_bp.authorization_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+    )
+    assert (
+        azure_domain_bp.token_url
+        == "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    )
+
+
 def test_blueprint_factory_with_organization_tenant():
     azure_orgs_bp = make_azure_blueprint(
         client_id="foo",

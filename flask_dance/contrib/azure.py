@@ -24,6 +24,9 @@ def make_azure_blueprint(
     session_class=None,
     storage=None,
     tenant="common",
+    prompt=None,
+    domain_hint=None,
+    login_hint=None,
 ):
     """
     Make a blueprint for authenticating with Azure AD using OAuth 2. This requires
@@ -55,12 +58,35 @@ def make_azure_blueprint(
                 `See the Azure documentation for more information about this parameter.
                 <https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols#endpoints>`_
                 Defaults to ``common``.
+        prompt (str, optional): Indicate the type of user interaction that is required.
+            Valid values are ``login``, ``select_account``, ``consent``, ``admin_consent``.
+            Learn more about the options `here.
+            <https://docs.microsoft.com/en-us/azure/active-directory/develop/v1-protocols-oauth-code#request-an-authorization-code>`_
+            Defaults to ``None``
+        domain_hint (str, optional): Provides a hint about the tenant or domain that
+            the user should use to sign in. The value of the domain_hint is a
+            registered domain for the tenant. If the tenant is federated to an
+            on-premises directory, AAD redirects to the specified tenant federation server.
+            Defaults to ``None``
+        login_hint (str, optional): Can be used to pre-fill the username/email
+            address field of the sign-in page for the user, if you know their
+            username ahead of time. Often apps use this parameter during re-authentication,
+            having already extracted the username from a previous sign-in using the
+            preferred_username claim.
+            Defaults to ``None``
 
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["openid", "email", "profile", "User.Read"]
+    authorization_url_params = {}
+    if login_hint:
+        authorization_url_params["login_hint"] = login_hint
+    if domain_hint:
+        authorization_url_params["domain_hint"] = domain_hint
+    if prompt:
+        authorization_url_params["prompt"] = prompt
     azure_bp = OAuth2ConsumerBlueprint(
         "azure",
         __name__,
@@ -78,6 +104,7 @@ def make_azure_blueprint(
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
+        authorization_url_params=authorization_url_params,
         session_class=session_class,
         storage=storage,
     )
