@@ -3,11 +3,15 @@ Changelog
 
 `unreleased`_
 -------------
+Nothing yet
+
+`3.0.0`_ (2019-10-21)
+---------------------
 * Updated Meetup and Nylas pre-set configurations
   to include the ``client_id`` in the OAuth token request.
 * Removed Okta pre-set configuration, since it doesn't add any value over
   using ``OAuth2ConsumerBlueprint`` directly.
-* Updated Azure to allow defining ``authorization_url_params`` 
+* Updated Azure to allow defining ``authorization_url_params``
 
 `2.2.0`_ (2019-06-04)
 ---------------------
@@ -320,7 +324,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v2.2.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.0.0...HEAD
+.. _3.0.0: https://github.com/singingwolfboy/flask-dance/compare/v2.2.0...v3.0.0
 .. _2.2.0: https://github.com/singingwolfboy/flask-dance/compare/v2.1.0...v2.2.0
 .. _2.1.0: https://github.com/singingwolfboy/flask-dance/compare/v2.0.0...v2.1.0
 .. _2.0.0: https://github.com/singingwolfboy/flask-dance/compare/v1.4.0...v2.0.0
