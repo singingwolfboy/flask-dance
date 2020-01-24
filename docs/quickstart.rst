@@ -36,6 +36,7 @@ SQLAlchemy
 ----------
 
 * `Google <https://github.com/singingwolfboy/flask-dance-google-sqla>`__
+* `Google with Flask-Security <https://github.com/singingwolfboy/flask-dance-google-security-sqla>`__
 * `Twitter <https://github.com/singingwolfboy/flask-dance-twitter-sqla>`__
 * `Facebook <https://github.com/singingwolfboy/flask-dance-facebook-sqla>`__
 * `Heroku <https://github.com/singingwolfboy/flask-dance-heroku-sqla>`__
