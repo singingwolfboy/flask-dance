@@ -2,7 +2,7 @@ Pre-set Configurations
 ======================
 This directory contains pre-set consumer configurations for
 several popular OAuth providers. Have one that you'd like to add? Great, we
-love pull requests! However, you must meet certain critera for your
+love pull requests! However, you must meet certain criteria for your
 configuration to accepted:
 
 1. You must create a Python file in this directory named after the provider:
