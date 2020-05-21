@@ -1,6 +1,6 @@
 include LICENSE
 include *.rst *.txt
-recursive-include tests *.py
+recursive-include tests *.py *.txt
 recursive-include docs *
 recursive-exclude docs .git
 global-exclude .git .gitignore .DS_Store
