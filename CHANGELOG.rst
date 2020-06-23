@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-Nothing yet
+* Updated Discord to use the new discord.com instead of the old discordapp.com
 
 `3.0.0`_ (2019-10-21)
 ---------------------

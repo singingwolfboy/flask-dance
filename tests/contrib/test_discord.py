@@ -32,11 +32,11 @@ def test_blueprint_factory():
     )
     assert isinstance(discord_bp, OAuth2ConsumerBlueprint)
     assert discord_bp.session.scope == ["identify", "email"]
-    assert discord_bp.session.base_url == "https://discordapp.com/"
+    assert discord_bp.session.base_url == "https://discord.com/"
     assert discord_bp.session.client_id == "foo"
     assert discord_bp.client_secret == "bar"
-    assert discord_bp.authorization_url == "https://discordapp.com/api/oauth2/authorize"
-    assert discord_bp.token_url == "https://discordapp.com/api/oauth2/token"
+    assert discord_bp.authorization_url == "https://discord.com/api/oauth2/authorize"
+    assert discord_bp.token_url == "https://discord.com/api/oauth2/token"
 
 
 def test_load_from_config(make_app):
