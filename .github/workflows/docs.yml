@@ -19,6 +19,7 @@ jobs:
           -r docs/requirements.txt
           -e .
 
+      - run: cd docs
       - run: sphinx-build -W -b linkcheck -d _build/doctrees . _build/linkcheck
       - run: sphinx-build -W -b spelling -d _build/doctrees . _build/spelling
       - run: sphinx-build -W -b html -d _build/doctrees . _build/html
