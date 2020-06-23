@@ -2,6 +2,7 @@ pytest
 mock
 responses
 freezegun
+coverage
 # testing sqlalchemy support
 sqlalchemy>=0.9
 sqlalchemy-utils
