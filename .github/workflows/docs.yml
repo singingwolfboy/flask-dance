@@ -1,3 +1,4 @@
+name: Docs
 on: pull_request
 
 jobs:
