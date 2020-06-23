@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Update system package listing
-        run: apt update
+        run: apt-get update
       - name: Install system dependencies
         run: >-
           apt-get install -y
