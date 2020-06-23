@@ -1,0 +1,57 @@
+on: pull_request
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["2.x", "3.x"]
+        database-uri:
+          ["postgresql://testuser:testpw@postgres/testdb", "sqlite://"]
+    name: "pytest: Python ${{ matrix.python-version }}, ${{ matrix.database-uri }}"
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpw
+          POSTGRES_DB: testdb
+    env:
+      DATABASE_URI: ${{ matrix.database-uri }}"
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: >-
+          pip install
+          -r requirements.txt
+          -r tests/requirements.txt
+          -e .
+
+      - name: Run pytest
+        run: coverage run -m pytest
+
+      - name: Upload coverage to Codecov
+        if: ${{ always() }}
+        uses: codecov/codecov-action@v1.0.7
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+  black:
+    runs-on: ubuntu-latest
+    name: black
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install black
+        run: pip install black
+      - name: Run black
+        run: black --check .

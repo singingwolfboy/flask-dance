@@ -1,0 +1,23 @@
+on: pull_request
+
+jobs:
+  sphinx:
+    runs-on: ubuntu-latest
+    name: "Sphinx"
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install dependencies
+        run: >-
+          pip install
+          -r requirements.txt
+          -r docs/requirements.txt
+          -e .
+
+      - run: sphinx-build -W -b linkcheck -d _build/doctrees . _build/linkcheck
+      - run: sphinx-build -W -b spelling -d _build/doctrees . _build/spelling
+      - run: sphinx-build -W -b html -d _build/doctrees . _build/html
