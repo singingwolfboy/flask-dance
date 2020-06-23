@@ -106,8 +106,8 @@ This README provides just a taste of what Flask-Dance is capable of. To see more
 .. _Flask-Login: https://flask-login.readthedocs.io/
 .. _Flask-Caching: https://flask-caching.readthedocs.io/
 
-.. |build-status| image:: https://travis-ci.org/singingwolfboy/flask-dance.svg?branch=master&style=flat
-   :target: https://travis-ci.org/singingwolfboy/flask-dance
+.. |build-status| image:: https://github.com/singingwolfboy/flask-dance/workflows/Test/badge.svg
+   :target: https://github.com/singingwolfboy/flask-dance/actions?query=workflow%3ATest
    :alt: Build status
 .. |coverage-status| image:: http://codecov.io/github/singingwolfboy/flask-dance/coverage.svg?branch=master
    :target: http://codecov.io/github/singingwolfboy/flask-dance?branch=master
