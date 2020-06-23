@@ -8,7 +8,7 @@ jobs:
       matrix:
         python-version: ["2.x", "3.x"]
         database-uri:
-          - "postgresql://testuser:testpw@postgres/testdb"
+          - "postgresql://testuser:testpw@localhost/testdb"
           - "sqlite://"
     name: "pytest: Python ${{ matrix.python-version }}, postgres=${{ contains(matrix.database-uri, 'postgres') }}"
     services:
