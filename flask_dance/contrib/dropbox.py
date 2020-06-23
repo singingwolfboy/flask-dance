@@ -36,7 +36,7 @@ def make_dropbox_blueprint(
 
     For more information about the ``force_reapprove``, ``disable_signup``,
     and ``require_role`` arguments, `check the Dropbox API documentation
-    <https://www.dropbox.com/developers-v1/core/docs#oa2-authorize>`_.
+    <https://www.dropbox.com/developers/documentation/http/overview>`_.
 
     Args:
         app_key (str): The client ID for your application on Dropbox.
