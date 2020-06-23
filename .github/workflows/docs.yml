@@ -1,0 +1,36 @@
+name: Docs
+on: pull_request
+
+jobs:
+  sphinx:
+    runs-on: ubuntu-latest
+    name: "Sphinx"
+    defaults:
+      run:
+        working-directory: docs
+
+    steps:
+      - name: Install system dependencies
+        run: >-
+          sudo apt-get install -y
+          python3-enchant
+          aspell-en
+          hunspell-en-us
+        working-directory: .
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Install dependencies
+        run: >-
+          pip install
+          -r requirements.txt
+          -r docs/requirements.txt
+          -e .
+        working-directory: .
+
+      - run: sphinx-build -W -b linkcheck -d _build/doctrees . _build/linkcheck
+      - run: sphinx-build -W -b spelling -d _build/doctrees . _build/spelling
+      - run: sphinx-build -W -b html -d _build/doctrees . _build/html

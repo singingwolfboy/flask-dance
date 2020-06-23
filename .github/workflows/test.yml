@@ -1,0 +1,56 @@
+name: Test
+on: pull_request
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["2.x", "3.x"]
+        database-uri:
+          - "postgresql://testuser:testpw@localhost/testdb"
+          - "sqlite://"
+    name: "pytest: Python ${{ matrix.python-version }}, postgres=${{ contains(matrix.database-uri, 'postgres') }}"
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpw
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URI: ${{ matrix.database-uri }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: >-
+          pip install
+          -r requirements.txt
+          -r tests/requirements.txt
+          -e .
+
+      - name: Install psycopg2
+        if: ${{ contains(matrix.database-uri, 'postgres') }}
+        run: pip install psycopg2
+
+      - name: Run pytest
+        run: coverage run -m pytest
+
+      - name: Upload coverage to Codecov
+        if: ${{ always() }}
+        uses: codecov/codecov-action@v1.0.7
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false

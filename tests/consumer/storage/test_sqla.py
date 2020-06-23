@@ -324,7 +324,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
             with client.session_transaction() as sess:
                 sess["test-service_oauth_state"] = "random-string"
                 # set alice as the logged in user
-                sess["user_id"] = u1.id
+                sess["_user_id"] = u1.id
             # make the request
             resp = client.get(
                 "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -349,7 +349,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
             with client.session_transaction() as sess:
                 sess["test-service_oauth_state"] = "random-string"
                 # set bob as the logged in user
-                sess["user_id"] = u2.id
+                sess["_user_id"] = u2.id
             # make the request
             resp = client.get(
                 "/login/test-service/authorized?code=secret-code&state=random-string",
