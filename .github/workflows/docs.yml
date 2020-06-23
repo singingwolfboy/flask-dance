@@ -12,11 +12,10 @@ jobs:
     steps:
       - name: Install system dependencies
         run: >-
-          sudo apt-get install -y
+          apt-get install -y
           python3-enchant
           aspell-en
           hunspell-en-us
-          myspell-en-us
         working-directory: .
 
       - uses: actions/checkout@v2
