@@ -9,5 +9,6 @@ sqlalchemy-utils
 flask-sqlalchemy
 # testing integration with other extensions
 flask-login
-flask-caching
+flask-caching==1.7.2; python_version==2.7
+flask-caching; python_version>=3
 betamax
