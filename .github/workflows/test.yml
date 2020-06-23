@@ -18,7 +18,7 @@ jobs:
           POSTGRES_PASSWORD: testpw
           POSTGRES_DB: testdb
     env:
-      DATABASE_URI: ${{ matrix.database-uri }}"
+      DATABASE_URI: ${{ matrix.database-uri }}
 
     steps:
       - uses: actions/checkout@v2
