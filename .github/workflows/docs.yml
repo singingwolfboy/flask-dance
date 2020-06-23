@@ -10,6 +10,16 @@ jobs:
         working-directory: docs
 
     steps:
+      - name: Update system package listing
+        run: apt update
+      - name: Install system dependencies
+        run: >-
+          apt-get install -y
+          python3-enchant
+          aspell-en
+          hunspell-en-us
+          myspell-en-us
+
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
