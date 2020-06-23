@@ -1,5 +1,13 @@
 name: Lint
-on: pull_request
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+  push:
+    branches:
+      - master
+      - main
 
 jobs:
   black:
