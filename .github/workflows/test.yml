@@ -35,7 +35,7 @@ jobs:
           -e .
 
       - name: Install psycopg2
-        if: ${{ contains(matrix.database-uri, "postgres") }}
+        if: ${{ contains(matrix.database-uri, 'postgres') }}
         run: pip install psycopg2
 
       - name: Run pytest
