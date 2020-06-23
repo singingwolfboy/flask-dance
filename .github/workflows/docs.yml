@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Install system dependencies
         run: >-
-          apt-get install -y
+          sudo apt-get install -y
           python3-enchant
           aspell-en
           hunspell-en-us
