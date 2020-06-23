@@ -31,6 +31,7 @@ def is_requirement(line):
         or line.startswith("#")
         or line.startswith("-e")
         or line.startswith("git+")
+        or ";" in line
     )
 
 
