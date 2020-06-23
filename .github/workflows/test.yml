@@ -47,17 +47,3 @@ jobs:
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
-
-  black:
-    runs-on: ubuntu-latest
-    name: black
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.8"
-      - name: Install black
-        run: pip install black
-      - name: Run black
-        run: black --check .
