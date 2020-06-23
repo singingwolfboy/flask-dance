@@ -334,7 +334,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 4
+    assert len(queries) == 1
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
     responses.reset()
@@ -359,7 +359,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
             assert resp.status_code == 302
             assert resp.headers["Location"] == "https://a.b.c/oauth_done"
 
-    assert len(queries) == 4
+    assert len(queries) == 1
 
     # check the database
     authorizations = OAuth.query.all()
