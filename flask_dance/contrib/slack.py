@@ -29,6 +29,7 @@ def make_slack_blueprint(
     authorized_url=None,
     session_class=None,
     storage=None,
+    subdomain=None,
 ):
     """
     Make a blueprint for authenticating with Slack using OAuth 2. This requires
@@ -50,6 +51,8 @@ def make_slack_blueprint(
             Defaults to ``/slack``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/slack/authorized``.
+        subdomain (str, optional): the name of the subdomain under which your
+            Slack space is accessed. Providing this may improve the login experience.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
@@ -61,6 +64,8 @@ def make_slack_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify", "chat:write:bot"]
+    subdomain = subdomain or ""
+    if subdomain is not "": subdomain += "."
     slack_bp = SlackBlueprint(
         "slack",
         __name__,
@@ -68,7 +73,7 @@ def make_slack_blueprint(
         client_secret=client_secret,
         scope=scope,
         base_url="https://slack.com/api/",
-        authorization_url="https://slack.com/oauth/authorize",
+        authorization_url="https://%sslack.com/oauth/authorize" % subdomain,
         token_url="https://slack.com/api/oauth.access",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
