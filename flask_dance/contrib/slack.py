@@ -75,7 +75,7 @@ def make_slack_blueprint(
         client_secret=client_secret,
         scope=scope,
         base_url="https://slack.com/api/",
-        authorization_url="https://{hostname}/oauth/authorize".format(hostname=hostname)
+        authorization_url="https://{hostname}/oauth/authorize".format(hostname=hostname),
         token_url="https://slack.com/api/oauth.access",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
