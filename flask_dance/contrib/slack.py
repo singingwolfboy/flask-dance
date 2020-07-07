@@ -64,8 +64,10 @@ def make_slack_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify", "chat:write:bot"]
-    subdomain = subdomain or ""
-    if subdomain is not "": subdomain += "."
+    if subdomain:
+        hostname = "{subdomain}.slack.com".format(subdomain=subdomain)
+    else:
+        hostname = "slack.com"
     slack_bp = SlackBlueprint(
         "slack",
         __name__,
