@@ -51,14 +51,14 @@ def make_slack_blueprint(
             Defaults to ``/slack``
         authorized_url (str, optional): the URL path for the ``authorized`` view.
             Defaults to ``/slack/authorized``.
-        subdomain (str, optional): the name of the subdomain under which your
-            Slack space is accessed. Providing this may improve the login experience.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
         storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
+        subdomain (str, optional): the name of the subdomain under which your
+            Slack space is accessed. Providing this may improve the login experience.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
