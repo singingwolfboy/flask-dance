@@ -48,7 +48,7 @@ class OAuth1Session(BaseOAuth1Session):
 
     @property
     def authorized(self):
-        """ This is the property used when you have a statement in your code
+        """This is the property used when you have a statement in your code
         that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
 
         The way it works is kind of complicated: this function just tries
@@ -146,7 +146,7 @@ class OAuth2Session(BaseOAuth2Session):
 
     @property
     def authorized(self):
-        """ This is the property used when you have a statement in your code
+        """This is the property used when you have a statement in your code
         that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
 
         The way it works is kind of complicated: this function just tries
