@@ -49,6 +49,7 @@ Okta
 Reddit
 Slack
 Spotify
+Strava
 Twitter
 Zoho
 Atlassian

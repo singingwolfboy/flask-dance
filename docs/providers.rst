@@ -191,6 +191,18 @@ Slack
     already has the Slack authentication token loaded (assuming that the user
     has authenticated with Slack at some point in the past).
 
+Strava
+------
+.. module:: flask_dance.contrib.strava
+
+.. autofunction:: make_strava_blueprint
+
+.. data:: strava
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Strava authentication token loaded (assuming that the user
+    has authenticated with Strava at some point in the past).
+
 Twitter
 -------
 .. module:: flask_dance.contrib.twitter

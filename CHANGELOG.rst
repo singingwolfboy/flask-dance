@@ -4,6 +4,7 @@ Changelog
 `unreleased`_
 -------------
 * Updated Discord to use the new discord.com instead of the old discordapp.com
+* Add Strava pre-set configuration
 
 `3.0.0`_ (2019-10-21)
 ---------------------
