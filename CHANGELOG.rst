@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`3.1.0`_ (2020-10-29)
+---------------------
 * Updated Discord to use the new discord.com instead of the old discordapp.com
 * Add Strava pre-set configuration
 
