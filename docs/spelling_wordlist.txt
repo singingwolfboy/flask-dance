@@ -36,6 +36,7 @@ authentiq
 Azure
 Discord
 Dropbox
+DigitalOcean
 Facebook
 GitHub
 GitLab

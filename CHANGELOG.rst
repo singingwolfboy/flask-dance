@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+Added Digital Ocean pre-set configuration
 
 `3.1.0`_ (2020-10-29)
 ---------------------
