@@ -4,8 +4,7 @@ import pytest
 import responses
 from urlobject import URLObject
 from flask import Flask
-from flask_dance.contrib.digitalocean import (make_digitalocean_blueprint,
-                                              digitalocean)
+from flask_dance.contrib.digitalocean import make_digitalocean_blueprint, digitalocean
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
 
@@ -25,27 +24,31 @@ def make_app():
 
 
 def test_scope_list_is_valid_with_single_scope():
-    digitalocean_bp = make_digitalocean_blueprint(client_id="foobar",
-                                                  client_secret="supersecret",
-                                                  scope="read")
+    digitalocean_bp = make_digitalocean_blueprint(
+        client_id="foobar", client_secret="supersecret", scope="read"
+    )
     assert digitalocean_bp.session.scope == "read"
 
 
 def test_scope_list_is_converted_to_space_delimited():
-    digitalocean_bp = make_digitalocean_blueprint(client_id="foobar",
-                                                  client_secret="supersecret",
-                                                  scope="read,write")
+    digitalocean_bp = make_digitalocean_blueprint(
+        client_id="foobar", client_secret="supersecret", scope="read,write"
+    )
     assert digitalocean_bp.session.scope == "read write"
 
 
 def test_blueprint_factory():
-    digitalocean_bp = make_digitalocean_blueprint(client_id="foobar",
-                                                  client_secret="supersecret")
+    digitalocean_bp = make_digitalocean_blueprint(
+        client_id="foobar", client_secret="supersecret"
+    )
     assert isinstance(digitalocean_bp, OAuth2ConsumerBlueprint)
     assert digitalocean_bp.session.client_id == "foobar"
     assert digitalocean_bp.client_secret == "supersecret"
     assert digitalocean_bp.token_url == "https://cloud.digitalocean.com/v1/oauth/token"
-    assert digitalocean_bp.authorization_url == "https://cloud.digitalocean.com/v1/oauth/authorize"
+    assert (
+        digitalocean_bp.authorization_url
+        == "https://cloud.digitalocean.com/v1/oauth/authorize"
+    )
 
 
 @responses.activate
@@ -76,12 +79,12 @@ def test_context_local(make_app):
         redirect_to="url2",
         storage=MemoryStorage({"access_token": "app2"}),
     )
-    # outside of a request context, referencing functions on the `digitalocean` object
-    # will raise an exception
+    # outside of a request context, referencing functions on the `digitalocean`
+    # object will raise an exception
     with pytest.raises(RuntimeError):
         digitalocean.get("https://google.com")
-    # inside of a request context, `digitalocean` should be a proxy to the correct
-    # blueprint session
+    # inside of a request context, `digitalocean` should be a proxy to the
+    # correct blueprint session
     with app1.test_request_context("/"):
         app1.preprocess_request()
         digitalocean.get("https://google.com")

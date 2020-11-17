@@ -36,9 +36,7 @@ def make_digitalocean_blueprint(
         client_id (str): Client ID for your application on Digital Ocean
         client_secret (str): Client secret for your Digital Ocean application
         scope (str, optional): comma-separated list of scopes for the OAuth
-            token. Digital Ocean uses space delimitation but comma deliminated
-            values are used for library consistency and the commas are replaced
-            with spaces when the blueprint is declared below
+            token.
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
