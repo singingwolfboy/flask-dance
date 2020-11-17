@@ -36,7 +36,7 @@ Azure
     has authenticated with Azure AD at some point in the past).
 
 Digital Ocean
------
+-------------
 .. module:: flask_dance.contrib.digitalocean
 
 .. autofunction:: make_digitalocean_blueprint
