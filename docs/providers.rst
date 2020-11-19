@@ -35,6 +35,18 @@ Azure
     already has the Azure AD authentication token loaded (assuming that the user
     has authenticated with Azure AD at some point in the past).
 
+Digital Ocean
+-------------
+.. module:: flask_dance.contrib.digitalocean
+
+.. autofunction:: make_digitalocean_blueprint
+
+.. data:: digitalocean
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Digital Ocean authentication token loaded (assuming that 
+    the user has authenticated with Digital Ocean at some point in the past).
+
 Discord
 -------
 .. module:: flask_dance.contrib.discord
