@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`3.2.0`_ (2020-11-24)
+---------------------
 Added Digital Ocean pre-set configuration
 
 `3.1.0`_ (2020-10-29)
@@ -329,7 +333,9 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.0.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...HEAD
+.. _3.2.0: https://github.com/singingwolfboy/flask-dance/compare/v3.1.0...v3.2.0
+.. _3.1.0: https://github.com/singingwolfboy/flask-dance/compare/v3.0.0...v3.1.0
 .. _3.0.0: https://github.com/singingwolfboy/flask-dance/compare/v2.2.0...v3.0.0
 .. _2.2.0: https://github.com/singingwolfboy/flask-dance/compare/v2.1.0...v2.2.0
 .. _2.1.0: https://github.com/singingwolfboy/flask-dance/compare/v2.0.0...v2.1.0
