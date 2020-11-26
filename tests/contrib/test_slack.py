@@ -47,6 +47,23 @@ def test_blueprint_factory():
     assert slack_bp.token_url == "https://slack.com/api/oauth.access"
 
 
+def test_blueprint_factory_with_subdomain():
+    slack_bp = make_slack_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope=["identity", "im:write"],
+        redirect_to="index",
+        subdomain="my-team",
+    )
+    assert isinstance(slack_bp, OAuth2ConsumerBlueprint)
+    assert slack_bp.session.scope == ["identity", "im:write"]
+    assert slack_bp.session.base_url == "https://slack.com/api/"
+    assert slack_bp.session.client_id == "foo"
+    assert slack_bp.client_secret == "bar"
+    assert slack_bp.authorization_url == "https://my-team.slack.com/oauth/authorize"
+    assert slack_bp.token_url == "https://slack.com/api/oauth.access"
+
+
 def test_load_from_config(make_app):
     app = make_app()
     app.config["SLACK_OAUTH_CLIENT_ID"] = "foo"
