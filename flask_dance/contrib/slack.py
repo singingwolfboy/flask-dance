@@ -64,10 +64,6 @@ def make_slack_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify", "chat:write:bot"]
-    if subdomain:
-        hostname = "{subdomain}.slack.com".format(subdomain=subdomain)
-    else:
-        hostname = "slack.com"
     slack_bp = SlackBlueprint(
         "slack",
         __name__,
@@ -75,9 +71,9 @@ def make_slack_blueprint(
         client_secret=client_secret,
         scope=scope,
         base_url="https://slack.com/api/",
-        authorization_url="https://{hostname}/oauth/authorize".format(
-            hostname=hostname
-        ),
+        authorization_url="https://slack.com/oauth/authorize"
+        if subdomain is None
+        else "https://{subdomain}.slack.com/oauth/authorize".format(hostname=hostname),
         token_url="https://slack.com/api/oauth.access",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
