@@ -73,7 +73,9 @@ def make_slack_blueprint(
         base_url="https://slack.com/api/",
         authorization_url="https://slack.com/oauth/authorize"
         if subdomain is None
-        else "https://{subdomain}.slack.com/oauth/authorize".format(subdomain=subdomain),
+        else "https://{subdomain}.slack.com/oauth/authorize".format(
+            subdomain=subdomain
+        ),
         token_url="https://slack.com/api/oauth.access",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
