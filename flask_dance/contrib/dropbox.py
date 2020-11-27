@@ -43,7 +43,7 @@ def make_dropbox_blueprint(
         app_key (str): The client ID for your application on Dropbox.
         app_secret (str): The client secret for your application on Dropbox
         scope (str, optional): Comma-separated list of scopes for the OAuth token
-        offline (bool): Whether to request `offline access
+        offline (bool): Whether to request `offline token access
             <https://www.dropbox.com/developers/reference/auth-types>`_
             for the OAuth token. Defaults to False
         force_reapprove (bool): Force the user to approve the app again
