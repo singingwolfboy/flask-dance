@@ -145,6 +145,13 @@ class OAuth2Session(BaseOAuth2Session):
         return self.token and self.token.get("access_token")
 
     @property
+    def refresh_token(self):
+        """
+        Returns the ``refresh_token`` from the OAuth token.
+        """
+        return self.token and self.token.get("refresh_token")
+
+    @property
     def authorized(self):
         """This is the property used when you have a statement in your code
         that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
