@@ -56,7 +56,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: ${{ always() }}
-        uses: codecov/codecov-action@v1.0.7
+        uses: codecov/codecov-action@v1.1.1
         with:
-          file: ./coverage.xml
           fail_ci_if_error: false
