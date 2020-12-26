@@ -77,7 +77,7 @@ def make_discord_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
-        authorization_url_params = authorization_url_params,
+        authorization_url_params=authorization_url_params,
     )
     discord_bp.from_config["client_id"] = "DISCORD_OAUTH_CLIENT_ID"
     discord_bp.from_config["client_secret"] = "DISCORD_OAUTH_CLIENT_SECRET"
