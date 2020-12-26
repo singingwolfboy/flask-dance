@@ -37,6 +37,25 @@ def test_blueprint_factory():
     assert discord_bp.client_secret == "bar"
     assert discord_bp.authorization_url == "https://discord.com/api/oauth2/authorize"
     assert discord_bp.token_url == "https://discord.com/api/oauth2/token"
+    assert discord_bp.authorization_url_params["prompt"] == "consent"
+
+
+def test_blueprint_factory_with_prompt():
+    discord_bp = make_discord_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope=["identify", "email"],
+        redirect_to="index",
+        prompt=None,
+    )
+    assert isinstance(discord_bp, OAuth2ConsumerBlueprint)
+    assert discord_bp.session.scope == ["identify", "email"]
+    assert discord_bp.session.base_url == "https://discord.com/"
+    assert discord_bp.session.client_id == "foo"
+    assert discord_bp.client_secret == "bar"
+    assert discord_bp.authorization_url == "https://discord.com/api/oauth2/authorize"
+    assert discord_bp.token_url == "https://discord.com/api/oauth2/token"
+    assert discord_bp.authorization_url_params["prompt"] == None
 
 
 def test_load_from_config(make_app):
@@ -66,6 +85,7 @@ def test_context_local(make_app):
         "bar2",
         redirect_to="url2",
         storage=MemoryStorage({"access_token": "app2"}),
+        prompt=None,
     )
 
     # outside of a request context, referencing functions on the `discord` object
