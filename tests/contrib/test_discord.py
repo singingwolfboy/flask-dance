@@ -37,6 +37,7 @@ def test_blueprint_factory():
     assert discord_bp.client_secret == "bar"
     assert discord_bp.authorization_url == "https://discord.com/api/oauth2/authorize"
     assert discord_bp.token_url == "https://discord.com/api/oauth2/token"
+    assert discord_bp.authorization_url_params["prompt"] == "consent"
 
 
 def test_blueprint_factory_with_prompt():
