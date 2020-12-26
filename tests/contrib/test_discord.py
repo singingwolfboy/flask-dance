@@ -66,6 +66,7 @@ def test_context_local(make_app):
         "bar2",
         redirect_to="url2",
         storage=MemoryStorage({"access_token": "app2"}),
+        prompt=None,
     )
 
     # outside of a request context, referencing functions on the `discord` object

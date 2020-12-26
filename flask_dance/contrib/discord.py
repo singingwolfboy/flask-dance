@@ -23,6 +23,7 @@ def make_discord_blueprint(
     authorized_url=None,
     session_class=None,
     storage=None,
+    prompt="consent",
 ):
     """
     Make a blueprint for authenticating with Discord using OAuth 2. This requires
@@ -50,11 +51,17 @@ def make_discord_blueprint(
         storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
+        prompt (str, optional): Define authorization flow.
+            Defaults to ``consent``, setting it to ``None`` will skip user
+            interaction if the application was previously approved.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify"]
+    authorization_url_params = {"prompt": "consent"}
+    if prompt is None:
+        authorization_url_params["prompt"] = None
     discord_bp = OAuth2ConsumerBlueprint(
         "discord",
         __name__,
@@ -70,6 +77,7 @@ def make_discord_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
+        authorization_url_params = authorization_url_params,
     )
     discord_bp.from_config["client_id"] = "DISCORD_OAUTH_CLIENT_ID"
     discord_bp.from_config["client_secret"] = "DISCORD_OAUTH_CLIENT_SECRET"
