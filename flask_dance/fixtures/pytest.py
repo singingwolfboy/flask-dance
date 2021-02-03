@@ -42,7 +42,6 @@ with :func:`pytest.mark.usefixtures`, like this:
         assert response.status_code == 200
 
 """
-from __future__ import absolute_import
 
 import pytest
 
@@ -72,7 +71,7 @@ def betamax_record_flask_dance(app, flask_dance_sessions, request):
         betamax_setup_info = [
             (
                 session,
-                "{testname}-{index}".format(testname=request.node.name, index=index),
+                f"{request.node.name}-{index}",
             )
             for index, session in enumerate(flask_dance_sessions)
         ]

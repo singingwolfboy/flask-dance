@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
@@ -63,11 +61,11 @@ def make_gitlab_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://{hostname}/api/v4/".format(hostname=hostname),
+        base_url=f"https://{hostname}/api/v4/",
         authorization_url="https://{hostname}/oauth/authorize".format(
             hostname=hostname
         ),
-        token_url="https://{hostname}/oauth/token".format(hostname=hostname),
+        token_url=f"https://{hostname}/oauth/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import os.path
 from urlobject import URLObject
 from oauthlib.oauth1 import SIGNATURE_RSA
@@ -19,7 +17,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 class JsonOAuth1Session(OAuth1Session):
     def __init__(self, *args, **kwargs):
-        super(JsonOAuth1Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.headers["Content-Type"] = "application/json"
 
 

@@ -1,8 +1,5 @@
-from __future__ import unicode_literals, print_function
-
 import warnings
 from datetime import datetime, timedelta
-import six
 from abc import ABCMeta, abstractmethod, abstractproperty
 from werkzeug.datastructures import CallbackDict
 import flask
@@ -21,7 +18,7 @@ oauth_before_login = _signals.signal("oauth-before-login")
 oauth_error = _signals.signal("oauth-error")
 
 
-class BaseOAuthConsumerBlueprint(six.with_metaclass(ABCMeta, flask.Blueprint)):
+class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
     def __init__(
         self,
         name,

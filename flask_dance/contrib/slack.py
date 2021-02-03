@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 from functools import partial

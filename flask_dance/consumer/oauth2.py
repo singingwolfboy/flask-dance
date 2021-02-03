@@ -1,4 +1,3 @@
-from __future__ import unicode_literals, print_function
 import json
 
 import logging
@@ -54,7 +53,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         redirect_to=None,
         session_class=None,
         storage=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Most of the constructor arguments are forwarded either to the
@@ -179,7 +178,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             state=self.state,
             blueprint=self,
             base_url=self.base_url,
-            **self.kwargs
+            **self.kwargs,
         )
 
         def token_updater(token):
@@ -200,7 +199,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state, **self.authorization_url_params
         )
-        state_key = "{bp.name}_oauth_state".format(bp=self)
+        state_key = f"{self.name}_oauth_state"
         flask.session[state_key] = state
         log.debug("state = %s", state)
         log.debug("redirect URL = %s", url)
@@ -237,7 +236,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             )
             return redirect(next_url)
 
-        state_key = "{bp.name}_oauth_state".format(bp=self)
+        state_key = f"{self.name}_oauth_state"
         if state_key not in flask.session:
             # can't validate state, so redirect back to login view
             log.info("state not found, redirecting user to login")
@@ -257,7 +256,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 self.token_url,
                 authorization_response=request.url,
                 client_secret=self.client_secret,
-                **self.token_url_params
+                **self.token_url_params,
             )
         except MissingCodeError as e:
             e.args = (

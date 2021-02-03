@@ -1,5 +1,4 @@
 pytest
-mock
 responses
 freezegun
 coverage

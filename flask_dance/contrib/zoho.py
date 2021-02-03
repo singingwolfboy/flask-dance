@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from oauthlib.oauth2.rfc6749 import tokens
 from oauthlib.oauth2.rfc6749.clients.web_application import WebApplicationClient
 from flask_dance.consumer import OAuth2ConsumerBlueprint

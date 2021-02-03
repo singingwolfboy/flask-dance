@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth2Session
 from functools import partial
@@ -16,7 +14,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 class HerokuOAuth2Session(OAuth2Session):
     def __init__(self, api_version, *args, **kwargs):
-        super(HerokuOAuth2Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         accept = "application/vnd.heroku+json; version={api_version}".format(
             api_version=api_version
         )

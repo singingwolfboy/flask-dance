@@ -1,7 +1,5 @@
-from __future__ import unicode_literals
-
 import pytest
-import mock
+from unittest import mock
 import responses
 from flask import Flask
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter

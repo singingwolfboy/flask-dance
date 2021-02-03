@@ -1,12 +1,9 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 try:
     from urllib.parse import quote_plus
 except ImportError:
     from urllib import quote_plus
 import pytest
-import mock
+from unittest import mock
 import responses
 import flask
 from werkzeug.middleware.proxy_fix import ProxyFix

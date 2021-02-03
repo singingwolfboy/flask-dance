@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Dropped support for Python 2 and Python 3.5
 
 `3.3.0`_ (2021-02-25)
 ---------------------

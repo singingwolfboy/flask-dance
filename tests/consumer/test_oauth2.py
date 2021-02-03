@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
 import json
 import re
 from oauthlib.oauth2 import MissingCodeError
@@ -10,7 +8,7 @@ except ImportError:
     from urllib import quote_plus
     from urlparse import parse_qsl
 import pytest
-import mock
+from unittest import mock
 import responses
 from urlobject import URLObject
 import flask

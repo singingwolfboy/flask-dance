@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import pytest
-import mock
+from unittest import mock
 import responses
 from flask_dance.consumer.requests import OAuth1Session, OAuth2Session
 

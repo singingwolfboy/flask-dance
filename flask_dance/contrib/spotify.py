@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object

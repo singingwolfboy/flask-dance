@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint, OAuth2Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
@@ -16,18 +14,18 @@ except ImportError:
 __maintainer__ = "Jimmy Hedman <jimmy.hedman@gmail.com>"
 
 
-DEFAULT_USER_AGENT = "Flask-Dance/{version}".format(version=_flask_dance_version)
+DEFAULT_USER_AGENT = f"Flask-Dance/{_flask_dance_version}"
 
 
 class StravaOAuth2Session(OAuth2Session):
     def fetch_token(self, *args, **kwargs):
         # Pass client_id to session so it could trigger Basic Auth
-        return super(StravaOAuth2Session, self).fetch_token(
+        return super().fetch_token(
             include_client_id=True,
             method="POST",
             code=request.args.get("code"),
             *args,
-            **kwargs
+            **kwargs,
         )
 
 
