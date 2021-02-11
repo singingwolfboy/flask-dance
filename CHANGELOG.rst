@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Add `offline` option to `make_dropbox_blueprint`
 
 `3.2.0`_ (2020-11-24)
 ---------------------
