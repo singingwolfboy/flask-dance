@@ -17,6 +17,7 @@ def make_dropbox_blueprint(
     app_key=None,
     app_secret=None,
     scope=None,
+    offline=False,
     force_reapprove=False,
     disable_signup=False,
     require_role=None,
@@ -42,6 +43,9 @@ def make_dropbox_blueprint(
         app_key (str): The client ID for your application on Dropbox.
         app_secret (str): The client secret for your application on Dropbox
         scope (str, optional): Comma-separated list of scopes for the OAuth token
+        offline (bool): Whether to request `Dropbox offline access
+            <https://www.dropbox.com/lp/developers/reference/oauth-guide>`_
+            for the OAuth token. Defaults to False
         force_reapprove (bool): Force the user to approve the app again
             if they've already done so.
         disable_signup (bool): Prevent users from seeing a sign-up link
@@ -69,6 +73,8 @@ def make_dropbox_blueprint(
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     authorization_url_params = {}
+    if offline:
+        authorization_url_params["token_access_type"] = "offline"
     if force_reapprove:
         authorization_url_params["force_reapprove"] = "true"
     if disable_signup:

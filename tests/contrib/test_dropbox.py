@@ -7,6 +7,7 @@ from flask import Flask
 from flask_dance.contrib.dropbox import make_dropbox_blueprint, dropbox
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
+from six import string_types
 
 
 @pytest.fixture
@@ -82,32 +83,40 @@ def test_context_local(make_app):
         assert request.headers["Authorization"] == "Bearer app2"
 
 
-def test_force_reapprove(make_app):
-    app = make_app("foo", "bar", force_reapprove=True)
-
+def _test_app_redirect(app):
     with app.test_client() as client:
         resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
-    # check that there is a `force_reapprove=true` query param in the redirect URL
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
-    assert location.query_dict["force_reapprove"] == "true"
+    return location
+
+
+def test_default_redirect_params(make_app):
+    app = make_app("foo", "bar")
+    query_dict = _test_app_redirect(app).query_dict
+    assert isinstance(query_dict.pop("state"), string_types)
+    assert query_dict == {
+        "client_id": "foo",
+        "redirect_uri": "https://a.b.c/dropbox/authorized",
+        "response_type": "code",
+    }
+
+
+def test_force_reapprove(make_app):
+    app = make_app("foo", "bar", force_reapprove=True)
+    assert _test_app_redirect(app).query_dict["force_reapprove"] == "true"
 
 
 def test_disable_signup(make_app):
     app = make_app("foo", "bar", disable_signup=True)
-
-    with app.test_client() as client:
-        resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
-    assert resp.status_code == 302
-    location = URLObject(resp.headers["Location"])
-    assert location.query_dict["disable_signup"] == "true"
+    assert _test_app_redirect(app).query_dict["disable_signup"] == "true"
 
 
 def test_require_role(make_app):
     app = make_app("foo", "bar", require_role="work")
+    assert _test_app_redirect(app).query_dict["require_role"] == "work"
 
-    with app.test_client() as client:
-        resp = client.get("/dropbox", base_url="https://a.b.c", follow_redirects=False)
-    assert resp.status_code == 302
-    location = URLObject(resp.headers["Location"])
-    assert location.query_dict["require_role"] == "work"
+
+def test_offline(make_app):
+    app = make_app("foo", "bar", offline=True)
+    assert _test_app_redirect(app).query_dict["token_access_type"] == "offline"
