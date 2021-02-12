@@ -1,7 +1,8 @@
-from functools import partial
+from __future__ import unicode_literals
 
-from flask.globals import LocalProxy, _lookup_app_object
 from flask_dance.consumer import OAuth2ConsumerBlueprint
+from functools import partial
+from flask.globals import LocalProxy, _lookup_app_object
 
 try:
     from flask import _app_ctx_stack as stack
@@ -9,7 +10,7 @@ except ImportError:
     from flask import _request_ctx_stack as stack
 
 
-def make_jira_blueprint(
+def make_atlassian_blueprint(
     client_id=None,
     client_secret=None,
     scope=None,
@@ -22,17 +23,17 @@ def make_jira_blueprint(
     storage=None,
 ):
     """
-    Make a blueprint for authenticating with Jira using OAuth 2. This requires
-    a client ID and client secret from Jira. You should either pass them to
+    Make a blueprint for authenticating with Atlassian using OAuth 2. This requires
+    a client ID and client secret from Atlassian. You should either pass them to
     this constructor, or make sure that your Flask application config defines
-    them, using the variables :envvar:`JIRA_OAUTH2_CLIENT_ID` and
-    :envvar:`JIRA_OAUTH2_CLIENT_SECRET`.
+    them, using the variables :envvar:`ATLASSIAN_OAUTH_CLIENT_ID` and
+    :envvar:`ATLASSIAN_OAUTH_CLIENT_SECRET`.
 
     Args:
-        client_id (str): The client ID for your application on Jira.
-        client_secret (str): The client secret for your application on Jira.
+        client_id (str): The client ID for your application on Atlassian.
+        client_secret (str): The client secret for your application on Atlassian.
         scope (str, optional): comma-separated list of scopes for the OAuth token.
-        reprompt_consent (bool): If True, force Jira to re-prompt the user
+        reprompt_consent (bool): If True, force Atlassian to re-prompt the user
             for their consent, even if the user has already given their
             consent. Defaults to False.
         redirect_url (str): the URL to redirect to after the authentication
@@ -41,9 +42,9 @@ def make_jira_blueprint(
             view to redirect to after the authentication dance is complete.
             The actual URL will be determined by :func:`flask.url_for`.
         login_url (str, optional): the URL path for the ``login`` view.
-            Defaults to ``/jira``.
+            Defaults to ``/atlassian``.
         authorized_url (str, optional): the URL path for the ``authorized`` view.
-            Defaults to ``/jira/authorized``.
+            Defaults to ``/atlassian/authorized``.
         session_class (class, optional): The class to use for creating a
             Requests session. Defaults to
             :class:`~flask_dance.consumer.requests.OAuth2Session`.
@@ -54,20 +55,18 @@ def make_jira_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
-    authorization_url_params = {}
+    authorization_url_params = {"audience": "api.atlassian.com"}
     if reprompt_consent:
         authorization_url_params["prompt"] = "consent"
 
-    jira_bp = OAuth2ConsumerBlueprint(
-        "jira",
+    atlassian_bp = OAuth2ConsumerBlueprint(
+        "atlassian",
         __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
         base_url="https://api.atlassian.com/",
-        authorization_url=(
-            "https://auth.atlassian.com/authorize?audience=api.atlassian.com"
-        ),
+        authorization_url="https://auth.atlassian.com/authorize",
         token_url="https://auth.atlassian.com/oauth/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
@@ -77,15 +76,15 @@ def make_jira_blueprint(
         session_class=session_class,
         storage=storage,
     )
-    jira_bp.from_config["client_id"] = "JIRA_OAUTH2_CLIENT_ID"
-    jira_bp.from_config["client_secret"] = "JIRA_OAUTH2_CLIENT_SECRET"
+    atlassian_bp.from_config["client_id"] = "ATLASSIAN_OAUTH_CLIENT_ID"
+    atlassian_bp.from_config["client_secret"] = "ATLASSIAN_OAUTH_CLIENT_SECRET"
 
-    @jira_bp.before_app_request
+    @atlassian_bp.before_app_request
     def set_applocal_session():
         ctx = stack.top
-        ctx.jira_oauth = jira_bp.session
+        ctx.atlassian_oauth = atlassian_bp.session
 
-    return jira_bp
+    return atlassian_bp
 
 
-jira = LocalProxy(partial(_lookup_app_object, "jira_oauth"))
+atlassian = LocalProxy(partial(_lookup_app_object, "atlassian_oauth"))
