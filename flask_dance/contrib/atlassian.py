@@ -10,6 +10,9 @@ except ImportError:
     from flask import _request_ctx_stack as stack
 
 
+__maintainer__ = "Przemyslaw Kanach <kanach16@gmail.com>"
+
+
 def make_atlassian_blueprint(
     client_id=None,
     client_secret=None,
