@@ -7,6 +7,7 @@ from flask import Flask
 from flask_dance.contrib.atlassian import make_atlassian_blueprint, atlassian
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
+from six import string_types
 
 
 @pytest.fixture
@@ -95,13 +96,27 @@ def test_context_local(make_app):
         assert request.headers["Authorization"] == "Bearer app2"
 
 
-def test_consent(make_app):
-    app = make_app("foo", "bar", reprompt_consent=True)
-
+def app_redirect_location(app):
     with app.test_client() as client:
         resp = client.get(
-            "/atlassian", base_url="https://atlassian.com", follow_redirects=False
+            "/atlassian", base_url="https://a.b.c", follow_redirects=False
         )
     assert resp.status_code == 302
-    location = URLObject(resp.headers["Location"])
-    assert location.query_dict["prompt"] == "consent"
+    return URLObject(resp.headers["Location"])
+
+
+def test_default_redirect_params(make_app):
+    app = make_app("foo", "bar")
+    query_dict = app_redirect_location(app).query_dict
+    assert isinstance(query_dict.pop("state"), string_types)
+    assert query_dict == {
+        "audience": "api.atlassian.com",
+        "client_id": "foo",
+        "redirect_uri": "https://a.b.c/atlassian/authorized",
+        "response_type": "code",
+    }
+
+
+def test_consent(make_app):
+    app = make_app("foo", "bar", reprompt_consent=True)
+    assert app_redirect_location(app).query_dict["prompt"] == "consent"
