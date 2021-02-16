@@ -5,6 +5,7 @@ Changelog
 -------------
 * Add `offline` option to `make_dropbox_blueprint`
 * Added Atlassian pre-set configuration
+* Added Salesforce pre-set configuration
 
 `3.2.0`_ (2020-11-24)
 ---------------------
