@@ -11,6 +11,18 @@ to Flask-Dance!
    :local:
    :backlinks: none
 
+Atlassian
+---------
+.. module:: flask_dance.contrib.atlassian
+
+.. autofunction:: make_atlassian_blueprint
+
+.. data:: atlassian
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Atlassian authentication token loaded (assuming
+    that the user has authenticated with Atlassian at some point in the past).
+
 Authentiq
 ---------
 .. module:: flask_dance.contrib.authentiq
