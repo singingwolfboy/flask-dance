@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`3.3.0`_ (2021-02-25)
+---------------------
 * Added Atlassian pre-set configuration
 * Added Salesforce pre-set configuration
 * Added `offline` option to `make_dropbox_blueprint`
@@ -337,7 +341,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.3.0...HEAD
+.. _3.3.0: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...v3.3.0
 .. _3.2.0: https://github.com/singingwolfboy/flask-dance/compare/v3.1.0...v3.2.0
 .. _3.1.0: https://github.com/singingwolfboy/flask-dance/compare/v3.0.0...v3.1.0
 .. _3.0.0: https://github.com/singingwolfboy/flask-dance/compare/v2.2.0...v3.0.0
