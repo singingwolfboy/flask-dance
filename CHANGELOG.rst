@@ -3,9 +3,11 @@ Changelog
 
 `unreleased`_
 -------------
-* Add `offline` option to `make_dropbox_blueprint`
 * Added Atlassian pre-set configuration
 * Added Salesforce pre-set configuration
+* Added `offline` option to `make_dropbox_blueprint`
+* Added `prompt` option to `make_discord_blueprint`
+* Added `subdomain` option to `make_slack_blueprint`
 
 `3.2.0`_ (2020-11-24)
 ---------------------
