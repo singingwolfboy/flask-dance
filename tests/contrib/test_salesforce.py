@@ -24,7 +24,7 @@ def make_app():
     return _make_app
 
 
-def test_blueprint_factory():
+def test_blueprint_factory_default():
     salesforce_bp = make_salesforce_blueprint(
         client_id="foo",
         client_secret="bar",
@@ -33,10 +33,7 @@ def test_blueprint_factory():
     )
     assert isinstance(salesforce_bp, OAuth2ConsumerBlueprint)
     assert salesforce_bp.session.scope == "api"
-    assert (
-        salesforce_bp.session.base_url
-        == "https://login.salesforce.com/services/oauth2/"
-    )
+    assert salesforce_bp.session.base_url == "https://login.salesforce.com/"
     assert salesforce_bp.session.client_id == "foo"
     assert salesforce_bp.client_secret == "bar"
     assert (
@@ -45,6 +42,51 @@ def test_blueprint_factory():
     )
     assert (
         salesforce_bp.token_url == "https://login.salesforce.com/services/oauth2/token"
+    )
+
+
+def test_blueprint_factory_sandbox():
+    salesforce_bp = make_salesforce_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="api",
+        redirect_to="index",
+        is_sandbox=True,
+    )
+    assert isinstance(salesforce_bp, OAuth2ConsumerBlueprint)
+    assert salesforce_bp.session.scope == "api"
+    assert salesforce_bp.session.base_url == "https://test.salesforce.com/"
+    assert salesforce_bp.session.client_id == "foo"
+    assert salesforce_bp.client_secret == "bar"
+    assert (
+        salesforce_bp.authorization_url
+        == "https://test.salesforce.com/services/oauth2/authorize"
+    )
+    assert (
+        salesforce_bp.token_url == "https://test.salesforce.com/services/oauth2/token"
+    )
+
+
+def test_blueprint_factory_custom():
+    salesforce_bp = make_salesforce_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="api",
+        redirect_to="index",
+        hostname="example.my.salesforce.com",
+    )
+    assert isinstance(salesforce_bp, OAuth2ConsumerBlueprint)
+    assert salesforce_bp.session.scope == "api"
+    assert salesforce_bp.session.base_url == "https://example.my.salesforce.com/"
+    assert salesforce_bp.session.client_id == "foo"
+    assert salesforce_bp.client_secret == "bar"
+    assert (
+        salesforce_bp.authorization_url
+        == "https://example.my.salesforce.com/services/oauth2/authorize"
+    )
+    assert (
+        salesforce_bp.token_url
+        == "https://example.my.salesforce.com/services/oauth2/token"
     )
 
 
