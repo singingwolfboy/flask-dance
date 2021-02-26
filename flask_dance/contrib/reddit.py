@@ -4,10 +4,7 @@ from flask.globals import LocalProxy, _lookup_app_object
 
 from flask_dance import __version__ as _flask_dance_version
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 __maintainer__ = "Sergey Storchay <r8@r8.com.ua>"
 

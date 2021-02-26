@@ -3,10 +3,7 @@ from flask_dance.consumer.requests import OAuth2Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"

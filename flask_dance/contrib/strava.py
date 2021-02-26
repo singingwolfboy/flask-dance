@@ -6,10 +6,7 @@ from flask_dance import __version__ as _flask_dance_version
 
 from flask import request
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 __maintainer__ = "Jimmy Hedman <jimmy.hedman@gmail.com>"
 

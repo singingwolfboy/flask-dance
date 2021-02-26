@@ -2,10 +2,7 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "Pieter Ennes <support@authentiq.com>"
