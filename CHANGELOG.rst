@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`3.3.1`_ (2021-03-01)
+---------------------
 * Added `hostname` option to the `make_salesforce_blueprint`
 * Added `is_sandbox` option to the `make_salesforce_blueprint`
 * Changed base url for `make_salesforce_blueprint`
@@ -343,7 +347,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.3.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.3.1...HEAD
+.. _3.3.1: https://github.com/singingwolfboy/flask-dance/compare/v3.3.0...v3.3.1
 .. _3.3.0: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...v3.3.0
 .. _3.2.0: https://github.com/singingwolfboy/flask-dance/compare/v3.1.0...v3.2.0
 .. _3.1.0: https://github.com/singingwolfboy/flask-dance/compare/v3.0.0...v3.1.0
