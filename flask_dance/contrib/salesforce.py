@@ -18,6 +18,8 @@ def make_salesforce_blueprint(
     client_secret=None,
     scope=None,
     reprompt_consent=False,
+    hostname=None,
+    is_sandbox=False,
     redirect_url=None,
     redirect_to=None,
     login_url=None,
@@ -39,6 +41,11 @@ def make_salesforce_blueprint(
         reprompt_consent (bool): If True, force Salesforce to re-prompt the user
             for their consent, even if the user has already given their
             consent. Defaults to False.
+        hostname (str, optional): The hostname of your Salesforce instance.
+            By default, Salesforce uses ``login.salesforce.com`` for production
+            instances and ``test.salesforce.com`` for sandboxes.
+        is_sandbox (bool): If hostname is not defined specify whether Salesforce
+            instance is a sandbox. Defaults to False.
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete.
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
@@ -62,15 +69,20 @@ def make_salesforce_blueprint(
     if reprompt_consent:
         authorization_url_params["prompt"] = "consent"
 
+    if not hostname:
+        hostname = "test.salesforce.com" if is_sandbox else "login.salesforce.com"
+
     salesforce_bp = OAuth2ConsumerBlueprint(
         "salesforce",
         __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://login.salesforce.com/services/oauth2/",
-        authorization_url="https://login.salesforce.com/services/oauth2/authorize",
-        token_url="https://login.salesforce.com/services/oauth2/token",
+        base_url="https://{hostname}/".format(hostname=hostname),
+        authorization_url=(
+            "https://{hostname}/services/oauth2/authorize".format(hostname=hostname)
+        ),
+        token_url="https://{hostname}/services/oauth2/token".format(hostname=hostname),
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,

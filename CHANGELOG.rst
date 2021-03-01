@@ -3,7 +3,9 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added `hostname` option to the `make_salesforce_blueprint`
+* Added `is_sandbox` option to the `make_salesforce_blueprint`
+* Changed base url for `make_salesforce_blueprint`
 
 `3.3.0`_ (2021-02-25)
 ---------------------
