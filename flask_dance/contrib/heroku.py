@@ -1,14 +1,9 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth2Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
@@ -16,7 +11,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 class HerokuOAuth2Session(OAuth2Session):
     def __init__(self, api_version, *args, **kwargs):
-        super(HerokuOAuth2Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         accept = "application/vnd.heroku+json; version={api_version}".format(
             api_version=api_version
         )

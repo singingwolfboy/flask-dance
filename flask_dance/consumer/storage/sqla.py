@@ -14,7 +14,7 @@ except ImportError:
     AnonymousUserMixin = None
 
 
-class OAuthConsumerMixin(object):
+class OAuthConsumerMixin:
     """
     A :ref:`SQLAlchemy declarative mixin <sqlalchemy:declarative_mixins>` with
     some suggested columns for a model to store OAuth tokens:
@@ -34,7 +34,7 @@ class OAuthConsumerMixin(object):
 
     @declared_attr
     def __tablename__(cls):
-        return "flask_dance_{}".format(cls.__name__.lower())
+        return f"flask_dance_{cls.__name__.lower()}"
 
     id = Column(Integer, primary_key=True)
     provider = Column(String(50), nullable=False)
@@ -45,9 +45,9 @@ class OAuthConsumerMixin(object):
         parts = []
         parts.append(self.__class__.__name__)
         if self.id:
-            parts.append("id={}".format(self.id))
+            parts.append(f"id={self.id}")
         if self.provider:
-            parts.append('provider="{}"'.format(self.provider))
+            parts.append(f'provider="{self.provider}"')
         return "<{}>".format(" ".join(parts))
 
 

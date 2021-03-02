@@ -10,15 +10,15 @@ def test_first():
     first([1, 1, 3, 4, 5], key=lambda x: x % 2 == 0) == 4
 
 
-class C(object):
+class C:
     d = "foo"
 
 
-class B(object):
+class B:
     C = C
 
 
-class A(object):
+class A:
     B = B
 
 

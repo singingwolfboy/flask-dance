@@ -1,13 +1,8 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "Pieter Ennes <support@authentiq.com>"
@@ -63,9 +58,9 @@ def make_authentiq_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://{hostname}/".format(hostname=hostname),
-        authorization_url="https://{hostname}/authorize".format(hostname=hostname),
-        token_url="https://{hostname}/token".format(hostname=hostname),
+        base_url=f"https://{hostname}/",
+        authorization_url=f"https://{hostname}/authorize",
+        token_url=f"https://{hostname}/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,

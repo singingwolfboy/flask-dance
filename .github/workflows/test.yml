@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["2.x", "3.x"]
+        python-version: ["3.6", "3.x"]
         database-uri:
           - "postgresql://testuser:testpw@localhost/testdb"
           - "sqlite://"

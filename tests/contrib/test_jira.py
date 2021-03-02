@@ -1,7 +1,5 @@
-from __future__ import unicode_literals
-
 import pytest
-import mock
+from unittest import mock
 import os
 import tempfile
 import responses
@@ -112,7 +110,7 @@ def test_content_type(sign_func, make_app):
     resp = app.test_client().get("/test")
     headers = responses.calls[0].request.headers
     assert "Content-Type" in headers
-    assert headers["Content-Type"] == "application/json".encode("utf-8")
+    assert headers["Content-Type"] == b"application/json"
 
 
 @responses.activate
