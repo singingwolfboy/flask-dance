@@ -59,9 +59,7 @@ def make_gitlab_blueprint(
         client_secret=client_secret,
         scope=scope,
         base_url=f"https://{hostname}/api/v4/",
-        authorization_url="https://{hostname}/oauth/authorize".format(
-            hostname=hostname
-        ),
+        authorization_url=f"https://{hostname}/oauth/authorize",
         token_url=f"https://{hostname}/oauth/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,

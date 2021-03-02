@@ -12,9 +12,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 class HerokuOAuth2Session(OAuth2Session):
     def __init__(self, api_version, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        accept = "application/vnd.heroku+json; version={api_version}".format(
-            api_version=api_version
-        )
+        accept = f"application/vnd.heroku+json; version={api_version}"
         self.headers["Accept"] = accept
 
 

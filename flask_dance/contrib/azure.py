@@ -89,12 +89,8 @@ def make_azure_blueprint(
         client_secret=client_secret,
         scope=scope,
         base_url="https://graph.microsoft.com",
-        authorization_url="https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize".format(
-            tenant=tenant
-        ),
-        token_url="https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token".format(
-            tenant=tenant
-        ),
+        authorization_url=f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize",
+        token_url=f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,

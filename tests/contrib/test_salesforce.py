@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import pytest
 import responses
 from urlobject import URLObject
@@ -7,7 +5,6 @@ from flask import Flask
 from flask_dance.contrib.salesforce import make_salesforce_blueprint, salesforce
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
-from six import string_types
 
 
 @pytest.fixture
@@ -158,7 +155,7 @@ def app_redirect_location(app):
 def test_default_redirect_params(make_app):
     app = make_app("foo", "bar")
     query_dict = app_redirect_location(app).query_dict
-    assert isinstance(query_dict.pop("state"), string_types)
+    assert isinstance(query_dict.pop("state"), str)
     assert query_dict == {
         "client_id": "foo",
         "redirect_uri": "https://a.b.c/salesforce/authorized",
