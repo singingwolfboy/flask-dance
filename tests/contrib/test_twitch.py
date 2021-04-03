@@ -26,14 +26,15 @@ def test_blueprint_factory():
         client_id="foo", client_secret="bar", scope="user:email", redirect_to="index"
     )
     assert isinstance(twitch_bp, OAuth2ConsumerBlueprint)
-    assert twitch_bp.session.scope == ['user:read:subscriptions','channel:read:subscriptions','user:read:subscriptions']
+    assert twitch_bp.session.scope == [
+        "user:read:subscriptions",
+        "channel:read:subscriptions",
+        "user:read:subscriptions",
+    ]
     assert twitch_bp.session.base_url == "https://api.twitch.tv/helix/"
     assert twitch_bp.session.client_id == "foo"
     assert twitch_bp.client_secret == "bar"
-    assert (
-        twitch_bp.authorization_url
-        == "https://id.twitch.tv/oauth2/authorize"
-    )
+    assert twitch_bp.authorization_url == "https://id.twitch.tv/oauth2/authorize"
     assert twitch_bp.token_url == "https://id.twitch.tv/oauth2/token"
 
 

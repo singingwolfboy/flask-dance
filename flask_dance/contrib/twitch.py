@@ -8,11 +8,11 @@ from flask import _app_ctx_stack as stack
 
 __maintainer__ = "Kerry Hatcher <kerry.hatcher@protonmail.com>"
 
+
 class TwitchBlueprint(OAuth2ConsumerBlueprint):
     def session_created(self, session):
-        session.headers.update({'client-id': os.getenv('TWITCH_CLIENTID')}) 
+        session.headers.update({"client-id": os.getenv("TWITCH_CLIENTID")})
         return session
-
 
 
 def make_twitch_blueprint(
