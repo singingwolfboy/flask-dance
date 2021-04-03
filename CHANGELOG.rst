@@ -7,6 +7,7 @@ Changelog
 * If you are using the SQLAlchemy token storage, this project now depends on
   SQLAlchemy version 1.3.11 and above. `sqlalchemy-utils` is no longer necessary.
 * Add disabling of TLS certificate verification for Gitlab blueprint creation
+* Added Twitch pre-set configuration
 
 `3.3.1`_ (2021-03-01)
 ---------------------

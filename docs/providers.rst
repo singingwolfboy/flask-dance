@@ -239,6 +239,18 @@ Strava
     already has the Strava authentication token loaded (assuming that the user
     has authenticated with Strava at some point in the past).
 
+Twitch
+-------
+.. module:: flask_dance.contrib.twitch
+
+.. autofunction:: make_twitch_blueprint
+
+.. data:: twitch
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Twitch authentication token loaded (assuming that the user
+    has authenticated with Twitch at some point in the past).
+
 Twitter
 -------
 .. module:: flask_dance.contrib.twitter
