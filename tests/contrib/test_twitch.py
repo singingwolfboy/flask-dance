@@ -22,15 +22,21 @@ def make_app():
 
 
 def test_blueprint_factory():
-    twitch_bp = make_twitch_blueprint(
-        client_id="foo", client_secret="bar", scope="user:email", redirect_to="index"
-    )
-    assert isinstance(twitch_bp, OAuth2ConsumerBlueprint)
-    assert twitch_bp.session.scope == [
+
+    test_scope = [
         "user:read:subscriptions",
         "channel:read:subscriptions",
         "user:read:subscriptions",
     ]
+
+    twitch_bp = make_twitch_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope=test_scope,
+        redirect_to="index",
+    )
+    assert isinstance(twitch_bp, OAuth2ConsumerBlueprint)
+    assert twitch_bp.session.scope == test_scope
     assert twitch_bp.session.base_url == "https://api.twitch.tv/helix/"
     assert twitch_bp.session.client_id == "foo"
     assert twitch_bp.client_secret == "bar"

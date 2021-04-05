@@ -4,6 +4,7 @@ Changelog
 `unreleased`_
 -------------
 * Dropped support for Python 2 and Python 3.5
+* Added Twitch pre-set configuration
 
 `3.3.1`_ (2021-03-01)
 ---------------------
