@@ -6,6 +6,7 @@ import os
 from flask import _app_ctx_stack as stack
 
 
+
 __maintainer__ = "Kerry Hatcher <kerry.hatcher@protonmail.com>"
 
 
@@ -13,11 +14,9 @@ class TwitchBlueprint(OAuth2ConsumerBlueprint):
     """
     Add client-id to the API request headers
     """
-
     def session_created(self, session):
         session.headers.update({"client-id": os.getenv("TWITCH_CLIENTID")})
         return session
-
 
 def make_twitch_blueprint(
     client_id=None,
@@ -37,15 +36,24 @@ def make_twitch_blueprint(
     them, using the variables :envvar:`TWITCH_OAUTH_CLIENT_ID` and
     :envvar:`TWITCH_OAUTH_CLIENT_SECRET`.
     Args:
-        client_id (str): The client ID for your application on Twitch.
+        client_id (str): The client ID for your application on Twitch
         client_secret (str): The client secret for your application on Twitch
         scope (str, optional): comma-separated list of scopes for the OAuth token
-        redirect_url (str): the URL to redirect to after the authentication dance is complete
-        redirect_to (str): if ``redirect_url`` is not defined, the name of the view to redirect to after the authentication dance is complete. The actual URL will be determined by :func:`flask.url_for`
-        login_url (str, optional): the URL path for the ``login`` view. Defaults to ``/twitch``
-        authorized_url (str, optional): the URL path for the ``authorized`` view. Defaults to ``/twitch/authorized``.
-        session_class (class, optional): The class to use for creating a Requests session. Defaults to :class:`~flask_dance.consumer.requests.OAuth2Session`.
-        storage: A token storage class, or an instance of a token storage class, to use for this blueprint. Defaults to :class:`~flask_dance.consumer.storage.session.SessionStorage`.
+        redirect_url (str): the URL to redirect to after the authentication
+            dance is complete
+        redirect_to (str): if ``redirect_url`` is not defined, the name of the
+            view to redirect to after the authentication dance is complete.
+            The actual URL will be determined by :func:`flask.url_for`
+        login_url (str, optional): the URL path for the ``login`` view.
+            Defaults to ``/twitch``
+        authorized_url (str, optional): the URL path for the ``authorized`` view.
+            Defaults to ``/twitch/authorized``.
+        session_class (class, optional): The class to use for creating a
+            Requests session. Defaults to
+            :class:`~flask_dance.consumer.requests.OAuth2Session`.
+        storage: A token storage class, or an instance of a token storage
+                class, to use for this blueprint. Defaults to
+                :class:`~flask_dance.consumer.storage.session.SessionStorage`.
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
