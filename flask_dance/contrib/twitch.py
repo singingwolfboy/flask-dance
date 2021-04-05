@@ -6,7 +6,6 @@ import os
 from flask import _app_ctx_stack as stack
 
 
-
 __maintainer__ = "Kerry Hatcher <kerry.hatcher@protonmail.com>"
 
 
@@ -14,9 +13,11 @@ class TwitchBlueprint(OAuth2ConsumerBlueprint):
     """
     Add client-id to the API request headers
     """
+
     def session_created(self, session):
         session.headers.update({"client-id": os.getenv("TWITCH_CLIENTID")})
         return session
+
 
 def make_twitch_blueprint(
     client_id=None,
@@ -57,6 +58,7 @@ def make_twitch_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
+
     twitch_bp = TwitchBlueprint(
         "twitch",
         __name__,
