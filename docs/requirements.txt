@@ -4,7 +4,7 @@ sphinxcontrib-spelling
 Flask-Sphinx-Themes
 
 # code dependencies, needed for imports
-sqlalchemy>=0.9
+sqlalchemy>=0.9,<1.4.0
 sqlalchemy-utils
 pytest
 betamax
