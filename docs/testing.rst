@@ -74,7 +74,7 @@ Here's how you could do that with `pytest`_ and the :class:`MemoryStorage`:
         assert text == "You are authorized"
 
 In this example, we're using the
-`monkeypatch fixture <https://docs.pytest.org/en/latest/monkeypatch.html>`__
+`monkeypatch fixture <https://docs.pytest.org/en/latest/how-to/monkeypatch.html>`__
 to set a mock storage on the Flask-Dance blueprint. This fixture will
 ensure that the original storage is put back on the blueprint after the
 test is finished, so that the test doesn't change the code being tested.
