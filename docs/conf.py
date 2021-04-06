@@ -284,7 +284,6 @@ intersphinx_mapping = {
     "oauthlib": ("https://oauthlib.readthedocs.io/en/latest/", None),
     "requests_oauthlib": ("https://requests-oauthlib.readthedocs.io/en/latest/", None),
     "sqlalchemy": ("https://docs.sqlalchemy.org/en/latest/", None),
-    "sqlalchemy_utils": ("https://sqlalchemy-utils.readthedocs.io/en/latest/", None),
     "betamax": ("https://betamax.readthedocs.io/en/latest", None),
     "pytest": ("https://docs.pytest.org/en/latest/", None),
 }
