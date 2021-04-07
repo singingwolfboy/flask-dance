@@ -30,7 +30,7 @@ def make_twitch_blueprint(
 
     This requires a client ID and client secret from Twitch.
     You should either pass them to this constructor, or make sure that your Flask application config defines them, using the variables :envvar:`TWITCH_OAUTH_CLIENT_ID` and :envvar:`TWITCH_OAUTH_CLIENT_SECRET`.
-    
+
     Args:
         client_id (str): The client ID for your application on Twitch. Defaults to app config "TWITCH_OAUTH_CLIENT_ID".
         client_secret (str): The client Secret for your application on Twitch. Defaults to app config "TWITCH_OAUTH_CLIENT_SECRET".
