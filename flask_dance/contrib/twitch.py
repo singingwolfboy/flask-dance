@@ -93,22 +93,12 @@ def make_twitch_blueprint(
 
         if twitch_bp.client_id is None:
             raise MissingConfigException(
-                f"client_id is required, currently is {type(twitch_bp.client_id)}"
+                f"client_id is required, currently is {twitch_bp.client_id}. Type: {type(twitch_bp.client_id)}"
             )
 
-        if type(twitch_bp.client_id) != str:
+        if twitch_bp.client_secret is None:
             raise MissingConfigException(
-                f"client_id should be a str, is: {type(twitch_bp.client_id)}"
-            )
-
-        if twitch_bp.client_id is None:
-            raise MissingConfigException(
-                f"client_id is required, currently is {type(twitch_bp.client_id)}"
-            )
-
-        if type(twitch_bp.client_secret) != str:
-            raise MissingConfigException(
-                f"client_secret should be a str, is {type(twitch_bp.client_secret)}"
+                f"client_secret is required, currently is  is {twitch_bp.client_secret}. Type: {type(twitch_bp.client_secret)}"
             )
 
         twitch_bp.session.headers.update({"client-id": twitch_bp.client_id})
