@@ -59,7 +59,6 @@ Pytest
 Werkzeug
 Betamax
 CustomSite
-param
 
 # contractions are buggy
 isn
