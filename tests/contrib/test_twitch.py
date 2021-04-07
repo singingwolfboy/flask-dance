@@ -2,7 +2,11 @@ import pytest
 import responses
 from urlobject import URLObject
 from flask import Flask
-from flask_dance.contrib.twitch import make_twitch_blueprint, twitch
+from flask_dance.contrib.twitch import (
+    make_twitch_blueprint,
+    twitch,
+    MissingConfigException,
+)
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
 
@@ -55,6 +59,30 @@ def test_load_from_config(make_app):
     assert client_id == "foo"
 
 
+def test_load_from_config_missing_client_secret(make_app):
+    app = make_app()
+    app.config["TWITCH_OAUTH_CLIENT_ID"] = "foo"
+
+    with app.test_request_context("/"):
+        with pytest.raises(MissingConfigException):
+            app.preprocess_request()
+
+def test_load_from_config_missing_client_id(make_app):
+    app = make_app()
+    app.config["TWITCH_OAUTH_CLIENT_SECRET"] = "bar"
+
+    with app.test_request_context("/"):
+        with pytest.raises(MissingConfigException):
+            app.preprocess_request()
+
+def test_load_from_config_missing_both(make_app):
+    app = make_app()
+    with app.test_request_context("/"):
+        with pytest.raises(MissingConfigException):
+            app.preprocess_request()
+             
+
+
 @responses.activate
 def test_context_local(make_app):
     responses.add(responses.GET, "https://google.com")
@@ -66,6 +94,7 @@ def test_context_local(make_app):
         redirect_to="url1",
         storage=MemoryStorage({"access_token": "app1"}),
     )
+
     app2 = make_app(
         "foo2",
         "bar2",
@@ -85,9 +114,11 @@ def test_context_local(make_app):
         twitch.get("https://google.com")
         request = responses.calls[0].request
         assert request.headers["Authorization"] == "Bearer app1"
+        assert request.headers["client-id"] == "foo1"
 
     with app2.test_request_context("/"):
         app2.preprocess_request()
         twitch.get("https://google.com")
         request = responses.calls[1].request
         assert request.headers["Authorization"] == "Bearer app2"
+        assert request.headers["client-id"] == "foo2"
