@@ -67,6 +67,7 @@ def test_load_from_config_missing_client_secret(make_app):
         with pytest.raises(MissingConfigException):
             app.preprocess_request()
 
+
 def test_load_from_config_missing_client_id(make_app):
     app = make_app()
     app.config["TWITCH_OAUTH_CLIENT_SECRET"] = "bar"
@@ -75,12 +76,12 @@ def test_load_from_config_missing_client_id(make_app):
         with pytest.raises(MissingConfigException):
             app.preprocess_request()
 
+
 def test_load_from_config_missing_both(make_app):
     app = make_app()
     with app.test_request_context("/"):
         with pytest.raises(MissingConfigException):
             app.preprocess_request()
-             
 
 
 @responses.activate
