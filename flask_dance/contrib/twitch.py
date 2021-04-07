@@ -19,35 +19,27 @@ def make_twitch_blueprint(
     client_id=None,
     client_secret=None,
     scope=None,
-    redirect_url=None,
     redirect_to=None,
-    login_url=None,
     base_url="https://api.twitch.tv/helix/",
     authorization_url="https://id.twitch.tv/oauth2/authorize",
     token_url="https://id.twitch.tv/oauth2/token",
     token_url_params={"include_client_id": True},
-    authorized_url=None,
-    session_class=None,
     storage=None,
 ):
     """Make a blueprint for authenticating with Twitch using OAuth 2.
 
     This requires a client ID and client secret from Twitch.
     You should either pass them to this constructor, or make sure that your Flask application config defines them, using the variables :envvar:`TWITCH_OAUTH_CLIENT_ID` and :envvar:`TWITCH_OAUTH_CLIENT_SECRET`.
-
+    
     Args:
         client_id (str): The client ID for your application on Twitch. Defaults to app config "TWITCH_OAUTH_CLIENT_ID".
         client_secret (str): The client Secret for your application on Twitch. Defaults to app config "TWITCH_OAUTH_CLIENT_SECRET".
         scope (list, optional): Comma-separated list of scopes for the OAuth token.Defaults to None.
-        redirect_url (str, optional): The URL to redirect to after the authentication dance is complete. Defaults to None.
         redirect_to (str, optional): If ``redirect_url`` is not defined, the name of the view to redirect to after the authentication dance is complete. Defaults to None.
-        login_url (str, optional): The URL path for the ``login`` view. Defaults to None.
         base_url (str, optional): Base URL for the Twitch API. Defaults to "{Twitch API}/helix/".
         authorization_url (str, optional): URL for the Twitch API login endpoint. Defaults to "{Twitch API}/oauth2/authorize".
         token_url (str, optional): URL for Twitch token API. Defaults to "{Twitch API}/oauth2/token".
         token_url_params (dict, optional): Options to send to the token URL. Defaults to {"include_client_id": True}.
-        authorized_url (str, optional): The URL path for the ``authorized`` view. Defaults to None.
-        session_class (class, optional):  The class to use for creating a Requests session. Defaults to None.
         storage (class, optional): A token storage class, or an instance of a token storage class, to use for this blueprint. Defaults to None.
 
     Raises:
@@ -66,18 +58,13 @@ def make_twitch_blueprint(
         authorization_url=authorization_url,
         token_url=token_url,
         token_url_params=token_url_params,
-        redirect_url=redirect_url,
         redirect_to=redirect_to,
-        login_url=login_url,
-        authorized_url=authorized_url,
-        session_class=session_class,
         storage=storage,
     )
-    if twitch_bp.client_id is None:
-        twitch_bp.from_config["client_id"] = "TWITCH_OAUTH_CLIENT_ID"
 
-    if twitch_bp.client_secret is None:
-        twitch_bp.from_config["client_secret"] = "TWITCH_OAUTH_CLIENT_SECRET"
+    twitch_bp.from_config["client_id"] = "TWITCH_OAUTH_CLIENT_ID"
+
+    twitch_bp.from_config["client_secret"] = "TWITCH_OAUTH_CLIENT_SECRET"
 
     # TODO: The key won't auto renew. See https://github.com/singingwolfboy/flask-dance/issues/35 I think this will work but needs a test.
     twitch_bp.auto_refresh_url = twitch_bp.token_url
