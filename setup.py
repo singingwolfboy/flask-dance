@@ -60,7 +60,7 @@ setup(
     python_requires=">=3.6",
     install_requires=get_requirements("requirements.txt"),
     tests_require=get_requirements("tests/requirements.txt"),
-    extras_require={"sqla": ["sqlalchemy", "sqlalchemy-utils"], "signals": ["blinker"]},
+    extras_require={"sqla": ["sqlalchemy>=1.3.11"], "signals": ["blinker"]},
     cmdclass={"test": PyTest},
     entry_points={"pytest11": ["pytest_flask_dance = flask_dance.fixtures.pytest"]},
     license="MIT",
