@@ -19,6 +19,7 @@ def make_gitlab_blueprint(
     session_class=None,
     storage=None,
     hostname="gitlab.com",
+    **kwargs,
 ):
     """
     Make a blueprint for authenticating with GitLab using OAuth 2. This requires
@@ -67,6 +68,7 @@ def make_gitlab_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
+        **kwargs,
     )
     gitlab_bp.from_config["client_id"] = "GITLAB_OAUTH_CLIENT_ID"
     gitlab_bp.from_config["client_secret"] = "GITLAB_OAUTH_CLIENT_SECRET"
