@@ -51,7 +51,7 @@ def make_gitlab_blueprint(
             specify the hostname, default is ``gitlab.com``
         verify_tls_certificates (bool, optional): Specify whether TLS
             certificates should be verified. Set this to ``False`` if
-            certificates fail to validate for self-hosted gitlab instances.
+            certificates fail to validate for self-hosted GitLab instances.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
