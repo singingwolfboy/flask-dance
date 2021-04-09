@@ -99,3 +99,16 @@ def test_context_local(make_app):
         gitlab.get("https://google.com")
         request = responses.calls[1].request
         assert request.headers["Authorization"] == "Bearer app2"
+
+
+def test_verify_parameter(make_app):
+    app = make_app(
+        "foo",
+        "bar",
+        redirect_to="gitlab.login",
+        storage=MemoryStorage({"access_token": "app"}),
+        verify_tls_certificates=False,
+    )
+    with app.test_request_context("/"):
+        app.preprocess_request()
+        assert not gitlab.blueprint.token_url_params.get("verify", True)
