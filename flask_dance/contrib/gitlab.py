@@ -65,7 +65,9 @@ def make_gitlab_blueprint(
     """
     if not verify_tls_certificates:
         if session_class:
-            raise ValueError("cannot override session_class and disable certificate validation")
+            raise ValueError(
+                "cannot override session_class and disable certificate validation"
+            )
         else:
             session_class = NoVerifyOAuth2Session
 
