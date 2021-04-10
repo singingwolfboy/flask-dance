@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`4.0.0`_ (2021-04-10)
+---------------------
 * Dropped support for Python 2 and Python 3.5
 * If you are using the SQLAlchemy token storage, this project now depends on
   SQLAlchemy version 1.3.11 and above. `sqlalchemy-utils` is no longer necessary.
@@ -351,7 +355,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.3.1...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v4.0.0...HEAD
+.. _4.0.0: https://github.com/singingwolfboy/flask-dance/compare/v3.3.1...v4.0.0
 .. _3.3.1: https://github.com/singingwolfboy/flask-dance/compare/v3.3.0...v3.3.1
 .. _3.3.0: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...v3.3.0
 .. _3.2.0: https://github.com/singingwolfboy/flask-dance/compare/v3.1.0...v3.2.0
