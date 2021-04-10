@@ -71,10 +71,12 @@ def make_gitlab_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
-        token_url_params=dict(verify=verify_tls_certificates),
+        token_url_params={"verify": verify_tls_certificates},
     )
     gitlab_bp.from_config["client_id"] = "GITLAB_OAUTH_CLIENT_ID"
     gitlab_bp.from_config["client_secret"] = "GITLAB_OAUTH_CLIENT_SECRET"
+
+    gitlab_bp.session.verify = verify_tls_certificates
 
     @gitlab_bp.before_app_request
     def set_applocal_session():

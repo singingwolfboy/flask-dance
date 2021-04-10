@@ -101,14 +101,62 @@ def test_context_local(make_app):
         assert request.headers["Authorization"] == "Bearer app2"
 
 
-def test_verify_parameter(make_app):
+def test_no_verify_token(make_app, mocker):
     app = make_app(
         "foo",
         "bar",
-        redirect_to="gitlab.login",
-        storage=MemoryStorage({"access_token": "app"}),
+        hostname="my-insecure-gitlab.com",
+        storage=MemoryStorage(),
         verify_tls_certificates=False,
     )
-    with app.test_request_context("/"):
-        app.preprocess_request()
-        assert not gitlab.blueprint.token_url_params.get("verify", True)
+
+    with responses.RequestsMock() as rsps:
+        mock_on_request = mocker.patch.object(
+            rsps, "_on_request", wraps=rsps._on_request
+        )
+        rsps.add(
+            responses.POST,
+            "https://my-insecure-gitlab.com/oauth/token",
+            body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+        )
+        with app.test_client() as client:
+            # reset the session before the request
+            with client.session_transaction() as sess:
+                sess["gitlab_oauth_state"] = "random-string"
+            # make the request
+            resp = client.get(
+                "/gitlab/authorized?code=secret-code&state=random-string",
+                base_url="https://a.b.c",
+            )
+            # check that `verify=False` in the token request
+            mock_on_request.assert_called()
+            call_verify = mock_on_request.call_args.kwargs.get("verify", True)
+            assert call_verify is False
+
+
+def test_no_verify_api_call(make_app, mocker):
+    app = make_app(
+        "foo",
+        "bar",
+        hostname="my-insecure-gitlab.com",
+        storage=MemoryStorage({"access_token": "fake-token"}),
+        verify_tls_certificates=False,
+    )
+
+    with responses.RequestsMock() as rsps:
+        mock_on_request = mocker.patch.object(
+            rsps, "_on_request", wraps=rsps._on_request
+        )
+        rsps.add(
+            method=responses.GET,
+            url="https://my-insecure-gitlab.com",
+            body="insecure but OK",
+        )
+        with app.test_request_context("/"):
+            app.preprocess_request()
+            gitlab.get("https://my-insecure-gitlab.com")
+
+        # check that `verify=False` in the API call
+        mock_on_request.assert_called()
+        call_verify = mock_on_request.call_args.kwargs.get("verify", True)
+        assert call_verify is False
