@@ -1,4 +1,5 @@
 from flask_dance.consumer import OAuth2ConsumerBlueprint
+from flask_dance.consumer.requests import OAuth2Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
@@ -6,6 +7,12 @@ from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "Justin Georgeson <jgeorgeson@lopht.net>"
+
+
+class NoVerifyOAuth2Session(OAuth2Session):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.verify = False
 
 
 def make_gitlab_blueprint(
@@ -56,6 +63,14 @@ def make_gitlab_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
+    if not verify_tls_certificates:
+        if session_class:
+            raise ValueError(
+                "cannot override session_class and disable certificate validation"
+            )
+        else:
+            session_class = NoVerifyOAuth2Session
+
     gitlab_bp = OAuth2ConsumerBlueprint(
         "gitlab",
         __name__,
@@ -71,7 +86,7 @@ def make_gitlab_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
-        token_url_params=dict(verify=verify_tls_certificates),
+        token_url_params={"verify": verify_tls_certificates},
     )
     gitlab_bp.from_config["client_id"] = "GITLAB_OAUTH_CLIENT_ID"
     gitlab_bp.from_config["client_secret"] = "GITLAB_OAUTH_CLIENT_SECRET"
