@@ -5,7 +5,6 @@ from flask import Flask
 from flask_dance.contrib.twitch import (
     make_twitch_blueprint,
     twitch,
-    MissingConfigException,
 )
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
@@ -26,8 +25,7 @@ def make_app():
 
 
 def test_blueprint_factory():
-
-    test_scope = [
+    scope = [
         "user:read:subscriptions",
         "channel:read:subscriptions",
         "user:read:subscriptions",
@@ -36,11 +34,11 @@ def test_blueprint_factory():
     twitch_bp = make_twitch_blueprint(
         client_id="foo",
         client_secret="bar",
-        scope=test_scope,
+        scope=scope,
         redirect_to="index",
     )
     assert isinstance(twitch_bp, OAuth2ConsumerBlueprint)
-    assert twitch_bp.session.scope == test_scope
+    assert twitch_bp.session.scope == scope
     assert twitch_bp.session.base_url == "https://api.twitch.tv/helix/"
     assert twitch_bp.session.client_id == "foo"
     assert twitch_bp.client_secret == "bar"
@@ -57,31 +55,6 @@ def test_load_from_config(make_app):
     url = resp.headers["Location"]
     client_id = URLObject(url).query.dict.get("client_id")
     assert client_id == "foo"
-
-
-def test_load_from_config_missing_client_secret(make_app):
-    app = make_app()
-    app.config["TWITCH_OAUTH_CLIENT_ID"] = "foo"
-
-    with app.test_request_context("/"):
-        with pytest.raises(MissingConfigException):
-            app.preprocess_request()
-
-
-def test_load_from_config_missing_client_id(make_app):
-    app = make_app()
-    app.config["TWITCH_OAUTH_CLIENT_SECRET"] = "bar"
-
-    with app.test_request_context("/"):
-        with pytest.raises(MissingConfigException):
-            app.preprocess_request()
-
-
-def test_load_from_config_missing_both(make_app):
-    app = make_app()
-    with app.test_request_context("/"):
-        with pytest.raises(MissingConfigException):
-            app.preprocess_request()
 
 
 @responses.activate
