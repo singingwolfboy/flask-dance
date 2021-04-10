@@ -130,7 +130,7 @@ def test_no_verify_token(make_app, mocker):
             )
             # check that `verify=False` in the token request
             mock_on_request.assert_called()
-            call_verify = mock_on_request.call_args.kwargs.get("verify", True)
+            call_verify = mock_on_request.call_args[1].get("verify", True)
             assert call_verify is False
 
 
@@ -158,5 +158,5 @@ def test_no_verify_api_call(make_app, mocker):
 
         # check that `verify=False` in the API call
         mock_on_request.assert_called()
-        call_verify = mock_on_request.call_args.kwargs.get("verify", True)
+        call_verify = mock_on_request.call_args[1].get("verify", True)
         assert call_verify is False
