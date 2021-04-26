@@ -49,7 +49,7 @@ def make_digitalocean_blueprint(
                 class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         rule_kwargs (dict, optional): Additional arguments that should be passed when adding
-            the login and authorized routes. Defaults to `None.
+            the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
