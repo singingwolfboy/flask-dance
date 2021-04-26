@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Flask Dance documentation build configuration file, created by
 # sphinx-quickstart on Sat Sep 27 09:47:52 2014.
@@ -52,7 +51,7 @@ master_doc = "index"
 
 # General information about the project.
 project = u"Flask Dance"
-copyright = u"2014-2020, David Baumgold"
+copyright = u"2014-2021, David Baumgold"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -208,8 +207,8 @@ latex_documents = [
     (
         "index",
         "FlaskDance.tex",
-        u"Flask Dance Documentation",
-        u"David Baumgold",
+        "Flask Dance Documentation",
+        "David Baumgold",
         "manual",
     )
 ]
@@ -240,7 +239,7 @@ latex_logo = "_static/flask-dance.png"
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ("index", "flaskdance", u"Flask Dance Documentation", [u"David Baumgold"], 1)
+    ("index", "flaskdance", "Flask Dance Documentation", ["David Baumgold"], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -256,8 +255,8 @@ texinfo_documents = [
     (
         "index",
         "FlaskDance",
-        u"Flask Dance Documentation",
-        u"David Baumgold",
+        "Flask Dance Documentation",
+        "David Baumgold",
         "FlaskDance",
         "One line description of project.",
         "Miscellaneous",
@@ -285,7 +284,6 @@ intersphinx_mapping = {
     "oauthlib": ("https://oauthlib.readthedocs.io/en/latest/", None),
     "requests_oauthlib": ("https://requests-oauthlib.readthedocs.io/en/latest/", None),
     "sqlalchemy": ("https://docs.sqlalchemy.org/en/latest/", None),
-    "sqlalchemy_utils": ("https://sqlalchemy-utils.readthedocs.io/en/latest/", None),
     "betamax": ("https://betamax.readthedocs.io/en/latest", None),
     "pytest": ("https://docs.pytest.org/en/latest/", None),
 }

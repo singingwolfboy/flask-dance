@@ -1,6 +1,3 @@
-# coding=utf-8
-from __future__ import unicode_literals
-
 import sys
 import re
 from setuptools import setup, find_packages
@@ -42,7 +39,7 @@ def get_requirements(path):
 
 
 version = ""
-with open("flask_dance/__init__.py", "r") as fd:
+with open("flask_dance/__init__.py") as fd:
     version = re.search(
         r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE
     ).group(1)
@@ -60,9 +57,10 @@ setup(
     author_email="david@davidbaumgold.com",
     url="https://github.com/singingwolfboy/flask-dance",
     packages=find_packages(),
+    python_requires=">=3.6",
     install_requires=get_requirements("requirements.txt"),
     tests_require=get_requirements("tests/requirements.txt"),
-    extras_require={"sqla": ["sqlalchemy", "sqlalchemy-utils"], "signals": ["blinker"]},
+    extras_require={"sqla": ["sqlalchemy>=1.3.11"], "signals": ["blinker"]},
     cmdclass={"test": PyTest},
     entry_points={"pytest11": ["pytest_flask_dance = flask_dance.fixtures.pytest"]},
     license="MIT",
@@ -71,11 +69,11 @@ setup(
         "Framework :: Flask",
         "Framework :: Pytest",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     zip_safe=False,
 )

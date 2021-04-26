@@ -1,16 +1,18 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
+from flask_dance.consumer.requests import OAuth2Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "Justin Georgeson <jgeorgeson@lopht.net>"
+
+
+class NoVerifyOAuth2Session(OAuth2Session):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.verify = False
 
 
 def make_gitlab_blueprint(
@@ -24,6 +26,7 @@ def make_gitlab_blueprint(
     session_class=None,
     storage=None,
     hostname="gitlab.com",
+    verify_tls_certificates=True,
     rule_kwargs=None,
 ):
     """
@@ -54,29 +57,40 @@ def make_gitlab_blueprint(
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         hostname (str, optional): If using a private instance of GitLab CE/EE,
             specify the hostname, default is ``gitlab.com``.
+        verify_tls_certificates (bool, optional): Specify whether TLS
+            certificates should be verified. Set this to ``False`` if
+            certificates fail to validate for self-hosted GitLab instances.
         rule_kwargs (dict, optional): Additional arguments that should be passed when adding
             the login and authorized routes. Defaults to ``None``.
+            specify the hostname, default is ``gitlab.com``
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
+    if not verify_tls_certificates:
+        if session_class:
+            raise ValueError(
+                "cannot override session_class and disable certificate validation"
+            )
+        else:
+            session_class = NoVerifyOAuth2Session
+
     gitlab_bp = OAuth2ConsumerBlueprint(
         "gitlab",
         __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://{hostname}/api/v4/".format(hostname=hostname),
-        authorization_url="https://{hostname}/oauth/authorize".format(
-            hostname=hostname
-        ),
-        token_url="https://{hostname}/oauth/token".format(hostname=hostname),
+        base_url=f"https://{hostname}/api/v4/",
+        authorization_url=f"https://{hostname}/oauth/authorize",
+        token_url=f"https://{hostname}/oauth/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
+        token_url_params={"verify": verify_tls_certificates},
         rule_kwargs=rule_kwargs,
     )
     gitlab_bp.from_config["client_id"] = "GITLAB_OAUTH_CLIENT_ID"

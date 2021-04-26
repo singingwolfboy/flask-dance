@@ -1,15 +1,12 @@
 pytest
-mock
+pytest-mock
 responses
 freezegun
 coverage
 # testing sqlalchemy support
-sqlalchemy>=0.9
-sqlalchemy-utils==0.36.3; python_version == '2.7'
-sqlalchemy-utils; python_version >= '3'
+sqlalchemy>=1.3.11
 flask-sqlalchemy
 # testing integration with other extensions
 flask-login
-flask-caching==1.7.2; python_version == '2.7'
-flask-caching; python_version >= '3'
+flask-caching
 betamax

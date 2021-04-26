@@ -5,6 +5,28 @@ Changelog
 -------------
 nothing yet
 
+`4.0.0`_ (2021-04-10)
+---------------------
+* Dropped support for Python 2 and Python 3.5
+* If you are using the SQLAlchemy token storage, this project now depends on
+  SQLAlchemy version 1.3.11 and above. `sqlalchemy-utils` is no longer necessary.
+* Added `verify_tls_certificates` option to `make_gitlab_blueprint`
+* Added Twitch pre-set configuration
+
+`3.3.1`_ (2021-03-01)
+---------------------
+* Added `hostname` option to the `make_salesforce_blueprint`
+* Added `is_sandbox` option to the `make_salesforce_blueprint`
+* Changed base url for `make_salesforce_blueprint`
+
+`3.3.0`_ (2021-02-25)
+---------------------
+* Added Atlassian pre-set configuration
+* Added Salesforce pre-set configuration
+* Added `offline` option to `make_dropbox_blueprint`
+* Added `prompt` option to `make_discord_blueprint`
+* Added `subdomain` option to `make_slack_blueprint`
+
 `3.2.0`_ (2020-11-24)
 ---------------------
 Added Digital Ocean pre-set configuration
@@ -333,7 +355,10 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v4.0.0...HEAD
+.. _4.0.0: https://github.com/singingwolfboy/flask-dance/compare/v3.3.1...v4.0.0
+.. _3.3.1: https://github.com/singingwolfboy/flask-dance/compare/v3.3.0...v3.3.1
+.. _3.3.0: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...v3.3.0
 .. _3.2.0: https://github.com/singingwolfboy/flask-dance/compare/v3.1.0...v3.2.0
 .. _3.1.0: https://github.com/singingwolfboy/flask-dance/compare/v3.0.0...v3.1.0
 .. _3.0.0: https://github.com/singingwolfboy/flask-dance/compare/v2.2.0...v3.0.0

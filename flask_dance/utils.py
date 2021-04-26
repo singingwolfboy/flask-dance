@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import functools
 from datetime import datetime
 
@@ -31,7 +30,7 @@ except ImportError:
         obj.__dict__[name] = _missing
 
 
-class FakeCache(object):
+class FakeCache:
     """
     An object that mimics just enough of Flask-Caching's API to be compatible
     with our needs, but does nothing.

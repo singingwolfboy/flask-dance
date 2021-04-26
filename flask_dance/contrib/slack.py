@@ -1,14 +1,9 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
@@ -76,9 +71,7 @@ def make_slack_blueprint(
         base_url="https://slack.com/api/",
         authorization_url="https://slack.com/oauth/authorize"
         if subdomain is None
-        else "https://{subdomain}.slack.com/oauth/authorize".format(
-            subdomain=subdomain
-        ),
+        else f"https://{subdomain}.slack.com/oauth/authorize",
         token_url="https://slack.com/api/oauth.access",
         redirect_url=redirect_url,
         redirect_to=redirect_to,

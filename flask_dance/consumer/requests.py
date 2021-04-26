@@ -1,5 +1,3 @@
-from __future__ import unicode_literals, print_function
-
 from functools import wraps
 from flask import redirect, url_for
 from urlobject import URLObject
@@ -25,7 +23,7 @@ class OAuth1Session(BaseOAuth1Session):
     """
 
     def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
-        super(OAuth1Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.blueprint = blueprint
         self.base_url = URLObject(base_url)
 
@@ -63,7 +61,7 @@ class OAuth1Session(BaseOAuth1Session):
         storage/sqla.py).
         """
         self.load_token()
-        return super(OAuth1Session, self).authorized
+        return super().authorized
 
     @property
     def authorization_required(self):
@@ -80,7 +78,7 @@ class OAuth1Session(BaseOAuth1Session):
             @wraps(func)
             def check_authorization(*args, **kwargs):
                 if not self.authorized:
-                    endpoint = "{name}.login".format(name=self.blueprint.name)
+                    endpoint = f"{self.blueprint.name}.login"
                     return redirect(url_for(endpoint))
                 return func(*args, **kwargs)
 
@@ -91,14 +89,14 @@ class OAuth1Session(BaseOAuth1Session):
     def prepare_request(self, request):
         if self.base_url:
             request.url = self.base_url.relative(request.url)
-        return super(OAuth1Session, self).prepare_request(request)
+        return super().prepare_request(request)
 
     def request(
         self, method, url, data=None, headers=None, should_load_token=True, **kwargs
     ):
         if should_load_token:
             self.load_token()
-        return super(OAuth1Session, self).request(
+        return super().request(
             method=method, url=url, data=data, headers=headers, **kwargs
         )
 
@@ -118,7 +116,7 @@ class OAuth2Session(BaseOAuth2Session):
     """
 
     def __init__(self, blueprint=None, base_url=None, *args, **kwargs):
-        super(OAuth2Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.blueprint = blueprint
         self.base_url = URLObject(base_url)
         invalidate_cached_property(self, "token")
@@ -161,7 +159,7 @@ class OAuth2Session(BaseOAuth2Session):
         storage/sqla.py).
         """
         self.load_token()
-        return super(OAuth2Session, self).authorized
+        return super().authorized
 
     @property
     def authorization_required(self):
@@ -178,7 +176,7 @@ class OAuth2Session(BaseOAuth2Session):
             @wraps(func)
             def check_authorization(*args, **kwargs):
                 if not self.authorized:
-                    endpoint = "{name}.login".format(name=self.blueprint.name)
+                    endpoint = f"{self.blueprint.name}.login"
                     return redirect(url_for(endpoint))
                 return func(*args, **kwargs)
 
@@ -191,12 +189,12 @@ class OAuth2Session(BaseOAuth2Session):
             url = self.base_url.relative(url)
 
         self.load_token()
-        return super(OAuth2Session, self).request(
+        return super().request(
             method=method,
             url=url,
             data=data,
             headers=headers,
             client_id=self.blueprint.client_id,
             client_secret=self.blueprint.client_secret,
-            **kwargs
+            **kwargs,
         )

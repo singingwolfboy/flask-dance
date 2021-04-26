@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import os.path
 from urlobject import URLObject
 from oauthlib.oauth1 import SIGNATURE_RSA
@@ -8,10 +6,7 @@ from flask_dance.consumer.requests import OAuth1Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
@@ -19,7 +14,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
 class JsonOAuth1Session(OAuth1Session):
     def __init__(self, *args, **kwargs):
-        super(JsonOAuth1Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.headers["Content-Type"] = "application/json"
 
 

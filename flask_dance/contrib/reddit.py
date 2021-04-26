@@ -1,34 +1,27 @@
-from __future__ import unicode_literals
-
 from flask_dance.consumer import OAuth2ConsumerBlueprint, OAuth2Session
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
 
 from flask_dance import __version__ as _flask_dance_version
 
-try:
-    from flask import _app_ctx_stack as stack
-except ImportError:
-    from flask import _request_ctx_stack as stack
+from flask import _app_ctx_stack as stack
 
 __maintainer__ = "Sergey Storchay <r8@r8.com.ua>"
 
 
-DEFAULT_USER_AGENT = "Flask-Dance/{version}".format(version=_flask_dance_version)
+DEFAULT_USER_AGENT = f"Flask-Dance/{_flask_dance_version}"
 
 
 class RedditOAuth2Session(OAuth2Session):
     def __init__(self, *args, **kwargs):
-        super(RedditOAuth2Session, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # The Reddit API requires a non-generic user agent
         self.headers["User-Agent"] = self.blueprint.user_agent or DEFAULT_USER_AGENT
 
     def fetch_token(self, *args, **kwargs):
         # Pass client_id to session so it could trigger Basic Auth
-        return super(RedditOAuth2Session, self).fetch_token(
-            client_id=self.blueprint.client_id, *args, **kwargs
-        )
+        return super().fetch_token(client_id=self.blueprint.client_id, *args, **kwargs)
 
 
 def make_reddit_blueprint(

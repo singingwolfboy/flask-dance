@@ -66,7 +66,7 @@ def app(blueprint, db, request):
     return app
 
 
-class record_queries(object):
+class record_queries:
     """
     A context manager for recording the SQLAlchemy queries that were executed
     in a given context block.

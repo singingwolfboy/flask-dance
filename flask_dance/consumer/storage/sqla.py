@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, JSON
 from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy_utils import JSONType
 from sqlalchemy.orm.exc import NoResultFound
 from flask_dance.utils import FakeCache, first
 from flask_dance.consumer.storage import BaseStorage
@@ -14,7 +13,7 @@ except ImportError:
     AnonymousUserMixin = None
 
 
-class OAuthConsumerMixin(object):
+class OAuthConsumerMixin:
     """
     A :ref:`SQLAlchemy declarative mixin <sqlalchemy:declarative_mixins>` with
     some suggested columns for a model to store OAuth tokens:
@@ -28,26 +27,26 @@ class OAuthConsumerMixin(object):
         an automatically generated datetime that indicates when
         the OAuth provider issued this token
     ``token``
-        a :class:`JSON <sqlalchemy_utils.types.json.JSONType>` field to store
+        a :class:`JSON <sqlalchemy.types.JSON>` field to store
         the actual token received from the OAuth provider
     """
 
     @declared_attr
     def __tablename__(cls):
-        return "flask_dance_{}".format(cls.__name__.lower())
+        return f"flask_dance_{cls.__name__.lower()}"
 
     id = Column(Integer, primary_key=True)
     provider = Column(String(50), nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    token = Column(MutableDict.as_mutable(JSONType), nullable=False)
+    token = Column(MutableDict.as_mutable(JSON), nullable=False)
 
     def __repr__(self):
         parts = []
         parts.append(self.__class__.__name__)
         if self.id:
-            parts.append("id={}".format(self.id))
+            parts.append(f"id={self.id}")
         if self.provider:
-            parts.append('provider="{}"'.format(self.provider))
+            parts.append(f'provider="{self.provider}"')
         return "<{}>".format(" ".join(parts))
 
 

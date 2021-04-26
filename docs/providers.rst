@@ -11,6 +11,18 @@ to Flask-Dance!
    :local:
    :backlinks: none
 
+Atlassian
+---------
+.. module:: flask_dance.contrib.atlassian
+
+.. autofunction:: make_atlassian_blueprint
+
+.. data:: atlassian
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Atlassian authentication token loaded (assuming
+    that the user has authenticated with Atlassian at some point in the past).
+
 Authentiq
 ---------
 .. module:: flask_dance.contrib.authentiq
@@ -191,6 +203,18 @@ Reddit
     already has the Reddit authentication token loaded (assuming that the user
     has authenticated with Reddit at some point in the past).
 
+Salesforce
+----------
+.. module:: flask_dance.contrib.salesforce
+
+.. autofunction:: make_salesforce_blueprint
+
+.. data:: salesforce
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Salesforce authentication token loaded (assuming
+    that the user has authenticated with Salesforce at some point in the past).
+
 Slack
 -----
 .. module:: flask_dance.contrib.slack
@@ -214,6 +238,18 @@ Strava
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
     already has the Strava authentication token loaded (assuming that the user
     has authenticated with Strava at some point in the past).
+
+Twitch
+-------
+.. module:: flask_dance.contrib.twitch
+
+.. autofunction:: make_twitch_blueprint
+
+.. data:: twitch
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Twitch authentication token loaded (assuming that the user
+    has authenticated with Twitch at some point in the past).
 
 Twitter
 -------

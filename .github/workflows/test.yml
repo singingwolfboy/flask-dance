@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["2.x", "3.x"]
+        python-version: ["3.6", "3.x"]
         database-uri:
           - "postgresql://testuser:testpw@localhost/testdb"
           - "sqlite://"
@@ -56,7 +56,6 @@ jobs:
 
       - name: Upload coverage to Codecov
         if: ${{ always() }}
-        uses: codecov/codecov-action@v1.0.7
+        uses: codecov/codecov-action@v1.1.1
         with:
-          file: ./coverage.xml
           fail_ci_if_error: false

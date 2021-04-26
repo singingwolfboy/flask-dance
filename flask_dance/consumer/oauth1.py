@@ -1,5 +1,3 @@
-from __future__ import unicode_literals, print_function
-
 import logging
 from flask import request, url_for, redirect, current_app
 from werkzeug.wrappers import Response

@@ -1,8 +1,7 @@
-import six
 from abc import ABCMeta, abstractmethod
 
 
-class BaseStorage(six.with_metaclass(ABCMeta)):
+class BaseStorage(metaclass=ABCMeta):
     @abstractmethod
     def get(self, blueprint):
         return None
