@@ -27,6 +27,7 @@ def make_google_blueprint(
     session_class=None,
     storage=None,
     hosted_domain=None,
+    rule_kwargs=None,
 ):
     """
     Make a blueprint for authenticating with Google using OAuth 2. This requires
@@ -66,6 +67,8 @@ def make_google_blueprint(
         hosted_domain (str, optional): The domain of the G Suite user. Used to indicate that the account selection UI
             should be optimized for accounts at this domain. Note that this only provides UI optimization, and requires
             response validation (see warning).
+        rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+            the login and authorized routes. Defaults to ``None``.
 
     .. _google_hosted_domain_warning:
     .. warning::
@@ -109,6 +112,7 @@ def make_google_blueprint(
         authorization_url_params=authorization_url_params,
         session_class=session_class,
         storage=storage,
+        rule_kwargs=rule_kwargs,
     )
     google_bp.from_config["client_id"] = "GOOGLE_OAUTH_CLIENT_ID"
     google_bp.from_config["client_secret"] = "GOOGLE_OAUTH_CLIENT_SECRET"

@@ -27,6 +27,7 @@ def make_azure_blueprint(
     prompt=None,
     domain_hint=None,
     login_hint=None,
+    rule_kwargs=None,
 ):
     """
     Make a blueprint for authenticating with Azure AD using OAuth 2. This requires
@@ -74,7 +75,8 @@ def make_azure_blueprint(
             having already extracted the username from a previous sign-in using the
             preferred_username claim.
             Defaults to ``None``
-
+        rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+            the login and authorized routes. Defaults to `None.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -107,6 +109,7 @@ def make_azure_blueprint(
         authorization_url_params=authorization_url_params,
         session_class=session_class,
         storage=storage,
+        rule_kwargs=rule_kwargs,
     )
     azure_bp.from_config["client_id"] = "AZURE_OAUTH_CLIENT_ID"
     azure_bp.from_config["client_secret"] = "AZURE_OAUTH_CLIENT_SECRET"

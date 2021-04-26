@@ -29,6 +29,7 @@ def make_zoho_blueprint(
     session_class=None,
     storage=None,
     reprompt_consent=False,
+    rule_kwargs=None,
 ):
     """
     Make a blueprint for authenticating with Zoho using OAuth 2. This requires
@@ -61,7 +62,10 @@ def make_zoho_blueprint(
             for the OAuth token. Defaults to False
         reprompt_consent (bool): If True, force Zoho to re-prompt the user
             for their consent, even if the user has already given their
-            consent. Defaults to False
+            consent. Defaults to False.
+        rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+            the login and authorized routes. Defaults to ``None``.
+
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
@@ -88,6 +92,7 @@ def make_zoho_blueprint(
         login_url=login_url,
         session_class=session_class,
         storage=storage,
+        rule_kwargs=rule_kwargs,
     )
 
     zoho_bp.from_config["client_id"] = "ZOHO_OAUTH_CLIENT_ID"

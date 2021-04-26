@@ -42,6 +42,7 @@ def make_strava_blueprint(
     session_class=None,
     storage=None,
     user_agent=None,
+    rule_kwargs=None,
 ):
     """
     Make a blueprint for authenticating with Strava using OAuth 2. This requires
@@ -71,7 +72,9 @@ def make_strava_blueprint(
             class, to use for this blueprint. Defaults to
             :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         user_agent (str, optional): User agent for the requests to Strava API.
-            Defaults to ``Flask-Dance/{{version}}``
+            Defaults to ``Flask-Dance/{{version}}``.
+        rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+            the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -93,6 +96,7 @@ def make_strava_blueprint(
         authorized_url=authorized_url,
         session_class=session_class or StravaOAuth2Session,
         storage=storage,
+        rule_kwargs=rule_kwargs,
     )
 
     strava_bp.from_config["client_id"] = "STRAVA_OAUTH_CLIENT_ID"

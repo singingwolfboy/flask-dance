@@ -679,3 +679,23 @@ def test_custom_session_class():
     )
     assert isinstance(bp.session, CustomOAuth2Session)
     assert bp.session.my_attr == "foobar"
+
+
+def test_rule_kwargs():
+    blueprint = OAuth2ConsumerBlueprint(
+        "test-service",
+        __name__,
+        client_id="client_id",
+        client_secret="client_secret",
+        state="random-string",
+        base_url="https://example.com",
+        authorization_url="https://example.com/oauth/authorize",
+        token_url="https://example.com/oauth/access_token",
+        redirect_url="http://mysite.cool/whoa?query=basketball",
+        rule_kwargs={"host":"example2.com"},
+    )
+    app = flask.Flask(__name__)
+    app.secret_key = "secret"
+    app.register_blueprint(blueprint, url_prefix="/login")
+    rules = [rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")]
+    assert all(rule.host == "example2.com" for rule in rules)

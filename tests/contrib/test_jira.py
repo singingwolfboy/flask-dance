@@ -51,6 +51,23 @@ def test_blueprint_factory():
     )
 
 
+def test_blueprint_factory_rule_kwargs(make_app):
+    app = make_app("https://flask.atlassian.net",
+        redirect_to="index",
+        rule_kwargs={"host":"example2.com"},
+    )
+    rules = [rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")]
+    assert all(rule.host == "example2.com" for rule in rules)
+
+
+def test_blueprint_factory_no_rule_kwargs(make_app):
+    app = make_app("https://flask.atlassian.net",
+        redirect_to="index",
+    )
+    rules = [rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")]
+    assert all(rule.host is None for rule in rules)
+
+
 def test_rsa_key_file(tmp_path):
     rsa_key = tmp_path / "fake.key"
     rsa_key.write_text("my-fake-key")
