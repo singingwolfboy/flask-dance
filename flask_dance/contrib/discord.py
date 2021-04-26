@@ -51,7 +51,7 @@ def make_discord_blueprint(
             Defaults to ``consent``, setting it to ``None`` will skip user
             interaction if the application was previously approved.
         rule_kwargs (dict, optional): Additional arguments that should be passed when adding
-            the login and authorized routes. Defaults to `None.
+            the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
