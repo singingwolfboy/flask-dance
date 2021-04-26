@@ -71,7 +71,7 @@ def make_azure_blueprint(
             preferred_username claim.
             Defaults to ``None``
         rule_kwargs (dict, optional): Additional arguments that should be passed when adding
-            the login and authorized routes. Defaults to `None.
+            the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
