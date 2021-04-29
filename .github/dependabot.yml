@@ -1,0 +1,15 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: flask-caching
+    versions:
+    - "> 1.7.2"
+  - dependency-name: sqlalchemy-utils
+    versions:
+    - "> 0.36.3"
