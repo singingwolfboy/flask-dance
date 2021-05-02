@@ -33,7 +33,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
         login_url=None,
         authorized_url=None,
         storage=None,
-        rule_kwargs=None
+        rule_kwargs=None,
     ):
 
         bp_kwargs = dict(
@@ -58,7 +58,10 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
         rule_kwargs = rule_kwargs or {}
 
         self.add_url_rule(
-            rule=login_url.format(bp=self), endpoint="login", view_func=self.login, **rule_kwargs,
+            rule=login_url.format(bp=self),
+            endpoint="login",
+            view_func=self.login,
+            **rule_kwargs,
         )
         self.add_url_rule(
             rule=authorized_url.format(bp=self),

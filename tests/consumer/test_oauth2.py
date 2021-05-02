@@ -690,11 +690,15 @@ def test_rule_kwargs():
         authorization_url="https://example.com/oauth/authorize",
         token_url="https://example.com/oauth/access_token",
         redirect_url="http://mysite.cool/whoa?query=basketball",
-        rule_kwargs={"host":"example2.com"},
+        rule_kwargs={"host": "example2.com"},
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
-    rules = [rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("test-service.")]
+    rules = [
+        rule
+        for rule in app.url_map.iter_rules()
+        if rule.endpoint.startswith("test-service.")
+    ]
     assert all(rule.host == "example2.com" for rule in rules)
     assert len(rules) == 2

@@ -78,9 +78,11 @@ def test_blueprint_factory_rule_kwargs(make_app):
         client_id="foo",
         client_secret="bar",
         redirect_to="index",
-        rule_kwargs={"host":"example2.com"},
+        rule_kwargs={"host": "example2.com"},
     )
-    rules = [rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")]
+    rules = [
+        rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")
+    ]
     assert all(rule.host == "example2.com" for rule in rules)
     assert len(rules) == 2
 
@@ -91,7 +93,9 @@ def test_blueprint_factory_no_rule_kwargs(make_app):
         client_secret="bar",
         redirect_to="index",
     )
-    rules = [rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")]
+    rules = [
+        rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")
+    ]
     assert all(rule.host is None for rule in rules)
     assert len(rules) == 2
 
