@@ -47,10 +47,6 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
             url_defaults=url_defaults,
             root_path=root_path,
         )
-        # `root_path` didn't exist in 0.10, and will cause an error if it's
-        # passed in that version. Only pass `root_path` if it's set.
-        if bp_kwargs["root_path"] is None:
-            del bp_kwargs["root_path"]
         flask.Blueprint.__init__(self, **bp_kwargs)
 
         login_url = login_url or "/{bp.name}"
