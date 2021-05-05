@@ -19,6 +19,7 @@ class HerokuOAuth2Session(OAuth2Session):
 def make_heroku_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     api_version="3",
     redirect_url=None,

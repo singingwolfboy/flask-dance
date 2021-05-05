@@ -8,6 +8,8 @@ Changelog
   pre-set configurations have been updated to also accept a `rule_kwargs` parameter
   as well.
 * Minimum supported version of Flask is now 1.0.4.
+* The blueprint classes and the pre-set configurations now use keyword-only arguments,
+  as defined in `PEP-3102`_.
 
 `4.0.0`_ (2021-04-10)
 ---------------------
@@ -352,6 +354,7 @@ Fixed
 * Initial release
 
 .. _Betamax: https://betamax.readthedocs.io/
+.. _PEP-3012: https://www.python.org/dev/peps/pep-3102/
 .. _issue 53: https://github.com/singingwolfboy/flask-dance/issues/53
 .. _issue 149: https://github.com/singingwolfboy/flask-dance/issues/149
 .. _#143: https://github.com/singingwolfboy/flask-dance/issues/143

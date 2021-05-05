@@ -11,6 +11,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 def make_dropbox_blueprint(
     app_key=None,
     app_secret=None,
+    *,
     scope=None,
     offline=False,
     force_reapprove=False,

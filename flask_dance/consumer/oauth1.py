@@ -29,6 +29,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         import_name,
         client_key=None,
         client_secret=None,
+        *,
         signature_method=SIGNATURE_HMAC,
         signature_type=SIGNATURE_TYPE_AUTH_HEADER,
         rsa_key=None,

@@ -11,6 +11,7 @@ __maintainer__ = "Pieter Ennes <support@authentiq.com>"
 def make_authentiq_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope="openid profile",
     redirect_url=None,
     redirect_to=None,

@@ -22,6 +22,7 @@ def make_jira_blueprint(
     base_url,
     consumer_key=None,
     rsa_key=None,
+    *,
     redirect_url=None,
     redirect_to=None,
     login_url=None,

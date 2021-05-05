@@ -11,6 +11,7 @@ __maintainer__ = "Przemyslaw Kanach <kanach16@gmail.com>"
 def make_salesforce_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     reprompt_consent=False,
     hostname=None,

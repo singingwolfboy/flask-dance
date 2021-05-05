@@ -29,6 +29,7 @@ class StravaOAuth2Session(OAuth2Session):
 def make_strava_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope="read",
     redirect_url=None,
     redirect_to=None,
