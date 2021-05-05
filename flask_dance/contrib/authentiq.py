@@ -19,6 +19,7 @@ def make_authentiq_blueprint(
     session_class=None,
     storage=None,
     hostname="connect.authentiq.io",
+    rule_kwargs=None,
 ):
     """
     Make a blueprint for authenticating with authentiq using OAuth 2. This requires
@@ -47,7 +48,9 @@ def make_authentiq_blueprint(
                 class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         hostname (str, optional): If using a private instance of authentiq CE/EE,
-            specify the hostname, default is ``connect.authentiq.io``
+            specify the hostname, default is ``connect.authentiq.io``.
+        rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+            the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -67,6 +70,7 @@ def make_authentiq_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
+        rule_kwargs=rule_kwargs,
     )
     authentiq_bp.from_config["client_id"] = "AUTHENTIQ_OAUTH_CLIENT_ID"
     authentiq_bp.from_config["client_secret"] = "AUTHENTIQ_OAUTH_CLIENT_SECRET"

@@ -18,6 +18,7 @@ def make_github_blueprint(
     authorized_url=None,
     session_class=None,
     storage=None,
+    rule_kwargs=None,
 ):
     """
     Make a blueprint for authenticating with GitHub using OAuth 2. This requires
@@ -45,6 +46,8 @@ def make_github_blueprint(
         storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
+        rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+            the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -64,6 +67,7 @@ def make_github_blueprint(
         authorized_url=authorized_url,
         session_class=session_class,
         storage=storage,
+        rule_kwargs=rule_kwargs,
     )
     github_bp.from_config["client_id"] = "GITHUB_OAUTH_CLIENT_ID"
     github_bp.from_config["client_secret"] = "GITHUB_OAUTH_CLIENT_SECRET"

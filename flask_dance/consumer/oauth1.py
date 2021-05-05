@@ -51,6 +51,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         redirect_to=None,
         session_class=None,
         storage=None,
+        rule_kwargs=None,
         **kwargs
     ):
         """
@@ -106,6 +107,8 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
+            rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+                the login and authorized routes. Defaults to ``None``.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self,
@@ -121,6 +124,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             login_url=login_url,
             authorized_url=authorized_url,
             storage=storage,
+            rule_kwargs=rule_kwargs,
         )
 
         self.base_url = base_url

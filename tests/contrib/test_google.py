@@ -73,6 +73,33 @@ def test_blueprint_factory_hosted_domain():
     assert google_bp.authorization_url_params["hd"] == "example.com"
 
 
+def test_blueprint_factory_rule_kwargs(make_app):
+    app = make_app(
+        client_id="foo",
+        client_secret="bar",
+        redirect_to="index",
+        rule_kwargs={"host": "example2.com"},
+    )
+    rules = [
+        rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")
+    ]
+    assert all(rule.host == "example2.com" for rule in rules)
+    assert len(rules) == 2
+
+
+def test_blueprint_factory_no_rule_kwargs(make_app):
+    app = make_app(
+        client_id="foo",
+        client_secret="bar",
+        redirect_to="index",
+    )
+    rules = [
+        rule for rule in app.url_map.iter_rules() if rule.endpoint.startswith("google.")
+    ]
+    assert all(rule.host is None for rule in rules)
+    assert len(rules) == 2
+
+
 @responses.activate
 def test_context_local(make_app):
     responses.add(responses.GET, "https://google.com")

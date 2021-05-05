@@ -27,6 +27,7 @@ def make_gitlab_blueprint(
     storage=None,
     hostname="gitlab.com",
     verify_tls_certificates=True,
+    rule_kwargs=None,
 ):
     """
     Make a blueprint for authenticating with GitLab using OAuth 2. This requires
@@ -55,10 +56,13 @@ def make_gitlab_blueprint(
                 class, to use for this blueprint. Defaults to
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         hostname (str, optional): If using a private instance of GitLab CE/EE,
-            specify the hostname, default is ``gitlab.com``
+            specify the hostname, default is ``gitlab.com``.
         verify_tls_certificates (bool, optional): Specify whether TLS
             certificates should be verified. Set this to ``False`` if
             certificates fail to validate for self-hosted GitLab instances.
+        rule_kwargs (dict, optional): Additional arguments that should be passed when adding
+            the login and authorized routes. Defaults to ``None``.
+            specify the hostname, default is ``gitlab.com``
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -87,6 +91,7 @@ def make_gitlab_blueprint(
         session_class=session_class,
         storage=storage,
         token_url_params={"verify": verify_tls_certificates},
+        rule_kwargs=rule_kwargs,
     )
     gitlab_bp.from_config["client_id"] = "GITLAB_OAUTH_CLIENT_ID"
     gitlab_bp.from_config["client_secret"] = "GITLAB_OAUTH_CLIENT_SECRET"
