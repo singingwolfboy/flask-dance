@@ -42,7 +42,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install specific Flask version
-        if: ${{ matrix.flask-version }} != 'latest'
+        if: ${{ matrix.flask-version != 'latest' }}
         run: pip install Flask==${{ matrix.flask-version }}
 
       - name: Install dependencies
