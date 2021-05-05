@@ -13,10 +13,11 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.6", "3.x"]
+        flask-version: ["1.0.4", "latest"]
         database-uri:
           - "postgresql://testuser:testpw@localhost/testdb"
           - "sqlite://"
-    name: "pytest: Python ${{ matrix.python-version }}, postgres=${{ contains(matrix.database-uri, 'postgres') }}"
+    name: "pytest: Python ${{ matrix.python-version }}, Flask ${{ matrix.flask-version }}, postgres=${{ contains(matrix.database-uri, 'postgres') }}"
     services:
       postgres:
         image: postgres:latest
@@ -39,6 +40,10 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install specific Flask version
+        if: ${{ matrix.flask-version != 'latest' }}
+        run: pip install Flask==${{ matrix.flask-version }}
 
       - name: Install dependencies
         run: >-

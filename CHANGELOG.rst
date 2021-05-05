@@ -7,6 +7,7 @@ Changelog
   you to configure how the OAuth routes are configured. All of the
   pre-set configurations have been updated to also accept a `rule_kwargs` parameter
   as well.
+* Minimum supported version of Flask is now 1.0.4.
 
 `4.0.0`_ (2021-04-10)
 ---------------------
