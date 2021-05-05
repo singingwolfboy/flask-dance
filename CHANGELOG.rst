@@ -3,7 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* BaseOAuthConsumerBlueprint now accepts a `rule_kwargs` parameter, which allows
+  you to configure how the OAuth routes are configured. All of the
+  pre-set configurations have been updated to also accept a `rule_kwargs` parameter
+  as well.
 
 `4.0.0`_ (2021-04-10)
 ---------------------
