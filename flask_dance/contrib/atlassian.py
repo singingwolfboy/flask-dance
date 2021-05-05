@@ -11,6 +11,7 @@ __maintainer__ = "Przemyslaw Kanach <kanach16@gmail.com>"
 def make_atlassian_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     reprompt_consent=False,
     redirect_url=None,

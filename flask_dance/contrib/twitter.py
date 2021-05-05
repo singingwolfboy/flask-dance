@@ -11,6 +11,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 def make_twitter_blueprint(
     api_key=None,
     api_secret=None,
+    *,
     redirect_url=None,
     redirect_to=None,
     login_url=None,

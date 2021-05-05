@@ -11,6 +11,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 def make_meetup_blueprint(
     key=None,
     secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,

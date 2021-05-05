@@ -25,6 +25,7 @@ class ClientIdHeaderOAuth2Session(OAuth2Session):
 def make_twitch_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,

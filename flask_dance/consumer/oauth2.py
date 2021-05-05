@@ -30,6 +30,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         import_name,
         client_id=None,
         client_secret=None,
+        *,
         client=None,
         auto_refresh_url=None,
         auto_refresh_kwargs=None,

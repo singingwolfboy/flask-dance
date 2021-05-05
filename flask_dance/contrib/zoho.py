@@ -17,6 +17,7 @@ ZOHO_TOKEN_HEADER = "Zoho-oauthtoken"
 def make_zoho_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     offline=False,

@@ -27,6 +27,7 @@ class RedditOAuth2Session(OAuth2Session):
 def make_reddit_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope="identity",
     permanent=False,
     redirect_url=None,

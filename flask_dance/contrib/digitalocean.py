@@ -11,6 +11,7 @@ __maintainer__ = "Michael Abrahamsen <support@conveyor.dev>"
 def make_digitalocean_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,

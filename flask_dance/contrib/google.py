@@ -11,6 +11,7 @@ __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 def make_google_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     offline=False,
     reprompt_consent=False,

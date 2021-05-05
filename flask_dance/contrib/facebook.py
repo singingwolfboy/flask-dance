@@ -11,6 +11,7 @@ __maintainer__ = "Matt Bachmann <bachmann.matt@gmail.com>"
 def make_facebook_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,

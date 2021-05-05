@@ -17,6 +17,7 @@ class SlackBlueprint(OAuth2ConsumerBlueprint):
 def make_slack_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,

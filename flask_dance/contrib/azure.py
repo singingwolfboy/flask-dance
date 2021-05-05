@@ -11,6 +11,7 @@ __maintainer__ = "Steven MARTINS <steven.martins.fr@gmail.com>"
 def make_azure_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,

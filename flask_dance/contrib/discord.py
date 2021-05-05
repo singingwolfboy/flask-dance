@@ -11,6 +11,7 @@ __maintainer__ = "Michael Delpech <michaeldel@protonmail.com>"
 def make_discord_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,

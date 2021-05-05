@@ -23,6 +23,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
         self,
         name,
         import_name,
+        *,
         static_folder=None,
         static_url_path=None,
         template_folder=None,

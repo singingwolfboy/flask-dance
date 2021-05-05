@@ -11,6 +11,7 @@ __maintainer__ = "Nick DiRienzo <me@nickdirienzo.com>"
 def make_spotify_blueprint(
     client_id=None,
     client_secret=None,
+    *,
     scope=None,
     redirect_url=None,
     redirect_to=None,
