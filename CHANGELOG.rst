@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`5.0.0`_ (2020-05-12)
+---------------------
 * Added support for Flask 2.0 and Werkzeug 2.0.
 * Minimum supported version of Flask is now 1.0.4.
 * BaseOAuthConsumerBlueprint now accepts a `rule_kwargs` parameter, which allows
@@ -363,7 +367,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v4.0.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v5.0.0...HEAD
+.. _5.0.0: https://github.com/singingwolfboy/flask-dance/compare/v4.0.0...v5.0.0
 .. _4.0.0: https://github.com/singingwolfboy/flask-dance/compare/v3.3.1...v4.0.0
 .. _3.3.1: https://github.com/singingwolfboy/flask-dance/compare/v3.3.0...v3.3.1
 .. _3.3.0: https://github.com/singingwolfboy/flask-dance/compare/v3.2.0...v3.3.0
