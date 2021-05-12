@@ -68,7 +68,7 @@ def make_twitch_blueprint(
             the login and authorized routes. Defaults to ``None``.
 
     Returns:
-        :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint` A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+        :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint` A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     twitch_bp = OAuth2ConsumerBlueprint(
         "twitch",

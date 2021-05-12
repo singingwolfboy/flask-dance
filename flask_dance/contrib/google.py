@@ -73,7 +73,7 @@ def make_google_blueprint(
        ``hosted_domain`` argument passed to ``make_google_blueprint``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
-    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["https://www.googleapis.com/auth/userinfo.profile"]
     authorization_url_params = {}

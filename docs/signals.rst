@@ -3,11 +3,11 @@
 Signals
 =======
 
-Flask-Dance supports signals, :ref:`just as Flask does <flask:signals>`.
+Flask-Dance supports signals, :doc:`just as Flask does <flask:signals>`.
 Signals are perfect for custom processing code that you want to run at a certain
 point in the OAuth dance. For example, after the dance is complete, you might
 need to update the user's profile, kick off a long-running task, or simply
-:ref:`flash a message <flask:message-flashing-pattern>` to let the user know
+:doc:`flash a message <flask:patterns/flashing>` to let the user know
 that the login was successful. It's easy, just import the appropriate signal of
 the ones listed below, and connect your custom processing code to the signal.
 

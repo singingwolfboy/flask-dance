@@ -59,7 +59,7 @@ def make_salesforce_blueprint(
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
-    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     authorization_url_params = {}
     if reprompt_consent:

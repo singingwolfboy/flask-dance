@@ -81,20 +81,20 @@ important when :doc:`implementing logout <logout>`.
 Blueprints
 ----------
 
-A :ref:`Flask blueprint <flask:blueprints>` is component of a
+A :doc:`Flask blueprint <flask:blueprints>` is component of a
 Flask application. Because Flask-Dance is designed to be the OAuth component
 of your Flask application, it is built using blueprints. As a result,
 Flask-Dance supports all the features that any blueprint supports,
 including registering the blueprint at any URL prefix or subdomain
 you want, url routing, and custom error handlers. Read the
-:ref:`Flask documentation about blueprints <flask:blueprints>`
+:doc:`Flask documentation about blueprints <flask:blueprints>`
 for more information.
 
 Signals
 -------
 
 Flask uses the `blinker`_ library to provide support for
-:ref:`signals <flask:signals>`. Signals allow you to subscribe to certain
+:doc:`signals <flask:signals>`. Signals allow you to subscribe to certain
 events that occur in your application, so that you can respond instantly
 when those events happen.
 
@@ -103,6 +103,6 @@ do whatever custom processing you want in response to certain events.
 For example, when a user successfully completes the OAuth dance, you probably
 want to flash a welcome message or kick off some kind of data import task.
 Signals allow you to do that without modifying the code in Flask-Dance.
-Read the :ref:`signals page <signals>` for more information.
+Read the :doc:`signals page <signals>` for more information.
 
 .. _blinker: https://pythonhosted.org/blinker/

@@ -53,7 +53,7 @@ def make_digitalocean_blueprint(
             the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
-    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     digitalocean_bp = OAuth2ConsumerBlueprint(
         "digitalocean",

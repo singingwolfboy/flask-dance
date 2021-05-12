@@ -60,7 +60,7 @@ def make_slack_blueprint(
             the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
-    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["identify", "chat:write:bot"]
     slack_bp = SlackBlueprint(
