@@ -78,7 +78,8 @@ def test_login_url():
             "/login/test-service", base_url="https://a.b.c", follow_redirects=False
         )
         # check that we saved the state in the session
-        assert flask.session["test-service_oauth_state"] == "random-string"
+        with client.session_transaction() as sess:
+            assert sess["test-service_oauth_state"] == "random-string"
     # check that we redirected the client
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
@@ -140,11 +141,12 @@ def test_authorized_url():
             == "https://a.b.c/login/test-service/authorized"
         )
         # check that we stored the access token in the session
-        assert flask.session["test-service_oauth_token"] == {
-            "access_token": "foobar",
-            "scope": ["admin"],
-            "token_type": "bearer",
-        }
+        with client.session_transaction() as sess:
+            assert sess["test-service_oauth_token"] == {
+                "access_token": "foobar",
+                "scope": ["admin"],
+                "token_type": "bearer",
+            }
 
 
 def test_authorized_url_no_state():
@@ -159,7 +161,8 @@ def test_authorized_url_no_state():
         assert resp.status_code == 302
         assert resp.headers["Location"] == "https://a.b.c/login/test-service"
         # check that there's nothing in the session
-        assert "test-service_oauth_token" not in flask.session
+        with client.session_transaction() as sess:
+            assert "test-service_oauth_token" not in sess
 
 
 @responses.activate
@@ -246,7 +249,8 @@ def test_authorized_url_token_lifetime():
             "expires_in": 300,
             "expires_at": 1451649901,
         }
-        assert flask.session["test-service_oauth_token"] == expected_stored_token
+        with client.session_transaction() as sess:
+            assert sess["test-service_oauth_token"] == expected_stored_token
 
 
 def test_return_expired_token(request):
