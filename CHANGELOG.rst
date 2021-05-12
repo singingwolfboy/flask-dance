@@ -9,9 +9,9 @@ nothing yet
 ---------------------
 * Added support for Flask 2.0 and Werkzeug 2.0.
 * Minimum supported version of Flask is now 1.0.4.
-* BaseOAuthConsumerBlueprint now accepts a `rule_kwargs` parameter, which allows
+* BaseOAuthConsumerBlueprint now accepts a ``rule_kwargs`` parameter, which allows
   you to configure how the OAuth routes are configured. All of the
-  pre-set configurations have been updated to also accept a `rule_kwargs` parameter
+  pre-set configurations have been updated to also accept a ``rule_kwargs`` parameter
   as well.
 * The blueprint classes and the pre-set configurations now use keyword-only arguments,
   as defined in `PEP-3102`_.
@@ -20,23 +20,23 @@ nothing yet
 ---------------------
 * Dropped support for Python 2 and Python 3.5
 * If you are using the SQLAlchemy token storage, this project now depends on
-  SQLAlchemy version 1.3.11 and above. `sqlalchemy-utils` is no longer necessary.
-* Added `verify_tls_certificates` option to `make_gitlab_blueprint`
+  SQLAlchemy version 1.3.11 and above. ``sqlalchemy-utils`` is no longer necessary.
+* Added ``verify_tls_certificates`` option to ``make_gitlab_blueprint``
 * Added Twitch pre-set configuration
 
 `3.3.1`_ (2021-03-01)
 ---------------------
-* Added `hostname` option to the `make_salesforce_blueprint`
-* Added `is_sandbox` option to the `make_salesforce_blueprint`
+* Added ``hostname`` option to the ``make_salesforce_blueprint``
+* Added ``is_sandbox`` option to the ``make_salesforce_blueprint``
 * Changed base url for `make_salesforce_blueprint`
 
 `3.3.0`_ (2021-02-25)
 ---------------------
 * Added Atlassian pre-set configuration
 * Added Salesforce pre-set configuration
-* Added `offline` option to `make_dropbox_blueprint`
-* Added `prompt` option to `make_discord_blueprint`
-* Added `subdomain` option to `make_slack_blueprint`
+* Added ``offline`` option to ``make_dropbox_blueprint``
+* Added ``prompt`` option to ``make_discord_blueprint``
+* Added ``subdomain`` option to ``make_slack_blueprint``
 
 `3.2.0`_ (2020-11-24)
 ---------------------
@@ -359,7 +359,7 @@ Fixed
 * Initial release
 
 .. _Betamax: https://betamax.readthedocs.io/
-.. _PEP-3012: https://www.python.org/dev/peps/pep-3102/
+.. _`PEP-3012`: https://www.python.org/dev/peps/pep-3102/
 .. _issue 53: https://github.com/singingwolfboy/flask-dance/issues/53
 .. _issue 149: https://github.com/singingwolfboy/flask-dance/issues/149
 .. _#143: https://github.com/singingwolfboy/flask-dance/issues/143
