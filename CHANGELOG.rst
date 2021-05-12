@@ -359,7 +359,7 @@ Fixed
 * Initial release
 
 .. _Betamax: https://betamax.readthedocs.io/
-.. _`PEP-3012`: https://www.python.org/dev/peps/pep-3102/
+.. _`PEP-3102`: https://www.python.org/dev/peps/pep-3102/
 .. _issue 53: https://github.com/singingwolfboy/flask-dance/issues/53
 .. _issue 149: https://github.com/singingwolfboy/flask-dance/issues/149
 .. _#143: https://github.com/singingwolfboy/flask-dance/issues/143
