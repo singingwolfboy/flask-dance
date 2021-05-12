@@ -66,7 +66,7 @@ def make_gitlab_blueprint(
             specify the hostname, default is ``gitlab.com``
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
-    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     if not verify_tls_certificates:
         if session_class:

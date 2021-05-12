@@ -277,9 +277,9 @@ texinfo_documents = [
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
-    "flask": ("http://flask.pocoo.org/docs/", None),
+    "flask": ("https://flask.palletsprojects.com/en/latest/", None),
     "flask_login": ("https://flask-login.readthedocs.io/en/latest/", None),
-    "werkzeug": ("http://werkzeug.pocoo.org/docs/", None),
+    "werkzeug": ("https://werkzeug.palletsprojects.com/en/latest/", None),
     "requests": ("https://requests.kennethreitz.org/en/latest/", None),
     "oauthlib": ("https://oauthlib.readthedocs.io/en/latest/", None),
     "requests_oauthlib": ("https://requests-oauthlib.readthedocs.io/en/latest/", None),

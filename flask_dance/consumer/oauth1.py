@@ -172,7 +172,10 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         )
 
     def teardown_session(self, exception=None):
-        invalidate_cached_property(self, "session")
+        try:
+            invalidate_cached_property(self, "session")
+        except KeyError:
+            pass
 
     def login(self):
         callback_uri = url_for(".authorized", _external=True)

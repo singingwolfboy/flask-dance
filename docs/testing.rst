@@ -177,7 +177,7 @@ during the test. Note that we also use ``request.addfinalizer`` to remove
 these "before_request" and "after_request" functions, so that they don't
 interfere with other tests. If you are recreating your ``app`` object
 from scratch each time using
-:ref:`the application factory pattern <flask:app-factories>`,
+:doc:`the application factory pattern <flask:patterns/appfactories>`,
 you don't need to include these ``request.addfinalizer`` lines.
 
 In the actual test, we check for the :envvar:`GITHUB_OAUTH_ACCESS_TOKEN`

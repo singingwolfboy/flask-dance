@@ -65,7 +65,7 @@ def make_jira_blueprint(
             the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth1ConsumerBlueprint`
-    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     if rsa_key and os.path.isfile(rsa_key):
         with open(rsa_key) as f:

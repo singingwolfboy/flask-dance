@@ -76,7 +76,13 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
 
         self.logged_in_funcs = []
         self.from_config = {}
-        invalidate_token = lambda d: invalidate_cached_property(self.session, "token")
+
+        def invalidate_token(d):
+            try:
+                invalidate_cached_property(self.session, "token")
+            except KeyError:
+                pass
+
         self.config = CallbackDict(on_update=invalidate_token)
         self.before_app_request(self.load_config)
 
@@ -148,12 +154,18 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
             expires_at = datetime.utcnow() + delta
             _token["expires_at"] = timestamp_from_datetime(expires_at)
         self.storage.set(self, _token)
-        invalidate_cached_property(self.session, "token")
+        try:
+            invalidate_cached_property(self.session, "token")
+        except KeyError:
+            pass
 
     @token.deleter
     def token(self):
         self.storage.delete(self)
-        invalidate_cached_property(self.session, "token")
+        try:
+            invalidate_cached_property(self.session, "token")
+        except KeyError:
+            pass
 
     @abstractproperty
     def session(self):

@@ -64,7 +64,7 @@ def make_zoho_blueprint(
             the login and authorized routes. Defaults to ``None``.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
-    :returns: A :ref:`blueprint <flask:blueprints>` to attach to your Flask app.
+    :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
     scope = scope or ["ZohoCRM.users.all"]
     base_url = "https://www.zohoapis.com/"

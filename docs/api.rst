@@ -40,7 +40,7 @@ of the user.
    .. attribute:: from_config
 
       A dictionary used to dynamically load variables from the
-      :ref:`Flask application config <flask:config>` into the blueprint
+      :doc:`Flask application config <flask:config>` into the blueprint
       at the start of each request. To tell this blueprint to pull configuration
       from the app, set key-value pairs on this dict. Keys are the name of
       the local variable to set on the blueprint object, and values are the
@@ -82,7 +82,7 @@ of the user.
    .. attribute:: from_config
 
       A dictionary used to dynamically load variables from the
-      :ref:`Flask application config <flask:config>` into the blueprint
+      :doc:`Flask application config <flask:config>` into the blueprint
       at the start of each request. To tell this blueprint to pull configuration
       from the app, set key-value pairs on this dict. Keys are the name of
       the local variable to set on the blueprint object, and values are the

@@ -150,10 +150,11 @@ def test_authorized_url():
         assert auth_header["oauth_token"] == "foobar"
         assert auth_header["oauth_verifier"] == "xyz"
         # check that we stored the access token and secret in the session
-        assert flask.session["test-service_oauth_token"] == {
-            "oauth_token": "xxx",
-            "oauth_token_secret": "yyy",
-        }
+        with client.session_transaction() as sess:
+            assert sess["test-service_oauth_token"] == {
+                "oauth_token": "xxx",
+                "oauth_token_secret": "yyy",
+            }
 
 
 @responses.activate
