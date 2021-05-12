@@ -3,11 +3,12 @@ Changelog
 
 `unreleased`_
 -------------
+* Added support for Flask 2.0 and Werkzeug 2.0.
+* Minimum supported version of Flask is now 1.0.4.
 * BaseOAuthConsumerBlueprint now accepts a `rule_kwargs` parameter, which allows
   you to configure how the OAuth routes are configured. All of the
   pre-set configurations have been updated to also accept a `rule_kwargs` parameter
   as well.
-* Minimum supported version of Flask is now 1.0.4.
 * The blueprint classes and the pre-set configurations now use keyword-only arguments,
   as defined in `PEP-3102`_.
 
