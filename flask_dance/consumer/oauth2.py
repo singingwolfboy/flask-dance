@@ -196,7 +196,10 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         return session
 
     def teardown_session(self, exception=None):
-        invalidate_cached_property(self, "session")
+        try:
+            invalidate_cached_property(self, "session")
+        except KeyError:
+            pass
 
     def login(self):
         log.debug("client_id = %s", self.client_id)
