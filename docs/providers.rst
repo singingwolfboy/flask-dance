@@ -95,6 +95,18 @@ Facebook
     already has the Facebook authentication token loaded (assuming that the user
     has authenticated with Facebook at some point in the past).
 
+Fitbit
+------
+.. module:: flask_dance.contrib.fitbit
+
+.. autofunction:: make_fitbit_blueprint
+
+.. data:: fitbit
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Fitbit authentication token loaded (assuming that the user
+    has authenticated with Fitbit at some point in the past).
+
 GitHub
 ------
 .. module:: flask_dance.contrib.github
