@@ -1,3 +1,4 @@
+import base64
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
 from flask.globals import LocalProxy, _lookup_app_object
@@ -59,7 +60,7 @@ def make_fitbit_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://www.fitbit.com/",
+        base_url="https://api.fitbit.com/",
         authorization_url="https://www.fitbit.com/oauth2/authorize",
         token_url="https://api.fitbit.com/oauth2/token",
         redirect_url=redirect_url,
@@ -72,7 +73,11 @@ def make_fitbit_blueprint(
     )
     fitbit_bp.from_config["client_id"] = "FITBIT_OAUTH_CLIENT_ID"
     fitbit_bp.from_config["client_secret"] = "FITBIT_OAUTH_CLIENT_SECRET"
-
+    fitbit_bp.auto_refresh_url = fitbit_bp.token_url
+    #fitbit_bp.auto_refresh_kwargs = {
+    #    "Authorization": "Basic " + bearer,
+    #    "Content-Type": "application/x-www-form-urlencoded"
+    #}
     @fitbit_bp.before_app_request
     def set_applocal_session():
         ctx = stack.top
