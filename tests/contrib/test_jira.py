@@ -85,7 +85,9 @@ def test_rsa_key_file(tmp_path):
 
 
 @responses.activate
-@mock.patch("oauthlib.oauth1.rfc5849.signature.sign_rsa_sha1", return_value="fakesig")
+@mock.patch(
+    "oauthlib.oauth1.rfc5849.Client.get_oauth_signature", return_value="fakesig"
+)
 def test_load_from_config(sign_func, make_app):
     responses.add(
         responses.POST,
@@ -97,17 +99,22 @@ def test_load_from_config(sign_func, make_app):
     app.config["JIRA_OAUTH_RSA_KEY"] = "bar"
 
     resp = app.test_client().get("/jira")
+    assert len(responses.calls) > 0
     auth_header = dict(
         parse_authorization_header(
             responses.calls[0].request.headers["Authorization"].decode("utf-8")
         )
     )
     assert auth_header["oauth_consumer_key"] == "foo"
-    assert sign_func.call_args[0][1] == "bar"
+    sign_func.assert_called()
+    request = sign_func.call_args[0][0]
+    assert dict(request.oauth_params)["oauth_signature"] == "fakesig"
 
 
 @responses.activate
-@mock.patch("oauthlib.oauth1.rfc5849.signature.sign_rsa_sha1", return_value="fakesig")
+@mock.patch(
+    "oauthlib.oauth1.rfc5849.Client.get_oauth_signature", return_value="fakesig"
+)
 def test_content_type(sign_func, make_app):
     responses.add(responses.GET, "https://flask.atlassian.net/")
 
@@ -133,6 +140,7 @@ def test_content_type(sign_func, make_app):
         return "success"
 
     resp = app.test_client().get("/test")
+    assert len(responses.calls) > 0
     headers = responses.calls[0].request.headers
     assert "Content-Type" in headers
     assert headers["Content-Type"] == b"application/json"
@@ -168,6 +176,7 @@ def test_context_local():
 
         app1.preprocess_request()
         jira.get("https://google.com")
+        assert len(responses.calls) > 0
         auth_header = dict(
             parse_authorization_header(
                 responses.calls[0].request.headers["Authorization"].decode("utf-8")
@@ -182,6 +191,7 @@ def test_context_local():
 
         app2.preprocess_request()
         jira.get("https://google.com")
+        assert len(responses.calls) > 0
         auth_header = dict(
             parse_authorization_header(
                 responses.calls[1].request.headers["Authorization"].decode("utf-8")
