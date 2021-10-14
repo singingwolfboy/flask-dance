@@ -10,3 +10,5 @@ flask-sqlalchemy
 flask-login
 flask-caching
 betamax
+# we need the `signedtoken` extra for `oauthlib`
+oauthlib[signedtoken]
