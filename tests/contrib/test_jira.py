@@ -85,7 +85,9 @@ def test_rsa_key_file(tmp_path):
 
 
 @responses.activate
-@mock.patch("oauthlib.oauth1.rfc5849.Client.get_oauth_signature", return_value="fakesig")
+@mock.patch(
+    "oauthlib.oauth1.rfc5849.Client.get_oauth_signature", return_value="fakesig"
+)
 def test_load_from_config(sign_func, make_app):
     responses.add(
         responses.POST,
@@ -106,11 +108,13 @@ def test_load_from_config(sign_func, make_app):
     assert auth_header["oauth_consumer_key"] == "foo"
     sign_func.assert_called()
     request = sign_func.call_args[0][0]
-    assert dict(request.oauth_params)['oauth_signature'] == "fakesig"
+    assert dict(request.oauth_params)["oauth_signature"] == "fakesig"
 
 
 @responses.activate
-@mock.patch("oauthlib.oauth1.rfc5849.Client.get_oauth_signature", return_value="fakesig")
+@mock.patch(
+    "oauthlib.oauth1.rfc5849.Client.get_oauth_signature", return_value="fakesig"
+)
 def test_content_type(sign_func, make_app):
     responses.add(responses.GET, "https://flask.atlassian.net/")
 
