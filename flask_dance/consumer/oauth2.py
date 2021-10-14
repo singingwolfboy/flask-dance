@@ -71,7 +71,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 resolved relative to this URL.
             authorization_url: The URL specified by the OAuth provider for
                 obtaining an
-                `authorization grant <http://tools.ietf.org/html/rfc6749#section-1.3>`__.
+                `authorization grant <https://datatracker.ietf.org/doc/html/rfc6749#section-1.3>`__.
                 This can be an fully-qualified URL, or a path that is
                 resolved relative to the ``base_url``.
             authorization_url_params (dict): A dict of extra
@@ -80,7 +80,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 OAuth 2 authorization grant request.
             token_url: The URL specified by the OAuth provider for
                 obtaining an
-                `access token <http://tools.ietf.org/html/rfc6749#section-1.4>`__.
+                `access token <https://datatracker.ietf.org/doc/html/rfc6749#section-1.4>`__.
                 This can be an fully-qualified URL, or a path that is
                 resolved relative to the ``base_url``.
             token_url_params (dict): A dict of extra
