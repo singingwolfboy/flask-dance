@@ -54,6 +54,7 @@ Strava
 Twitter
 Zoho
 Atlassian
+Fitbit
 
 Pytest
 Werkzeug

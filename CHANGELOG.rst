@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added Fitbit pre-set configuration 
 
 `5.0.0`_ (2020-05-12)
 ---------------------
