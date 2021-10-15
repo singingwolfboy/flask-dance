@@ -27,7 +27,7 @@ def test_blueprint_factory():
     )
     assert isinstance(fitbit_bp, OAuth2ConsumerBlueprint)
     assert fitbit_bp.session.scope == "user:email"
-    assert fitbit_bp.session.base_url == "https://www.fitbit.com/"
+    assert fitbit_bp.session.base_url == "https://api.fitbit.com/"
     assert fitbit_bp.session.client_id == "foo"
     assert fitbit_bp.client_secret == "bar"
     assert fitbit_bp.authorization_url == "https://www.fitbit.com/oauth2/authorize"
