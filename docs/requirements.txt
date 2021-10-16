@@ -7,3 +7,7 @@ Flask-Sphinx-Themes
 sqlalchemy>=1.3.11
 pytest
 betamax
+
+# resolve problems with outdated transitive dependency,
+# see https://github.com/readthedocs/readthedocs.org/issues/8575
+funcparserlib==1.0.0a0
