@@ -3,7 +3,11 @@ Changelog
 
 `unreleased`_
 -------------
-* Added Fitbit pre-set configuration 
+nothing yet
+
+`5.1.0`_ (2021-11-01)
+---------------------
+* Added Fitbit pre-set configuration
 
 `5.0.0`_ (2020-05-12)
 ---------------------
@@ -367,7 +371,8 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v5.0.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v5.1.0...HEAD
+.. _5.1.0: https://github.com/singingwolfboy/flask-dance/compare/v5.0.0...v5.1.0
 .. _5.0.0: https://github.com/singingwolfboy/flask-dance/compare/v4.0.0...v5.0.0
 .. _4.0.0: https://github.com/singingwolfboy/flask-dance/compare/v3.3.1...v4.0.0
 .. _3.3.1: https://github.com/singingwolfboy/flask-dance/compare/v3.3.0...v3.3.1
