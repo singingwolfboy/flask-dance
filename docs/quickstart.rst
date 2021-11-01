@@ -31,7 +31,7 @@ Flask sessions (easiest)
 * `Twitter <https://github.com/singingwolfboy/flask-dance-twitter>`__
 * `LinkedIn <https://github.com/singingwolfboy/flask-dance-linkedin>`__
 * `Heroku <https://github.com/singingwolfboy/flask-dance-heroku>`__
-* `fitbit <https://github.com/lila/flask-dance-fitbit>`__
+* `Fitbit <https://github.com/lila/flask-dance-fitbit>`__
 
 SQLAlchemy
 ----------

@@ -5,7 +5,7 @@ from flask.globals import LocalProxy, _lookup_app_object
 from flask import _app_ctx_stack as stack
 
 
-__maintainer__ = "Karan Bhatia (karan.bhatia@gmail.com)"
+__maintainer__ = "Karan Bhatia <karan.bhatia@gmail.com>"
 
 
 def make_fitbit_blueprint(
