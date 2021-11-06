@@ -8,7 +8,6 @@ from flask_dance.consumer.storage.session import SessionStorage
 from flask_dance.utils import (
     getattrd,
     timestamp_from_datetime,
-    invalidate_cached_property,
 )
 
 
@@ -79,7 +78,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
 
         def invalidate_token(d):
             try:
-                invalidate_cached_property(self.session, "token")
+                del self.session.token
             except KeyError:
                 pass
 
@@ -155,7 +154,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
             _token["expires_at"] = timestamp_from_datetime(expires_at)
         self.storage.set(self, _token)
         try:
-            invalidate_cached_property(self.session, "token")
+            del self.session.token
         except KeyError:
             pass
 
@@ -163,7 +162,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
     def token(self):
         self.storage.delete(self)
         try:
-            invalidate_cached_property(self.session, "token")
+            del self.session.token
         except KeyError:
             pass
 

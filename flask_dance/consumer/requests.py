@@ -5,7 +5,6 @@ from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib import OAuth2Session as BaseOAuth2Session
 from oauthlib.common import to_unicode
 from werkzeug.utils import cached_property
-from flask_dance.utils import invalidate_cached_property
 
 
 class OAuth1Session(BaseOAuth1Session):
@@ -119,7 +118,7 @@ class OAuth2Session(BaseOAuth2Session):
         super().__init__(*args, **kwargs)
         self.blueprint = blueprint
         self.base_url = URLObject(base_url)
-        invalidate_cached_property(self, "token")
+        del self.token
 
     @cached_property
     def token(self):

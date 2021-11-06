@@ -12,7 +12,6 @@ from .base import (
     oauth_error,
 )
 from .requests import OAuth1Session
-from flask_dance.utils import invalidate_cached_property
 
 
 log = logging.getLogger(__name__)
@@ -173,7 +172,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
 
     def teardown_session(self, exception=None):
         try:
-            invalidate_cached_property(self, "session")
+            del self.session
         except KeyError:
             pass
 
