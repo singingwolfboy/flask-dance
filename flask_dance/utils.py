@@ -21,14 +21,6 @@ except ImportError:
 
     utc = UTC()
 
-try:
-    from werkzeug.utils import invalidate_cached_property
-except ImportError:
-    from werkzeug._internal import _missing
-
-    def invalidate_cached_property(obj, name):
-        obj.__dict__[name] = _missing
-
 
 class FakeCache:
     """
