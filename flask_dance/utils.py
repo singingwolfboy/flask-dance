@@ -1,7 +1,6 @@
 import functools
 
 
-
 class FakeCache:
     """
     An object that mimics just enough of Flask-Caching's API to be compatible
@@ -48,4 +47,3 @@ def getattrd(obj, name, default=sentinel):
         if default is not sentinel:
             return default
         raise
-

@@ -4,9 +4,7 @@ from werkzeug.datastructures import CallbackDict
 import flask
 from flask.signals import Namespace
 from flask_dance.consumer.storage.session import SessionStorage
-from flask_dance.utils import (
-    getattrd,
-)
+from flask_dance.utils import getattrd
 
 
 _signals = Namespace()
