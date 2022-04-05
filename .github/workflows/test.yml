@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.6", "3.x"]
-        flask-version: ["1.0.4", "latest"]
+        python-version: ["3.7", "3.x"]
+        flask-version: ["2.0.3", "latest"]
         database-uri:
           - "postgresql://testuser:testpw@localhost/testdb"
           - "sqlite://"
