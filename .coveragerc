@@ -1,11 +1,2 @@
 [run]
 source = flask_dance
-
-[report]
-# Regexes for lines to exclude from consideration
-exclude_lines =
-    # Have to re-enable the standard pragma
-    pragma: no cover
-
-    # We only check for ImportError for backwards-compatible imports
-    except ImportError:

@@ -2,11 +2,7 @@ import json
 import re
 from oauthlib.oauth2 import MissingCodeError
 
-try:
-    from urllib.parse import quote_plus, parse_qsl
-except ImportError:
-    from urllib import quote_plus
-    from urlparse import parse_qsl
+from urllib.parse import parse_qsl
 import pytest
 from unittest import mock
 import responses

@@ -1,5 +1,4 @@
-import warnings
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from abc import ABCMeta, abstractmethod, abstractproperty
 from werkzeug.datastructures import CallbackDict
 import flask
@@ -7,7 +6,6 @@ from flask.signals import Namespace
 from flask_dance.consumer.storage.session import SessionStorage
 from flask_dance.utils import (
     getattrd,
-    timestamp_from_datetime,
 )
 
 
@@ -151,7 +149,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
             # that may already be there.
             delta = timedelta(seconds=_token["expires_in"])
             expires_at = datetime.utcnow() + delta
-            _token["expires_at"] = timestamp_from_datetime(expires_at)
+            _token["expires_at"] = expires_at.replace(tzinfo=timezone.utc).timestamp()
         self.storage.set(self, _token)
         try:
             del self.session.token
