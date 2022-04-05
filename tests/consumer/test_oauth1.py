@@ -137,7 +137,7 @@ def test_authorized_url():
         )
         # check that we redirected the client
         assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/"
+        assert resp.headers["Location"] in ("https://a.b.c/", "/")
         # check that we obtained an access token
         assert len(responses.calls) == 1
         assert "Authorization" in responses.calls[0].request.headers
@@ -222,7 +222,7 @@ def test_redirect_to():
         )
         # check that we redirected the client
         assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/blargl"
+        assert resp.headers["Location"] in ("https://a.b.c/blargl", "/blargl")
 
 
 @responses.activate
@@ -253,7 +253,7 @@ def test_redirect_fallback():
         )
         # check that we redirected the client
         assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/"
+        assert resp.headers["Location"] in ("https://a.b.c/", "/")
 
 
 def test_authorization_required_decorator_allowed():
@@ -287,7 +287,10 @@ def test_authorization_required_decorator_redirect():
         resp = client.get("/restricted", base_url="https://a.b.c")
         # check that we redirected the client
         assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/login/test-service"
+        assert resp.headers["Location"] in (
+            "https://a.b.c/login/test-service",
+            "/login/test-service",
+        )
 
 
 @requires_blinker
