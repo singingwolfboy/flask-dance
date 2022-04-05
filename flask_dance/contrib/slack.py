@@ -1,10 +1,10 @@
-from flask_dance.consumer import OAuth2ConsumerBlueprint
-from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 from functools import partial
-from flask.globals import LocalProxy, _lookup_app_object
 
 from flask import _app_ctx_stack as stack
+from flask.globals import LocalProxy, _lookup_app_object
+from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 
+from flask_dance.consumer import OAuth2ConsumerBlueprint
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 

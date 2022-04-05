@@ -1,10 +1,12 @@
 import logging
-from flask import request, url_for, redirect, current_app
-from werkzeug.wrappers import Response
-from werkzeug.utils import cached_property
-from requests_oauthlib.oauth1_session import TokenRequestDenied, TokenMissing
-from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
+
+from flask import current_app, redirect, request, url_for
 from oauthlib.common import to_unicode
+from oauthlib.oauth1 import SIGNATURE_HMAC, SIGNATURE_TYPE_AUTH_HEADER
+from requests_oauthlib.oauth1_session import TokenMissing, TokenRequestDenied
+from werkzeug.utils import cached_property
+from werkzeug.wrappers import Response
+
 from .base import (
     BaseOAuthConsumerBlueprint,
     oauth_authorized,
@@ -12,7 +14,6 @@ from .base import (
     oauth_error,
 )
 from .requests import OAuth1Session
-
 
 log = logging.getLogger(__name__)
 

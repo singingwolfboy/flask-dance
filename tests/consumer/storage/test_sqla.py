@@ -3,12 +3,14 @@ import pytest
 sa = pytest.importorskip("sqlalchemy")
 
 import os
-import responses
+
 import flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import event
+import responses
 from flask_caching import Cache
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import event
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint, oauth_authorized, oauth_error
 from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
 

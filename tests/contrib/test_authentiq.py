@@ -5,7 +5,7 @@ from urlobject import URLObject
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
-from flask_dance.contrib.authentiq import make_authentiq_blueprint, authentiq
+from flask_dance.contrib.authentiq import authentiq, make_authentiq_blueprint
 
 
 @pytest.fixture

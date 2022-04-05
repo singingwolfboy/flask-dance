@@ -1,10 +1,11 @@
 import pytest
 import responses
-from urlobject import URLObject
 from flask import Flask
-from flask_dance.contrib.zoho import make_zoho_blueprint, zoho
+from urlobject import URLObject
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
+from flask_dance.contrib.zoho import make_zoho_blueprint, zoho
 
 
 @pytest.fixture

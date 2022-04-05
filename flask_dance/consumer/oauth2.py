@@ -1,11 +1,12 @@
 import json
-
 import logging
+
 import flask
-from flask import request, url_for, redirect, current_app
-from werkzeug.wrappers import Response
-from werkzeug.utils import cached_property
+from flask import current_app, redirect, request, url_for
 from oauthlib.oauth2 import MissingCodeError
+from werkzeug.utils import cached_property
+from werkzeug.wrappers import Response
+
 from .base import (
     BaseOAuthConsumerBlueprint,
     oauth_authorized,
@@ -13,7 +14,6 @@ from .base import (
     oauth_error,
 )
 from .requests import OAuth2Session
-
 
 log = logging.getLogger(__name__)
 

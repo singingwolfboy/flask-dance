@@ -1,13 +1,13 @@
 import pytest
+import requests_oauthlib
 import responses
+from flask import Flask
 from urlobject import URLObject
 from werkzeug.urls import url_decode
-from flask import Flask
-from flask_dance.contrib.slack import make_slack_blueprint, slack
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
-
-import requests_oauthlib
+from flask_dance.contrib.slack import make_slack_blueprint, slack
 
 requires_overridable_fixer = pytest.mark.skipif(
     requests_oauthlib.__version__ <= "0.6.0",

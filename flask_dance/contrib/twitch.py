@@ -1,13 +1,13 @@
 """Blueprint for connecting to Twitch API."""
 
-from flask_dance.consumer import OAuth2ConsumerBlueprint
-from flask_dance.consumer.requests import OAuth2Session
-from functools import partial
-from flask.globals import LocalProxy, _lookup_app_object
 import os
+from functools import partial
 
 from flask import _app_ctx_stack as stack
+from flask.globals import LocalProxy, _lookup_app_object
 
+from flask_dance.consumer import OAuth2ConsumerBlueprint
+from flask_dance.consumer.requests import OAuth2Session
 
 __maintainer__ = "Kerry Hatcher <kerry.hatcher@protonmail.com>"
 

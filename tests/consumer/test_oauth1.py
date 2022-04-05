@@ -1,16 +1,18 @@
-from urllib.parse import quote_plus
-import pytest
 from unittest import mock
-import responses
+from urllib.parse import quote_plus
+
 import flask
+import pytest
+import responses
+from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 from werkzeug.middleware.proxy_fix import ProxyFix
+
 from flask_dance.consumer import (
     OAuth1ConsumerBlueprint,
     oauth_authorized,
     oauth_before_login,
     oauth_error,
 )
-from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
 from flask_dance.consumer.requests import OAuth1Session
 from flask_dance.consumer.storage import MemoryStorage
 

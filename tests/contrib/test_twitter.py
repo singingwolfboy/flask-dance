@@ -1,10 +1,12 @@
-import pytest
 from unittest import mock
+
+import pytest
 import responses
 from flask import Flask
-from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
-from flask_dance.consumer import OAuth1ConsumerBlueprint
 from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
+
+from flask_dance.consumer import OAuth1ConsumerBlueprint
+from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 
 
 @pytest.fixture

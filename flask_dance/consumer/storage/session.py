@@ -1,5 +1,6 @@
-from flask_dance.consumer.storage import BaseStorage
 import flask
+
+from flask_dance.consumer.storage import BaseStorage
 
 
 class SessionStorage(BaseStorage):

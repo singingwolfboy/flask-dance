@@ -1,9 +1,10 @@
 import os
-import pytest
-import flask
-from flask_dance.contrib.github import make_github_blueprint, github
-from flask_dance.consumer.storage import MemoryStorage
 
+import flask
+import pytest
+
+from flask_dance.consumer.storage import MemoryStorage
+from flask_dance.contrib.github import github, make_github_blueprint
 
 betamax = pytest.importorskip("betamax")
 GITHUB_ACCESS_TOKEN = os.environ.get("GITHUB_OAUTH_ACCESS_TOKEN", "fake-token")

@@ -1,4 +1,5 @@
 import pytest
+
 from flask_dance.utils import FakeCache, first, getattrd
 
 
