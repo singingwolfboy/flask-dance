@@ -1,10 +1,11 @@
 import pytest
 import responses
-from urlobject import URLObject
 from flask import Flask
-from flask_dance.contrib.gitlab import make_gitlab_blueprint, gitlab
+from urlobject import URLObject
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
+from flask_dance.contrib.gitlab import gitlab, make_gitlab_blueprint
 
 
 @pytest.fixture

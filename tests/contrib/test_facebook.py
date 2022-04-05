@@ -1,10 +1,11 @@
 import pytest
 import responses
-from urlobject import URLObject
 from flask import Flask
-from flask_dance.contrib.facebook import make_facebook_blueprint, facebook
+from urlobject import URLObject
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
+from flask_dance.contrib.facebook import facebook, make_facebook_blueprint
 
 
 @pytest.fixture

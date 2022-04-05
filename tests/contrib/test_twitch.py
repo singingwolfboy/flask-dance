@@ -1,13 +1,11 @@
 import pytest
 import responses
-from urlobject import URLObject
 from flask import Flask
-from flask_dance.contrib.twitch import (
-    make_twitch_blueprint,
-    twitch,
-)
+from urlobject import URLObject
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
+from flask_dance.contrib.twitch import make_twitch_blueprint, twitch
 
 
 @pytest.fixture

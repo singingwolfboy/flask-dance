@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, DateTime, JSON
-from sqlalchemy.ext.mutable import MutableDict
+from sqlalchemy import JSON, Column, DateTime, Integer, String
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.ext.mutable import MutableDict
 from sqlalchemy.orm.exc import NoResultFound
-from flask_dance.utils import FakeCache, first
+
 from flask_dance.consumer.storage import BaseStorage
+from flask_dance.utils import FakeCache, first
 
 try:
     from flask_login import AnonymousUserMixin

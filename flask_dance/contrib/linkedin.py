@@ -1,9 +1,9 @@
-from flask_dance.consumer import OAuth2ConsumerBlueprint
 from functools import partial
-from flask.globals import LocalProxy, _lookup_app_object
 
 from flask import _app_ctx_stack as stack
+from flask.globals import LocalProxy, _lookup_app_object
 
+from flask_dance.consumer import OAuth2ConsumerBlueprint
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 

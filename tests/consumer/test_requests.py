@@ -1,8 +1,9 @@
-import pytest
 from unittest import mock
-import responses
-from flask_dance.consumer.requests import OAuth1Session, OAuth2Session
 
+import pytest
+import responses
+
+from flask_dance.consumer.requests import OAuth1Session, OAuth2Session
 
 FAKE_OAUTH1_TOKEN = {"oauth_token": "abcdefg", "oauth_token_secret": "hijklmnop"}
 FAKE_OAUTH2_TOKEN = {

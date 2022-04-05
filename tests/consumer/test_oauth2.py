@@ -1,15 +1,16 @@
 import json
 import re
-from oauthlib.oauth2 import MissingCodeError
-
-from urllib.parse import parse_qsl
-import pytest
 from unittest import mock
-import responses
-from urlobject import URLObject
+from urllib.parse import parse_qsl
+
 import flask
+import pytest
+import responses
 from freezegun import freeze_time
+from oauthlib.oauth2 import MissingCodeError
+from urlobject import URLObject
 from werkzeug.middleware.proxy_fix import ProxyFix
+
 from flask_dance.consumer import (
     OAuth2ConsumerBlueprint,
     oauth_authorized,

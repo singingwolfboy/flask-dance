@@ -5,7 +5,7 @@ from urlobject import URLObject
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
-from flask_dance.contrib.azure import make_azure_blueprint, azure
+from flask_dance.contrib.azure import azure, make_azure_blueprint
 
 
 @pytest.fixture

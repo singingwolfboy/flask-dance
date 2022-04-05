@@ -1,11 +1,12 @@
-from datetime import datetime, timedelta, timezone
 from abc import ABCMeta, abstractmethod, abstractproperty
-from werkzeug.datastructures import CallbackDict
+from datetime import datetime, timedelta, timezone
+
 import flask
 from flask.signals import Namespace
+from werkzeug.datastructures import CallbackDict
+
 from flask_dance.consumer.storage.session import SessionStorage
 from flask_dance.utils import getattrd
-
 
 _signals = Namespace()
 oauth_authorized = _signals.signal("oauth-authorized")

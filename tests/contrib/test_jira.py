@@ -1,13 +1,15 @@
-import pytest
-from unittest import mock
 import os
 import tempfile
+from unittest import mock
+
+import pytest
 import responses
 from flask import Flask
-from flask_dance.contrib.jira import make_jira_blueprint, jira
+from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
+
 from flask_dance.consumer import OAuth1ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
-from oauthlib.oauth1.rfc5849.utils import parse_authorization_header
+from flask_dance.contrib.jira import jira, make_jira_blueprint
 
 
 @pytest.fixture

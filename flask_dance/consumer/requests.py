@@ -1,9 +1,10 @@
 from functools import wraps
+
 from flask import redirect, url_for
-from urlobject import URLObject
+from oauthlib.common import to_unicode
 from requests_oauthlib import OAuth1Session as BaseOAuth1Session
 from requests_oauthlib import OAuth2Session as BaseOAuth2Session
-from oauthlib.common import to_unicode
+from urlobject import URLObject
 from werkzeug.utils import cached_property
 
 

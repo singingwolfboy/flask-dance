@@ -16,8 +16,24 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: "3.8"
+          python-version: 3.8
       - name: Install black
         run: pip install black
       - name: Run black
         run: black --check .
+
+  isort:
+    runs-on: ubuntu-latest
+    name: isort
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r tests/requirements.txt
+      - name: Install isort
+        run: pip install isort
+      - name: Run black
+        run: isort --check .
