@@ -114,7 +114,10 @@ def test_sqla_storage_without_user(app, db, blueprint, request):
             )
             # check that we redirected the client
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+            assert resp.headers["Location"] in (
+                "https://a.b.c/oauth_done",
+                "/oauth_done",
+            )
 
     assert len(queries) == 2
 
@@ -194,7 +197,10 @@ def test_sqla_storage(app, db, blueprint, request):
             )
             # check that we redirected the client
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+            assert resp.headers["Location"] in (
+                "https://a.b.c/oauth_done",
+                "/oauth_done",
+            )
 
     assert len(queries) == 3
 
@@ -332,7 +338,10 @@ def test_sqla_flask_login(app, db, blueprint, request):
             )
             # check that we redirected the client
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+            assert resp.headers["Location"] in (
+                "https://a.b.c/oauth_done",
+                "/oauth_done",
+            )
 
     assert len(queries) == 4
 
@@ -357,7 +366,10 @@ def test_sqla_flask_login(app, db, blueprint, request):
             )
             # check that we redirected the client
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+            assert resp.headers["Location"] in (
+                "https://a.b.c/oauth_done",
+                "/oauth_done",
+            )
 
     assert len(queries) == 4
 
@@ -702,7 +714,10 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
             )
             # check that we redirected the client
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+            assert resp.headers["Location"] in (
+                "https://a.b.c/oauth_done",
+                "/oauth_done",
+            )
 
     assert len(queries) == 2
 
@@ -747,7 +762,10 @@ def test_sqla_cache(app, db, blueprint, request):
             )
             # check that we redirected the client
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+            assert resp.headers["Location"] in (
+                "https://a.b.c/oauth_done",
+                "/oauth_done",
+            )
 
     assert len(queries) == 2
 
