@@ -5,6 +5,12 @@ Changelog
 -------------
 nothing yet
 
+`6.0.0`_ (2022-04-05)
+---------------------
+* Added support for Flask 2.1 and Werkzeug 2.1
+* Minimum supported version of Flask is now 2.0.3
+* Codebase is now linted using `isort`_
+
 `5.1.0`_ (2021-11-01)
 ---------------------
 * Added Fitbit pre-set configuration
@@ -369,9 +375,11 @@ Fixed
 .. _#143: https://github.com/singingwolfboy/flask-dance/issues/143
 .. _#144: https://github.com/singingwolfboy/flask-dance/issues/144
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
+.. _isort: https://pycqa.github.io/isort/
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v5.1.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.0.0...HEAD
+.. _6.0.0: https://github.com/singingwolfboy/flask-dance/compare/v5.1.0...v6.0.0
 .. _5.1.0: https://github.com/singingwolfboy/flask-dance/compare/v5.0.0...v5.1.0
 .. _5.0.0: https://github.com/singingwolfboy/flask-dance/compare/v4.0.0...v5.0.0
 .. _4.0.0: https://github.com/singingwolfboy/flask-dance/compare/v3.3.1...v4.0.0
