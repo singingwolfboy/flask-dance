@@ -9,11 +9,6 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
 from flask_dance.contrib.slack import make_slack_blueprint, slack
 
-requires_overridable_fixer = pytest.mark.skipif(
-    requests_oauthlib.__version__ <= "0.6.0",
-    reason="requires an overridable Slack fixer",
-)
-
 
 @pytest.fixture
 def make_app():
@@ -106,7 +101,6 @@ def test_context_local(make_app):
         assert request.headers["Authorization"] == "Bearer app2"
 
 
-@requires_overridable_fixer
 @responses.activate
 def test_auto_token_get(make_app):
     responses.add(responses.GET, "https://slack.com/api/chat.postMessage")
@@ -131,7 +125,6 @@ def test_auto_token_get(make_app):
     assert request_data["token"] == "abcde"
 
 
-@requires_overridable_fixer
 @responses.activate
 def test_auto_token_post(make_app):
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
@@ -177,7 +170,6 @@ def test_auto_token_post_no_token(make_app):
     assert "token" not in url.query_dict
 
 
-@requires_overridable_fixer
 @responses.activate
 def test_override_token_get(make_app):
     responses.add(responses.GET, "https://slack.com/api/chat.postMessage")
@@ -209,7 +201,6 @@ def test_override_token_get(make_app):
     assert "token" not in url.query_dict
 
 
-@requires_overridable_fixer
 @responses.activate
 def test_override_token_post(make_app):
     responses.add(responses.POST, "https://slack.com/api/chat.postMessage")
