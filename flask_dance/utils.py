@@ -1,25 +1,4 @@
 import functools
-from datetime import datetime
-
-
-try:
-    from datetime import timezone
-
-    utc = timezone.utc
-except ImportError:
-    from datetime import timedelta, tzinfo
-
-    class UTC(tzinfo):
-        def utcoffset(self, dt):
-            return timedelta(0)
-
-        def tzname(self, dt):
-            return "UTC"
-
-        def dst(self, dst):
-            return timedelta(0)
-
-    utc = UTC()
 
 
 class FakeCache:
@@ -68,16 +47,3 @@ def getattrd(obj, name, default=sentinel):
         if default is not sentinel:
             return default
         raise
-
-
-def timestamp_from_datetime(dt):
-    """
-    Given a datetime, in UTC, return a float that represents the timestamp for
-    that datetime.
-
-    http://stackoverflow.com/questions/8777753/converting-datetime-date-to-utc-timestamp-in-python#8778548
-    """
-    dt = dt.replace(tzinfo=utc)
-    if hasattr(dt, "timestamp") and callable(dt.timestamp):
-        return dt.replace(tzinfo=utc).timestamp()
-    return (dt - datetime(1970, 1, 1, tzinfo=utc)).total_seconds()
