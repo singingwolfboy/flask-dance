@@ -10,4 +10,4 @@ betamax
 
 # resolve problems with outdated transitive dependency,
 # see https://github.com/readthedocs/readthedocs.org/issues/8575
-funcparserlib==1.0.0a0
+funcparserlib==1.0.0a2
