@@ -5,7 +5,7 @@ from flask.globals import LocalProxy, _lookup_app_object
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
-__maintainer__ = "David Baumgold <david@davidbaumgold.com>"
+__maintainer__ = "Martijn van Exel <m@rtijn.org>"
 
 
 def make_osm_blueprint(

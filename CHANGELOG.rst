@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added OpenStreetMap (OSM) provider
 
 `6.0.0`_ (2022-04-05)
 ---------------------
