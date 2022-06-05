@@ -6,6 +6,7 @@ app.secret_key = "kskijowsdenfolwnlfknw"  # Replace this with your own secret!
 blueprint = make_osm_blueprint(
     client_id="QqOjU6MRsjtRMVEQ38XPlIUm3CVjBLEE5xezFUvi0YM",
     client_secret="5OrHFE570MrShxyTlsbXAv9kl4WOXY26Zt_M9vOtzVc",
+    scope="read_prefs",
 )
 app.register_blueprint(blueprint, url_prefix="/login")
 
