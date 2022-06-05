@@ -203,6 +203,18 @@ Nylas
     already has the Nylas authentication token loaded (assuming that the user
     has authenticated with Nylas at some point in the past).
 
+OpenStreetMap
+------
+.. module:: flask_dance.contrib.osm
+
+.. autofunction:: make_osm_blueprint
+
+.. data:: osm
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the OpenStreetMap authentication token loaded (assuming that the user
+    has authenticated with OpenStreetMap at some point in the past).
+
 Reddit
 ------
 .. module:: flask_dance.contrib.reddit
