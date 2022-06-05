@@ -5,6 +5,7 @@ Changelog
 -------------
 * Switched from deprecated ``flask._app_ctx_stack`` to storing app state on
   ``flask.g`` instead. This should support Flask 2.3.0.
+* Added OpenStreetMap (OSM) provider
 
 `6.0.0`_ (2022-04-05)
 ---------------------
