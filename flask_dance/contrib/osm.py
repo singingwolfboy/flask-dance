@@ -59,7 +59,7 @@ def make_osm_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://openstreetmap.org/api/0.6/",
+        base_url="https://www.openstreetmap.org/api/0.6/",
         authorization_url="https://www.openstreetmap.org/oauth2/authorize",
         token_url="https://www.openstreetmap.org/oauth2/token",
         redirect_url=redirect_url,
