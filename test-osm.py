@@ -6,9 +6,12 @@ app.secret_key = "kskijowsdenfolwnlfknw"  # Replace this with your own secret!
 blueprint = make_osm_blueprint(
     client_id="QqOjU6MRsjtRMVEQ38XPlIUm3CVjBLEE5xezFUvi0YM",
     client_secret="5OrHFE570MrShxyTlsbXAv9kl4WOXY26Zt_M9vOtzVc",
-    redirect_url="http://localhost:5000/login/osm/authorized",
 )
 app.register_blueprint(blueprint, url_prefix="/login")
+
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 @app.route("/")
