@@ -19,6 +19,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 def index():
     if not osm.authorized:
         return redirect(url_for("osm.login"))
-    resp = osm.get("/user")
+    resp = osm.get("/user/details.json")
     assert resp.ok
-    return "You are @{login} on OSM".format(login=resp.json()["login"])
+    return "You are @{login} (id: {osmid} on OSM".format(
+        login=resp.json()["user"]["display_name"], osmid=resp.json()["user"]["id"]
+    )
