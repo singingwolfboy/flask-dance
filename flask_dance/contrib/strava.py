@@ -2,10 +2,11 @@ from functools import partial
 
 from flask import _app_ctx_stack as stack
 from flask import request
-from flask.globals import LocalProxy, _lookup_app_object
+from flask.globals import LocalProxy
 
 from flask_dance import __version__ as _flask_dance_version
 from flask_dance.consumer import OAuth2ConsumerBlueprint, OAuth2Session
+from flask_dance.utils import _lookup_app_object
 
 __maintainer__ = "Jimmy Hedman <jimmy.hedman@gmail.com>"
 

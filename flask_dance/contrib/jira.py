@@ -2,12 +2,13 @@ import os.path
 from functools import partial
 
 from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask.globals import LocalProxy
 from oauthlib.oauth1 import SIGNATURE_RSA
 from urlobject import URLObject
 
 from flask_dance.consumer import OAuth1ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth1Session
+from flask_dance.utils import _lookup_app_object
 
 __maintainer__ = "David Baumgold <david@davidbaumgold.com>"
 
