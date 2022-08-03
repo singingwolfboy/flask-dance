@@ -1,3 +1,4 @@
+from flask.globals import _app_ctx_stack, _no_app_msg
 import functools
 
 
@@ -47,3 +48,13 @@ def getattrd(obj, name, default=sentinel):
         if default is not sentinel:
             return default
         raise
+
+
+def _lookup_app_object(name):
+    """
+        Immitation for `flask.globals._lookup_app_object` which was depreciated Flask>2.2.0
+    """
+    top = _app_ctx_stack.top
+    if top is None:
+        raise RuntimeError(_no_app_msg)
+    return getattr(top, name)
