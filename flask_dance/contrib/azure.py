@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -108,10 +106,9 @@ def make_azure_blueprint(
 
     @azure_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.azure_oauth = azure_bp.session
+        g.flask_dance_azure = azure_bp.session
 
     return azure_bp
 
 
-azure = LocalProxy(partial(_lookup_app_object, "azure_oauth"))
+azure = LocalProxy(lambda: g.flask_dance_azure)

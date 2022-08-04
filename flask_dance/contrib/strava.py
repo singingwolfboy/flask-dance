@@ -1,8 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask import request
-from flask.globals import LocalProxy, _lookup_app_object
+from werkzeug.local import LocalProxy
+from flask import request, g
 
 from flask_dance import __version__ as _flask_dance_version
 from flask_dance.consumer import OAuth2ConsumerBlueprint, OAuth2Session
@@ -101,10 +98,9 @@ def make_strava_blueprint(
 
     @strava_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.strava_oauth = strava_bp.session
+        g.flask_dance_strava = strava_bp.session
 
     return strava_bp
 
 
-strava = LocalProxy(partial(_lookup_app_object, "strava_oauth"))
+strava = LocalProxy(lambda: g.flask_dance_strava)

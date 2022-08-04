@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
@@ -87,10 +85,9 @@ def make_slack_blueprint(
 
     @slack_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.slack_oauth = slack_bp.session
+        g.flask_dance_slack = slack_bp.session
 
     return slack_bp
 
 
-slack = LocalProxy(partial(_lookup_app_object, "slack_oauth"))
+slack = LocalProxy(lambda: g.flask_dance_slack)

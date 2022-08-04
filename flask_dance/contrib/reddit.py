@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance import __version__ as _flask_dance_version
 from flask_dance.consumer import OAuth2ConsumerBlueprint, OAuth2Session
@@ -107,10 +105,9 @@ def make_reddit_blueprint(
 
     @reddit_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.reddit_oauth = reddit_bp.session
+        g.flask_dance_reddit = reddit_bp.session
 
     return reddit_bp
 
 
-reddit = LocalProxy(partial(_lookup_app_object, "reddit_oauth"))
+reddit = LocalProxy(lambda: g.flask_dance_reddit)

@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth2Session
@@ -99,10 +97,9 @@ def make_gitlab_blueprint(
 
     @gitlab_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.gitlab_oauth = gitlab_bp.session
+        g.flask_dance_gitlab = gitlab_bp.session
 
     return gitlab_bp
 
 
-gitlab = LocalProxy(partial(_lookup_app_object, "gitlab_oauth"))
+gitlab = LocalProxy(lambda: g.flask_dance_gitlab)

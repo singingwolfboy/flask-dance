@@ -1,10 +1,7 @@
 """Blueprint for connecting to Twitch API."""
 
-import os
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth2Session
@@ -102,10 +99,9 @@ def make_twitch_blueprint(
 
     @twitch_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.twitch_oauth = twitch_bp.session
+        g.flask_dance_twitch = twitch_bp.session
 
     return twitch_bp
 
 
-twitch = LocalProxy(partial(_lookup_app_object, "twitch_oauth"))
+twitch = LocalProxy(lambda: g.flask_dance_twitch)
