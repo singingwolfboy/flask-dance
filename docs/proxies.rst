@@ -33,7 +33,7 @@ functions provided by Werkzeug's :mod:`~werkzeug.wsgi` module or Flask's
 
 If your Flask app is behind a TLS termination proxy, and you need to make
 sure that Flask is aware of that, check Flask's documentation for
-:ref:`how to deploy a proxy setup <flask:deploying-proxy-setups>`.
+:external:doc:`how to deploy a proxy setup <deploying/proxy_fix>`.
 
 Please read it and follow its instructions. This is not unique to
 Flask-Dance and there's nothing to configure on Flask-Dance's side
