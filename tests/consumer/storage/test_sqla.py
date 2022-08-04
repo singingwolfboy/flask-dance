@@ -442,7 +442,7 @@ def test_sqla_flask_login_misconfigured(app, db, blueprint, request):
         )
         # check that we redirected the client
         assert resp.status_code == 302
-        assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+        assert resp.headers["Location"] in ("https://a.b.c/oauth_done", "/oauth_done")
 
     assert len(calls) == 1
     assert calls[0][0] == (blueprint,)
@@ -508,7 +508,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
             )
             # check that we redirected the client
             assert resp.status_code == 302
-            assert resp.headers["Location"] == "https://a.b.c/oauth_done"
+            assert resp.headers["Location"] in ("https://a.b.c/oauth_done", "/oauth_done")
 
     assert len(queries) == 5
 
