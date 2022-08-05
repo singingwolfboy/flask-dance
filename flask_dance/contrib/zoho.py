@@ -1,6 +1,6 @@
 from flask import g
-from werkzeug.local import LocalProxy
 from oauthlib.oauth2.rfc6749.clients.web_application import WebApplicationClient
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 

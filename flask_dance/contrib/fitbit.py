@@ -1,5 +1,6 @@
 from flask import g
 from werkzeug.local import LocalProxy
+
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
 __maintainer__ = "Karan Bhatia <karan.bhatia@gmail.com>"

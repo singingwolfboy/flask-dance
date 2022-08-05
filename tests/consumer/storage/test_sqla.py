@@ -8,12 +8,12 @@ import flask
 import responses
 from flask_caching import Cache
 from flask_login import (
+    FlaskLoginClient,
     LoginManager,
     UserMixin,
     current_user,
     login_user,
     logout_user,
-    FlaskLoginClient,
 )
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event

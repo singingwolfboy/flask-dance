@@ -1,8 +1,9 @@
 import os.path
+
 from flask import g
-from werkzeug.local import LocalProxy
 from oauthlib.oauth1 import SIGNATURE_RSA
 from urlobject import URLObject
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth1ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth1Session

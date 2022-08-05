@@ -1,6 +1,6 @@
 from flask import g
-from werkzeug.local import LocalProxy
 from requests_oauthlib.compliance_fixes.slack import slack_compliance_fix
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 

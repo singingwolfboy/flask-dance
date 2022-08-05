@@ -1,5 +1,5 @@
+from flask import g, request
 from werkzeug.local import LocalProxy
-from flask import request, g
 
 from flask_dance import __version__ as _flask_dance_version
 from flask_dance.consumer import OAuth2ConsumerBlueprint, OAuth2Session
