@@ -79,25 +79,25 @@ def betamax_record_flask_dance(app, flask_dance_sessions, request):
         session = flask_dance_sessions
         betamax_setup_info = [(session, request.node.name)]
 
+    recorders = []
+
     @app.before_request
     def wrap_flask_dance_with_betamax():
-        recorders = [
-            Betamax(session).use_cassette(cassette_name)
-            for session, cassette_name in betamax_setup_info
-        ]
-        for recorder in recorders:
+        for session, cassette_name in betamax_setup_info:
+            recorder = Betamax(session).use_cassette(cassette_name)
+            recorders.append(recorder)
             recorder.start()
-
-        @app.after_request
-        def unwrap(response):
-            for recorder in recorders:
-                recorder.stop()
-            return response
-
-        request.addfinalizer(lambda: app.after_request_funcs[None].remove(unwrap))
 
     request.addfinalizer(
         lambda: app.before_request_funcs[None].remove(wrap_flask_dance_with_betamax)
     )
+
+    @app.after_request
+    def unwrap(response):
+        for recorder in recorders:
+            recorder.stop()
+        return response
+
+    request.addfinalizer(lambda: app.after_request_funcs[None].remove(unwrap))
 
     return app
