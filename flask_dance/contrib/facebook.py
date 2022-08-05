@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -82,10 +80,9 @@ def make_facebook_blueprint(
 
     @facebook_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.facebook_oauth = facebook_bp.session
+        g.flask_dance_facebook = facebook_bp.session
 
     return facebook_bp
 
 
-facebook = LocalProxy(partial(_lookup_app_object, "facebook_oauth"))
+facebook = LocalProxy(lambda: g.flask_dance_facebook)

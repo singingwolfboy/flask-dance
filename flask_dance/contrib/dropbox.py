@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -104,10 +102,9 @@ def make_dropbox_blueprint(
 
     @dropbox_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.dropbox_oauth = dropbox_bp.session
+        g.flask_dance_dropbox = dropbox_bp.session
 
     return dropbox_bp
 
 
-dropbox = LocalProxy(partial(_lookup_app_object, "dropbox_oauth"))
+dropbox = LocalProxy(lambda: g.flask_dance_dropbox)

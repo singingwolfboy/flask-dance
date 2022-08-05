@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -80,10 +78,9 @@ def make_atlassian_blueprint(
 
     @atlassian_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.atlassian_oauth = atlassian_bp.session
+        g.flask_dance_atlassian = atlassian_bp.session
 
     return atlassian_bp
 
 
-atlassian = LocalProxy(partial(_lookup_app_object, "atlassian_oauth"))
+atlassian = LocalProxy(lambda: g.flask_dance_atlassian)

@@ -1,10 +1,9 @@
 import os.path
-from functools import partial
 
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
 from oauthlib.oauth1 import SIGNATURE_RSA
 from urlobject import URLObject
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth1ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth1Session
@@ -95,10 +94,9 @@ def make_jira_blueprint(
 
     @jira_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.jira_oauth = jira_bp.session
+        g.flask_dance_jira = jira_bp.session
 
     return jira_bp
 
 
-jira = LocalProxy(partial(_lookup_app_object, "jira_oauth"))
+jira = LocalProxy(lambda: g.flask_dance_jira)

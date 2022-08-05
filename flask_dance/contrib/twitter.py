@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth1ConsumerBlueprint
 
@@ -73,10 +71,9 @@ def make_twitter_blueprint(
 
     @twitter_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.twitter_oauth = twitter_bp.session
+        g.flask_dance_twitter = twitter_bp.session
 
     return twitter_bp
 
 
-twitter = LocalProxy(partial(_lookup_app_object, "twitter_oauth"))
+twitter = LocalProxy(lambda: g.flask_dance_twitter)

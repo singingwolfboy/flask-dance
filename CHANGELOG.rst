@@ -3,7 +3,8 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Switched from deprecated ``flask._app_ctx_stack`` to storing app state on
+  ``flask.g`` instead. This should support Flask 2.3.0.
 
 `6.0.0`_ (2022-04-05)
 ---------------------

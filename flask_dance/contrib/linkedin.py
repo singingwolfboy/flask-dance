@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -76,10 +74,9 @@ def make_linkedin_blueprint(
 
     @linkedin_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.linkedin_oauth = linkedin_bp.session
+        g.flask_dance_linkedin = linkedin_bp.session
 
     return linkedin_bp
 
 
-linkedin = LocalProxy(partial(_lookup_app_object, "linkedin_oauth"))
+linkedin = LocalProxy(lambda: g.flask_dance_linkedin)

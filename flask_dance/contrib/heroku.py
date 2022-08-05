@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.requests import OAuth2Session
@@ -87,10 +85,9 @@ def make_heroku_blueprint(
 
     @heroku_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.heroku_oauth = heroku_bp.session
+        g.flask_dance_heroku = heroku_bp.session
 
     return heroku_bp
 
 
-heroku = LocalProxy(partial(_lookup_app_object, "heroku_oauth"))
+heroku = LocalProxy(lambda: g.flask_dance_heroku)

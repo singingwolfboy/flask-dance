@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -115,10 +113,9 @@ def make_google_blueprint(
 
     @google_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.google_oauth = google_bp.session
+        g.flask_dance_google = google_bp.session
 
     return google_bp
 
 
-google = LocalProxy(partial(_lookup_app_object, "google_oauth"))
+google = LocalProxy(lambda: g.flask_dance_google)

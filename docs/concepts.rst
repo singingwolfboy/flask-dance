@@ -105,4 +105,4 @@ want to flash a welcome message or kick off some kind of data import task.
 Signals allow you to do that without modifying the code in Flask-Dance.
 Read the :doc:`signals page <signals>` for more information.
 
-.. _blinker: https://pythonhosted.org/blinker/
+.. _blinker: https://blinker.readthedocs.io

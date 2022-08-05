@@ -1,7 +1,5 @@
-from functools import partial
-
-from flask import _app_ctx_stack as stack
-from flask.globals import LocalProxy, _lookup_app_object
+from flask import g
+from werkzeug.local import LocalProxy
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 
@@ -77,10 +75,9 @@ def make_digitalocean_blueprint(
 
     @digitalocean_bp.before_app_request
     def set_applocal_session():
-        ctx = stack.top
-        ctx.digitalocean_oauth = digitalocean_bp.session
+        g.flask_dance_digitalocean = digitalocean_bp.session
 
     return digitalocean_bp
 
 
-digitalocean = LocalProxy(partial(_lookup_app_object, "digitalocean_oauth"))
+digitalocean = LocalProxy(lambda: g.flask_dance_digitalocean)
