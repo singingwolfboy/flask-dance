@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`6.1.0`_ (2022-08-05)
+---------------------
 * Switched from deprecated ``flask._app_ctx_stack`` to storing app state on
   ``flask.g`` instead. This should support Flask 2.3.0.
 * Added OpenStreetMap (OSM) provider
@@ -380,7 +384,8 @@ Fixed
 .. _isort: https://pycqa.github.io/isort/
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.0.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.1.0...HEAD
+.. _6.1.0: https://github.com/singingwolfboy/flask-dance/compare/v6.0.0...v6.1.0
 .. _6.0.0: https://github.com/singingwolfboy/flask-dance/compare/v5.1.0...v6.0.0
 .. _5.1.0: https://github.com/singingwolfboy/flask-dance/compare/v5.0.0...v5.1.0
 .. _5.0.0: https://github.com/singingwolfboy/flask-dance/compare/v4.0.0...v5.0.0
