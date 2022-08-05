@@ -7,7 +7,14 @@ import os
 import flask
 import responses
 from flask_caching import Cache
-from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user
+from flask_login import (
+    LoginManager,
+    UserMixin,
+    current_user,
+    login_user,
+    logout_user,
+    FlaskLoginClient,
+)
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
 
@@ -305,6 +312,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
         user = db.relationship(User)
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session, user=current_user)
+    app.test_client_class = FlaskLoginClient
 
     db.create_all()
 
@@ -327,12 +335,10 @@ def test_sqla_flask_login(app, db, blueprint, request):
         return User.query.get(userid)
 
     with record_queries(db.engine) as queries:
-        with app.test_client() as client:
+        with app.test_client(user=u1) as client:
             # reset the session before the request
             with client.session_transaction() as sess:
                 sess["test-service_oauth_state"] = "random-string"
-                # set alice as the logged in user
-                sess["_user_id"] = u1.id
             # make the request
             resp = client.get(
                 "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -345,9 +351,11 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 4
+    assert len(queries) == 5
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
+    if "_login_user" in flask.g:
+        del flask.g._login_user  # clear cache
     responses.reset()
     responses.add(
         responses.POST,
@@ -355,12 +363,10 @@ def test_sqla_flask_login(app, db, blueprint, request):
         body='{"access_token":"abcdef","token_type":"bearer","scope":"bob"}',
     )
     with record_queries(db.engine) as queries:
-        with app.test_client() as client:
+        with app.test_client(user=u2) as client:
             # reset the session before the request
             with client.session_transaction() as sess:
                 sess["test-service_oauth_state"] = "random-string"
-                # set bob as the logged in user
-                sess["_user_id"] = u2.id
             # make the request
             resp = client.get(
                 "/login/test-service/authorized?code=secret-code&state=random-string",
@@ -373,7 +379,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 4
+    assert len(queries) == 5
 
     # check the database
     authorizations = OAuth.query.all()
