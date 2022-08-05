@@ -10,7 +10,7 @@ from flask_dance.contrib.osm import make_osm_blueprint, osm
 
 @pytest.fixture
 def make_app():
-    "A callable to create a Flask app with the GitHub provider"
+    "A callable to create a Flask app with the OpenStreetMap provider"
 
     def _make_app(*args, **kwargs):
         app = Flask(__name__)
