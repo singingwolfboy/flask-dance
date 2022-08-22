@@ -1,0 +1,10 @@
+[tool.distutils.bdist_wheel]
+universal = true
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+markers = [
+    "install_required: can only pass if flask_dance is installed"
+]
