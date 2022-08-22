@@ -15,6 +15,7 @@ with betamax.Betamax.configure() as config:
     config.cassette_library_dir = os.path.join(current_dir, "cassettes")
     config.define_cassette_placeholder("<AUTH_TOKEN>", GITHUB_ACCESS_TOKEN)
 
+pytestmark = pytest.mark.install_required
 
 @pytest.fixture
 def app():
