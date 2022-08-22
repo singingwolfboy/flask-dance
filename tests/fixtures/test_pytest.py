@@ -17,6 +17,7 @@ with betamax.Betamax.configure() as config:
 
 pytestmark = pytest.mark.install_required
 
+
 @pytest.fixture
 def app():
     _app = flask.Flask(__name__)
