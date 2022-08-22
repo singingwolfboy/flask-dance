@@ -5,6 +5,13 @@ Changelog
 -------------
 nothing yet
 
+`6.1.1`_ (2022-08-22)
+---------------------
+* Switched from ``setup.cfg`` to ``pyproject.toml``
+* Added an "install_required" marker to the tests that require this project
+  to be installed before the tests can pass. To run all tests _except_ those,
+  run ``pytest -m "not install_required"``.
+
 `6.1.0`_ (2022-08-05)
 ---------------------
 * Switched from deprecated ``flask._app_ctx_stack`` to storing app state on
@@ -384,7 +391,8 @@ Fixed
 .. _isort: https://pycqa.github.io/isort/
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.1.0...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.1.1...HEAD
+.. _6.1.1: https://github.com/singingwolfboy/flask-dance/compare/v6.1.0...v6.1.1
 .. _6.1.0: https://github.com/singingwolfboy/flask-dance/compare/v6.0.0...v6.1.0
 .. _6.0.0: https://github.com/singingwolfboy/flask-dance/compare/v5.1.0...v6.0.0
 .. _5.1.0: https://github.com/singingwolfboy/flask-dance/compare/v5.0.0...v5.1.0
