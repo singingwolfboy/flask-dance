@@ -556,7 +556,7 @@ def test_signal_oauth_authorized_response(request):
             "/login/test-service/authorized?code=secret-code&state=random-string"
         )
         assert resp.status_code == 302
-        assert resp.headers["Location"] == "http://localhost/url"
+        assert resp.headers["Location"] in ("/url", "http://localhost/url")
         # check that we did NOT store the token
         assert "test-service_oauth_token" not in flask.session
 

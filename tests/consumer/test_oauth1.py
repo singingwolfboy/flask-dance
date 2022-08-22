@@ -381,7 +381,7 @@ def test_signal_oauth_authorized_response(request):
             "/login/test-service/authorized?oauth_token=foobar&oauth_verifier=xyz"
         )
         assert resp.status_code == 302
-        assert resp.headers["Location"] == "http://localhost/url"
+        assert resp.headers["Location"] in ("/url", "http://localhost/url")
         # check that we did NOT store the token
         assert "test-token_oauth_token" not in flask.session
 
@@ -473,7 +473,7 @@ def test_signal_oauth_error_login(request):
     )
     assert resp.status_code == 302
     location = resp.headers["Location"]
-    assert location == "https://a.b.c/"
+    assert location in ("/", "https://a.b.c/")
 
 
 @requires_blinker
@@ -537,7 +537,7 @@ def test_signal_oauth_notoken_authorized(request):
     assert calls[0][1]["response"] == {"denied": "faketoken"}
     assert resp.status_code == 302
     location = resp.headers["Location"]
-    assert location == "https://a.b.c/"
+    assert location in ("/", "https://a.b.c/")
 
 
 class CustomOAuth1Session(OAuth1Session):
