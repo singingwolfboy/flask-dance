@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added ORCID and ORCID sandbox provider
 
 `6.1.1`_ (2022-08-22)
 ---------------------
