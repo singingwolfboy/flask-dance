@@ -35,7 +35,7 @@ def test_blueprint_factory():
     assert orcid_bp.token_url == "https://orcid.org/oauth2/token"
 
 
-def test_blueprint_factory():
+def test_sandbox_blueprint_factory():
     orcid_bp = make_orcid_blueprint(
         client_id="foo",
         client_secret="bar",

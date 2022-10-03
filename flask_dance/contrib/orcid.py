@@ -71,7 +71,7 @@ def make_orcid_blueprint(
         scope=scope,
         base_url=base_url,
         authorization_url="https://orcid.org/oauth/authorize",
-        token_url="https://orcid.org//oauth/token",
+        token_url="https://orcid.org/oauth/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
