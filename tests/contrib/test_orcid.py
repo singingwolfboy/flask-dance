@@ -41,7 +41,7 @@ def test_sandbox_blueprint_factory():
         client_secret="bar",
         scope="user:email",
         redirect_to="index",
-        use_orcid_sandbox=True,
+        sandbox=True,
     )
     assert isinstance(orcid_bp, OAuth2ConsumerBlueprint)
     assert orcid_bp.session.scope == "user:email"

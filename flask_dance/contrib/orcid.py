@@ -18,7 +18,7 @@ def make_orcid_blueprint(
     session_class=None,
     storage=None,
     rule_kwargs=None,
-    use_orcid_sandbox=False,
+    sandbox=False,
 ):
     """
     Make a blueprint for authenticating with ORCID (https://orcid.org)
@@ -30,7 +30,7 @@ def make_orcid_blueprint(
     :envvar:`ORCID_OAUTH_CLIENT_ID` and :envvar:`ORCID_OAUTH_CLIENT_SECRET`.
 
     The ORCID Sandbox API (https://sandbox.orcid.org) will be used if
-    the ``use_orcid_sandbox`` argument is set to true.
+    the ``sandbox`` argument is set to true.
 
     Args:
         client_id (str): The client ID for your application on ORCID.
@@ -53,7 +53,7 @@ def make_orcid_blueprint(
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         rule_kwargs (dict, optional): Additional arguments that should be passed when adding
             the login and authorized routes. Defaults to ``None``.
-        use_orcid_sandbox (bool): Whether to use the ORCID sandbox instead of the production API.
+        sandbox (bool): Whether to use the ORCID sandbox instead of the production API.
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
@@ -62,7 +62,7 @@ def make_orcid_blueprint(
     base_url = "https://api.orcid.org"
     authorization_url = "https://orcid.org/oauth/authorize"
     token_url = "https://orcid.org/oauth/token"
-    if use_orcid_sandbox:
+    if sandbox:
         base_url = "https://api.sandbox.orcid.org"
         authorization_url = "https://sandbox.orcid.org/oauth/authorize"
         token_url = "https://sandbox.orcid.org/oauth/token"
