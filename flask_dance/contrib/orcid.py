@@ -60,8 +60,12 @@ def make_orcid_blueprint(
     """
 
     base_url = "https://api.orcid.org"
+    authorization_url = "https://orcid.org/oauth/authorize"
+    token_url = "https://orcid.org/oauth/token"
     if use_orcid_sandbox:
         base_url = "https://api.sandbox.orcid.org"
+        authorization_url = "https://sandbox.orcid.org/oauth/authorize"
+        token_url = "https://sandbox.orcid.org/oauth/token"
 
     orcid_bp = OAuth2ConsumerBlueprint(
         "orcid",
@@ -70,8 +74,8 @@ def make_orcid_blueprint(
         client_secret=client_secret,
         scope=scope,
         base_url=base_url,
-        authorization_url="https://orcid.org/oauth/authorize",
-        token_url="https://orcid.org/oauth/token",
+        authorization_url=authorization_url,
+        token_url=token_url,
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
