@@ -215,6 +215,18 @@ OpenStreetMap
     already has the OpenStreetMap authentication token loaded (assuming that the user
     has authenticated with OpenStreetMap at some point in the past).
 
+ORCID
+-------------
+.. module:: flask_dance.contrib.orcid
+
+.. autofunction:: make_orcid_blueprint
+
+.. data:: orcid
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the ORCID (or sandbox ORCID) authentication token loaded (assuming 
+    that the user has authenticated with ORCID at some point in the past).
+
 Reddit
 ------
 .. module:: flask_dance.contrib.reddit
