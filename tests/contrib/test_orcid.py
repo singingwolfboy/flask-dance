@@ -31,8 +31,8 @@ def test_blueprint_factory():
     assert orcid_bp.session.base_url == "https://api.orcid.org"
     assert orcid_bp.session.client_id == "foo"
     assert orcid_bp.client_secret == "bar"
-    assert orcid_bp.authorization_url == "https://orcid.org/oauth2/authorize"
-    assert orcid_bp.token_url == "https://orcid.org/oauth2/token"
+    assert orcid_bp.authorization_url == "https://orcid.org/oauth/authorize"
+    assert orcid_bp.token_url == "https://orcid.org/oauth/token"
 
 
 def test_sandbox_blueprint_factory():
@@ -41,15 +41,15 @@ def test_sandbox_blueprint_factory():
         client_secret="bar",
         scope="user:email",
         redirect_to="index",
-        sandbox=True,
+        use_orcid_sandbox=True,
     )
     assert isinstance(orcid_bp, OAuth2ConsumerBlueprint)
     assert orcid_bp.session.scope == "user:email"
     assert orcid_bp.session.base_url == "https://api.sandbox.orcid.org"
     assert orcid_bp.session.client_id == "foo"
     assert orcid_bp.client_secret == "bar"
-    assert orcid_bp.authorization_url == "https://sandbox.orcid.org/oauth2/authorize"
-    assert orcid_bp.token_url == "https://sandbox.orcid.org/oauth2/token"
+    assert orcid_bp.authorization_url == "https://sandbox.orcid.org/oauth/authorize"
+    assert orcid_bp.token_url == "https://sandbox.orcid.org/oauth/token"
 
 
 def test_load_from_config(make_app):
