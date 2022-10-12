@@ -5,6 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "Flask-Dance"
 authors = [{ name = "David Baumgold", email = "david@davidbaumgold.com" }]
+maintainers = [{ name = "Daniele Sluijters" }]
 readme = "README.rst"
 dynamic = ["description", "version"]
 license = { file = "LICENSE" }
