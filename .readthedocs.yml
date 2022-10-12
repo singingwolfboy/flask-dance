@@ -13,7 +13,9 @@ formats: all
 
 # Optionally set the version of Python and requirements required to build your docs
 python:
-  version: 3.7
-  pip_install: true
-  extra_requirements:
-    - docs
+  version: "3.7"
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
