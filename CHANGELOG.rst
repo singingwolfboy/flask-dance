@@ -4,6 +4,7 @@ Changelog
 `unreleased`_
 -------------
 * Added ORCID and ORCID sandbox provider
+* Switched from setuptools to flit_ for packaging
 
 `6.1.1`_ (2022-08-22)
 ---------------------
@@ -389,6 +390,7 @@ Fixed
 .. _#144: https://github.com/singingwolfboy/flask-dance/issues/144
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 .. _isort: https://pycqa.github.io/isort/
+.. _flit: https://flit.pypa.io/
 
 
 .. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.1.1...HEAD
