@@ -1,6 +1,0 @@
-requests>=2.0
-oauthlib
-requests-oauthlib>=1.0.0
-Flask>=2.0.3
-Werkzeug
-urlobject

@@ -13,10 +13,10 @@ jobs:
     name: black
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Install black
         run: pip install black
       - name: Run black
@@ -27,13 +27,11 @@ jobs:
     name: isort
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.8
-      - name: Install dependencies
-        run: pip install -r requirements.txt -r tests/requirements.txt
-      - name: Install isort
-        run: pip install isort
+          python-version: "3.10"
+      - name: Install dependencies and isort
+        run: pip install -e . isort
       - name: Run isort
         run: isort --check .
