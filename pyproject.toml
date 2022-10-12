@@ -60,7 +60,7 @@ docs = [
     # code dependencies, needed for imports
     "sqlalchemy>=1.3.11",
     "pytest",
-    "betamax"
+    "betamax",
 ]
 sqla = ["sqlalchemy>=1.3.11"]
 signals = ["blinker"]
@@ -78,9 +78,7 @@ universal = true
 profile = "black"
 
 [tool.pytest.ini_options]
-markers = [
-    "install_required: can only pass if flask_dance is installed"
-]
+markers = ["install_required: can only pass if flask_dance is installed"]
 
 [tool.coverage.run]
 source = ["flask_dance"]
