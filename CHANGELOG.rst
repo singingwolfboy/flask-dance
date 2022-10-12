@@ -3,6 +3,10 @@ Changelog
 
 `unreleased`_
 -------------
+nothing yet
+
+`6.2.0`_ (2022-10-12)
+---------------------
 * Added ORCID and ORCID sandbox provider
 * Switched from setuptools to flit_ for packaging
 
@@ -393,7 +397,8 @@ Fixed
 .. _flit: https://flit.pypa.io/
 
 
-.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.1.1...HEAD
+.. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.2.0...HEAD
+.. _6.2.0: https://github.com/singingwolfboy/flask-dance/compare/v6.1.1...v6.2.0
 .. _6.1.1: https://github.com/singingwolfboy/flask-dance/compare/v6.1.0...v6.1.1
 .. _6.1.0: https://github.com/singingwolfboy/flask-dance/compare/v6.0.0...v6.1.0
 .. _6.0.0: https://github.com/singingwolfboy/flask-dance/compare/v5.1.0...v6.0.0
