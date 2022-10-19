@@ -13,6 +13,11 @@ from .base import (
     oauth_before_login,
     oauth_error,
 )
+from .pkce import (
+    is_valid_code_challenge_method,
+    create_code_verifier,
+    create_code_challenge,
+)
 from .requests import OAuth2Session
 
 log = logging.getLogger(__name__)
@@ -54,6 +59,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         session_class=None,
         storage=None,
         rule_kwargs=None,
+        code_challenge_method=None,
         **kwargs,
     ):
         """
@@ -114,6 +120,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
             rule_kwargs (dict, optional): Additional arguments that should be passed when adding
                 the login and authorized routes. Defaults to ``None``.
+            code_challenge_method: Code challenge method to be used in authorization code flow with PKCE
+                instead of client secret. Currently, only ``S256`` is supported. For more details please refer to TODO.
+                Defaults to ``None``.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self,
@@ -152,6 +161,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.token_url_params = token_url_params or {}
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
+        self.code_challenge_method = code_challenge_method
+        self._use_pkce = is_valid_code_challenge_method(self.code_challenge_method)
 
         self.teardown_app_request(self.teardown_session)
 
@@ -203,12 +214,25 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     def login(self):
         log.debug("client_id = %s", self.client_id)
         self.session.redirect_uri = url_for(".authorized", _external=True)
+        code_verifier = None
+        if self._use_pkce:
+            code_verifier = create_code_verifier()
+            code_challenge = create_code_challenge(code_verifier, method=self.code_challenge_method)
+            self.authorization_url_params.update({
+                "code_challenge_method": self.code_challenge_method,
+                "code_challenge": code_challenge,
+            })
+
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state, **self.authorization_url_params
         )
         state_key = f"{self.name}_oauth_state"
         flask.session[state_key] = state
         log.debug("state = %s", state)
+        if code_verifier:
+            code_verifier_key = f"{self.name}_{state}_oauth_code_verifier"
+            flask.session[code_verifier_key] = code_verifier
+            log.debug("code_verifier = %s", code_verifier)
         log.debug("redirect URL = %s", url)
         oauth_before_login.send(self, url=url)
         return redirect(url)
@@ -253,6 +277,18 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         log.debug("state = %s", state)
         self.session._state = state
         del flask.session[state_key]
+
+        if self._use_pkce and state:
+            code_verifier_key = f"{self.name}_{state}_oauth_code_verifier"
+            if code_verifier_key not in flask.session:
+                # can't find code_verifier, so redirect back to login view
+                log.info("code_verifier not found, redirecting user to login")
+                return redirect(url_for(".login"))
+
+            code_verifier = flask.session[code_verifier_key]
+            log.debug("code_verifier = %s", code_verifier)
+            del flask.session[code_verifier_key]
+            self.token_url_params.update({"code_verifier": code_verifier})
 
         self.session.redirect_uri = url_for(".authorized", _external=True)
 
