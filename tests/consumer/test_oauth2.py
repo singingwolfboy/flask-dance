@@ -27,7 +27,7 @@ except ImportError:
 requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
 
-def make_app(login_url=None, debug=False):
+def make_app(login_url=None, debug=False, **kwargs):
     blueprint = OAuth2ConsumerBlueprint(
         "test-service",
         __name__,
@@ -40,6 +40,7 @@ def make_app(login_url=None, debug=False):
         token_url="https://example.com/oauth/access_token",
         redirect_to="index",
         login_url=login_url,
+        **kwargs
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
@@ -88,6 +89,43 @@ def test_login_url():
     )
     assert location.query_dict["scope"] == "admin"
     assert location.query_dict["state"] == "random-string"
+
+
+@responses.activate
+def test_login_url_with_pkce():
+    app, _ = make_app(code_challenge_method="S256")
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
+        )
+        # check that we saved the state in the session
+        with client.session_transaction() as sess:
+            assert "test-service_random-string_oauth_code_verifier" in sess
+    # check that we redirected the client
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.without_query() == "https://example.com/oauth/authorize"
+    # check PKCE specific query parameters
+    assert location.query_dict["code_challenge_method"] == "S256"
+    assert "code_challenge" in location.query_dict
+
+
+@responses.activate
+def test_login_url_with_invalid_code_challenge_method():
+    app, _ = make_app(code_challenge_method="MDA5")
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
+        )
+        # check that we saved the state in the session
+        with client.session_transaction() as sess:
+            assert "test-service_random-string_oauth_code_verifier" not in sess
+
+    location = URLObject(resp.headers["Location"])
+    assert location.without_query() == "https://example.com/oauth/authorize"
+    # check PKCE specific query parameters
+    assert "code_challenge_method" not in location.query_dict
+    assert "code_challenge" not in location.query_dict
 
 
 @responses.activate
