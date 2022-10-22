@@ -217,10 +217,15 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         if self.use_pkce:
             code_verifier = generate_token(length=48)
             code_challenge = self.session._client.create_code_challenge(
-                code_verifier=code_verifier, code_challenge_method=self.code_challenge_method
+                code_verifier=code_verifier,
+                code_challenge_method=self.code_challenge_method,
             )
-            self.authorization_url_params["code_challenge_method"] = self.code_challenge_method
-            self.authorization_url_params["code_challenge"] = code_challenge
+            self.authorization_url_params.update(
+                {
+                    "code_challenge_method": self.code_challenge_method,
+                    "code_challenge": code_challenge,
+                }
+            )
 
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state, **self.authorization_url_params
