@@ -287,6 +287,65 @@ def test_authorized_url_token_lifetime():
             assert sess["test-service_oauth_token"] == expected_stored_token
 
 
+@responses.activate
+def test_authorized_url_with_pkce():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+    )
+    app, _ = make_app(use_pkce=True)
+
+    _state = "random-string"
+    _code_verifier = "random-code-very-secure"
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = _state
+            sess[f"test-service_{_state}_oauth_code_verifier"] = _code_verifier
+        # make the request
+        resp = client.get(
+            f"/login/test-service/authorized?code=secret-code&state={_state}&code_verifier={_code_verifier}",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] in ("https://a.b.c/", "/")
+        # check that we obtained an access token
+        assert len(responses.calls) == 1
+        request_data = dict(parse_qsl(responses.calls[0].request.body))
+        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+        assert request_data["code_verifier"] == _code_verifier
+        # check that we stored the access token in the session
+        with client.session_transaction() as sess:
+            assert sess["test-service_oauth_token"] == {
+                "access_token": "foobar",
+                "scope": ["admin"],
+                "token_type": "bearer",
+            }
+
+
+def test_authorized_url_pkce_flow_no_code_verifier():
+    app, _ = make_app(use_pkce=True)
+    with app.test_client() as client:
+        # make the request, without adding the code_verifier to the session
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client back to login view
+        assert resp.status_code == 302
+        assert resp.headers["Location"] in (
+            "https://a.b.c/login/test-service",
+            "/login/test-service",
+        )
+        # check that there's nothing in the session
+        with client.session_transaction() as sess:
+            assert "test-service_oauth_token" not in sess
+
+
 def test_return_expired_token(request):
     app, bp = make_app()
     time1 = "2016-01-01 12:00:01"
