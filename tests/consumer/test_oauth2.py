@@ -40,7 +40,7 @@ def make_app(login_url=None, debug=False, **kwargs):
         token_url="https://example.com/oauth/access_token",
         redirect_to="index",
         login_url=login_url,
-        **kwargs
+        **kwargs,
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
@@ -93,12 +93,10 @@ def test_login_url():
 
 @responses.activate
 def test_login_url_with_pkce():
-    app, _ = make_app(code_challenge_method="S256")
+    app, _ = make_app(use_pkce=True)
     with app.test_client() as client:
-        resp = client.get(
-            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
-        )
-        # check that we saved the state in the session
+        resp = client.get("/login/test-service", base_url="https://a.b.c", follow_redirects=False)
+        # check that we saved the code verifier in the session
         with client.session_transaction() as sess:
             assert "test-service_random-string_oauth_code_verifier" in sess
     # check that we redirected the client
@@ -112,18 +110,16 @@ def test_login_url_with_pkce():
 
 @responses.activate
 def test_login_url_with_invalid_code_challenge_method():
-    app, _ = make_app(code_challenge_method="MDA5")
+    app, _ = make_app(use_pkce=True, code_challenge_method="MD5")
     with app.test_client() as client:
-        resp = client.get(
-            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
-        )
-        # check that we saved the state in the session
+        resp = client.get("/login/test-service", base_url="https://a.b.c", follow_redirects=False)
+        # the code verifier is saved in the session ...
         with client.session_transaction() as sess:
-            assert "test-service_random-string_oauth_code_verifier" not in sess
+            assert "test-service_random-string_oauth_code_verifier" in sess
 
     location = URLObject(resp.headers["Location"])
     assert location.without_query() == "https://example.com/oauth/authorize"
-    # check PKCE specific query parameters
+    # ... but because the "code challenge method" was invalid it was not added to the query parameters
     assert "code_challenge_method" not in location.query_dict
     assert "code_challenge" not in location.query_dict
 
