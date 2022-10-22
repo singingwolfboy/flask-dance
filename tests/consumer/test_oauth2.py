@@ -95,7 +95,9 @@ def test_login_url():
 def test_login_url_with_pkce():
     app, _ = make_app(use_pkce=True)
     with app.test_client() as client:
-        resp = client.get("/login/test-service", base_url="https://a.b.c", follow_redirects=False)
+        resp = client.get(
+            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
+        )
         # check that we saved the code verifier in the session
         with client.session_transaction() as sess:
             assert "test-service_random-string_oauth_code_verifier" in sess
@@ -112,7 +114,9 @@ def test_login_url_with_pkce():
 def test_login_url_with_invalid_code_challenge_method():
     app, _ = make_app(use_pkce=True, code_challenge_method="MD5")
     with app.test_client() as client:
-        resp = client.get("/login/test-service", base_url="https://a.b.c", follow_redirects=False)
+        resp = client.get(
+            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
+        )
         # the code verifier is saved in the session ...
         with client.session_transaction() as sess:
             assert "test-service_random-string_oauth_code_verifier" in sess
@@ -314,7 +318,10 @@ def test_authorized_url_with_pkce():
         # check that we obtained an access token
         assert len(responses.calls) == 1
         request_data = dict(parse_qsl(responses.calls[0].request.body))
-        assert request_data["redirect_uri"] == "https://a.b.c/login/test-service/authorized"
+        assert (
+            request_data["redirect_uri"]
+            == "https://a.b.c/login/test-service/authorized"
+        )
         assert request_data["code_verifier"] == _code_verifier
         # check that we stored the access token in the session
         with client.session_transaction() as sess:
