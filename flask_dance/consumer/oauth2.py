@@ -13,11 +13,6 @@ from .base import (
     oauth_before_login,
     oauth_error,
 )
-from .pkce import (
-    is_valid_code_challenge_method,
-    create_code_verifier,
-    create_code_challenge,
-)
 from .requests import OAuth2Session
 
 log = logging.getLogger(__name__)
