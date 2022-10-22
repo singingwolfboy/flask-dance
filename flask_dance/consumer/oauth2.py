@@ -54,7 +54,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         session_class=None,
         storage=None,
         rule_kwargs=None,
-        code_challenge_method=None,
+        use_pkce=False,
+        code_challenge_method="S256",
         **kwargs,
     ):
         """
@@ -115,9 +116,11 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
             rule_kwargs (dict, optional): Additional arguments that should be passed when adding
                 the login and authorized routes. Defaults to ``None``.
+            use_pkce: If true then the authorization flow will follow the PKCE (Proof Key for Code Exchange).
+                For more details please refer to `RFC7636 <https://www.rfc-editor.org/rfc/rfc7636#section-4.1>`__
             code_challenge_method: Code challenge method to be used in authorization code flow with PKCE
-                instead of client secret. Currently, only ``S256`` is supported. For more details please refer to TODO.
-                Defaults to ``None``.
+                instead of client secret. It will be used only if ``use_pkce`` is set to True.
+                Defaults to ``S256``.
         """
         BaseOAuthConsumerBlueprint.__init__(
             self,
@@ -157,7 +160,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.redirect_url = redirect_url
         self.redirect_to = redirect_to
         self.code_challenge_method = code_challenge_method
-        self._use_pkce = is_valid_code_challenge_method(self.code_challenge_method)
+        self.use_pkce = use_pkce
 
         self.teardown_app_request(self.teardown_session)
 
