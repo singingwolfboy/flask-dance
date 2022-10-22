@@ -3,6 +3,7 @@ import logging
 
 import flask
 from flask import current_app, redirect, request, url_for
+from oauthlib.common import generate_token
 from oauthlib.oauth2 import MissingCodeError
 from werkzeug.utils import cached_property
 from werkzeug.wrappers import Response
@@ -213,13 +214,13 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         log.debug("client_id = %s", self.client_id)
         self.session.redirect_uri = url_for(".authorized", _external=True)
         code_verifier = None
-        if self._use_pkce:
-            code_verifier = create_code_verifier()
-            code_challenge = create_code_challenge(code_verifier, method=self.code_challenge_method)
-            self.authorization_url_params.update({
-                "code_challenge_method": self.code_challenge_method,
-                "code_challenge": code_challenge,
-            })
+        if self.use_pkce:
+            code_verifier = generate_token(length=48)
+            code_challenge = self.session._client.create_code_challenge(
+                code_verifier=code_verifier, code_challenge_method=self.code_challenge_method
+            )
+            self.authorization_url_params["code_challenge_method"] = self.code_challenge_method
+            self.authorization_url_params["code_challenge"] = code_challenge
 
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state, **self.authorization_url_params
