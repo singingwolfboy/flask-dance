@@ -277,7 +277,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session._state = state
         del flask.session[state_key]
 
-        if self._use_pkce and state:
+        if self.use_pkce and state:
             code_verifier_key = f"{self.name}_{state}_oauth_code_verifier"
             if code_verifier_key not in flask.session:
                 # can't find code_verifier, so redirect back to login view
@@ -287,7 +287,7 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             code_verifier = flask.session[code_verifier_key]
             log.debug("code_verifier = %s", code_verifier)
             del flask.session[code_verifier_key]
-            self.token_url_params.update({"code_verifier": code_verifier})
+            self.token_url_params["code_verifier"] = code_verifier
 
         self.session.redirect_uri = url_for(".authorized", _external=True)
 
