@@ -100,7 +100,8 @@ def test_login_url_with_pkce():
         )
         # check that we saved the code verifier in the session
         with client.session_transaction() as sess:
-            assert "test-service_random-string_oauth_code_verifier" in sess
+            assert "test-service_oauth_code_verifier" in sess
+
     # check that we redirected the client
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
@@ -119,7 +120,7 @@ def test_login_url_with_invalid_code_challenge_method():
         )
         # the code verifier is saved in the session ...
         with client.session_transaction() as sess:
-            assert "test-service_random-string_oauth_code_verifier" in sess
+            assert "test-service_oauth_code_verifier" in sess
 
     location = URLObject(resp.headers["Location"])
     assert location.without_query() == "https://example.com/oauth/authorize"
@@ -306,7 +307,7 @@ def test_authorized_url_with_pkce():
         # reset the session before the request
         with client.session_transaction() as sess:
             sess["test-service_oauth_state"] = _state
-            sess[f"test-service_{_state}_oauth_code_verifier"] = _code_verifier
+            sess[f"test-service_oauth_code_verifier"] = _code_verifier
         # make the request
         resp = client.get(
             f"/login/test-service/authorized?code=secret-code&state={_state}&code_verifier={_code_verifier}",
