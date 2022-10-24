@@ -8,6 +8,7 @@ import pytest
 import responses
 from freezegun import freeze_time
 from oauthlib.oauth2 import MissingCodeError
+from oauthlib.oauth2.rfc6749.clients import Client as OAuth2Client
 from urlobject import URLObject
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -93,6 +94,7 @@ def test_login_url():
 
 @responses.activate
 def test_login_url_with_pkce():
+    _code_challenge_method = "S256"  # That should be a default value
     app, _ = make_app(use_pkce=True)
     with app.test_client() as client:
         resp = client.get(
@@ -101,14 +103,19 @@ def test_login_url_with_pkce():
         # check that we saved the code verifier in the session
         with client.session_transaction() as sess:
             assert "test-service_oauth_code_verifier" in sess
+            _code_verifier = sess["test-service_oauth_code_verifier"]
+            assert 43 <= len(_code_verifier) <= 128  # RFC7636 section 4.1
+            _code_challenge = OAuth2Client("123").create_code_challenge(
+                _code_verifier, _code_challenge_method
+            )
 
     # check that we redirected the client
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.without_query() == "https://example.com/oauth/authorize"
     # check PKCE specific query parameters
-    assert location.query_dict["code_challenge_method"] == "S256"
-    assert "code_challenge" in location.query_dict
+    assert location.query_dict["code_challenge_method"] == _code_challenge_method
+    assert location.query_dict["code_challenge"] == _code_challenge
 
 
 @responses.activate
