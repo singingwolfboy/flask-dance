@@ -8,6 +8,7 @@ import pytest
 import responses
 from freezegun import freeze_time
 from oauthlib.oauth2 import MissingCodeError
+from oauthlib.oauth2.rfc6749.clients import Client as OAuth2Client
 from urlobject import URLObject
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -27,7 +28,7 @@ except ImportError:
 requires_blinker = pytest.mark.skipif(not blinker, reason="requires blinker")
 
 
-def make_app(login_url=None, debug=False):
+def make_app(login_url=None, debug=False, **kwargs):
     blueprint = OAuth2ConsumerBlueprint(
         "test-service",
         __name__,
@@ -40,6 +41,7 @@ def make_app(login_url=None, debug=False):
         token_url="https://example.com/oauth/access_token",
         redirect_to="index",
         login_url=login_url,
+        **kwargs,
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
@@ -88,6 +90,50 @@ def test_login_url():
     )
     assert location.query_dict["scope"] == "admin"
     assert location.query_dict["state"] == "random-string"
+
+
+@responses.activate
+def test_login_url_with_pkce():
+    _code_challenge_method = "S256"  # That should be a default value
+    app, _ = make_app(use_pkce=True)
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
+        )
+        # check that we saved the code verifier in the session
+        with client.session_transaction() as sess:
+            assert "test-service_oauth_code_verifier" in sess
+            _code_verifier = sess["test-service_oauth_code_verifier"]
+            assert 43 <= len(_code_verifier) <= 128  # RFC7636 section 4.1
+            _code_challenge = OAuth2Client("123").create_code_challenge(
+                _code_verifier, _code_challenge_method
+            )
+
+    # check that we redirected the client
+    assert resp.status_code == 302
+    location = URLObject(resp.headers["Location"])
+    assert location.without_query() == "https://example.com/oauth/authorize"
+    # check PKCE specific query parameters
+    assert location.query_dict["code_challenge_method"] == _code_challenge_method
+    assert location.query_dict["code_challenge"] == _code_challenge
+
+
+@responses.activate
+def test_login_url_with_invalid_code_challenge_method():
+    app, _ = make_app(use_pkce=True, code_challenge_method="MD5")
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service", base_url="https://a.b.c", follow_redirects=False
+        )
+        # the code verifier is saved in the session ...
+        with client.session_transaction() as sess:
+            assert "test-service_oauth_code_verifier" in sess
+
+    location = URLObject(resp.headers["Location"])
+    assert location.without_query() == "https://example.com/oauth/authorize"
+    # ... but because the "code challenge method" was invalid it was not added to the query parameters
+    assert "code_challenge_method" not in location.query_dict
+    assert "code_challenge" not in location.query_dict
 
 
 @responses.activate
@@ -251,6 +297,68 @@ def test_authorized_url_token_lifetime():
         }
         with client.session_transaction() as sess:
             assert sess["test-service_oauth_token"] == expected_stored_token
+
+
+@responses.activate
+def test_authorized_url_with_pkce():
+    responses.add(
+        responses.POST,
+        "https://example.com/oauth/access_token",
+        body='{"access_token":"foobar","token_type":"bearer","scope":"admin"}',
+    )
+    app, _ = make_app(use_pkce=True)
+
+    _state = "random-string"
+    _code_verifier = "random-code-very-secure"
+    with app.test_client() as client:
+        # reset the session before the request
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = _state
+            sess[f"test-service_oauth_code_verifier"] = _code_verifier
+        # make the request
+        resp = client.get(
+            f"/login/test-service/authorized?code=secret-code&state={_state}&code_verifier={_code_verifier}",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client
+        assert resp.status_code == 302
+        assert resp.headers["Location"] in ("https://a.b.c/", "/")
+        # check that we obtained an access token
+        assert len(responses.calls) == 1
+        request_data = dict(parse_qsl(responses.calls[0].request.body))
+        assert (
+            request_data["redirect_uri"]
+            == "https://a.b.c/login/test-service/authorized"
+        )
+        assert request_data["code_verifier"] == _code_verifier
+        # check that we stored the access token in the session
+        with client.session_transaction() as sess:
+            assert sess["test-service_oauth_token"] == {
+                "access_token": "foobar",
+                "scope": ["admin"],
+                "token_type": "bearer",
+            }
+
+
+def test_authorized_url_pkce_flow_no_code_verifier():
+    app, _ = make_app(use_pkce=True)
+    with app.test_client() as client:
+        # make the request, without adding the code_verifier to the session
+        with client.session_transaction() as sess:
+            sess["test-service_oauth_state"] = "random-string"
+        resp = client.get(
+            "/login/test-service/authorized?code=secret-code&state=random-string",
+            base_url="https://a.b.c",
+        )
+        # check that we redirected the client back to login view
+        assert resp.status_code == 302
+        assert resp.headers["Location"] in (
+            "https://a.b.c/login/test-service",
+            "/login/test-service",
+        )
+        # check that there's nothing in the session
+        with client.session_transaction() as sess:
+            assert "test-service_oauth_token" not in sess
 
 
 def test_return_expired_token(request):

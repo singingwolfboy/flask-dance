@@ -146,7 +146,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
         if _token and _token.get("expires_in"):
             # Set the `expires_at` value, overwriting any value
             # that may already be there.
-            delta = timedelta(seconds=_token["expires_in"])
+            delta = timedelta(seconds=int(_token["expires_in"]))
             expires_at = datetime.utcnow() + delta
             _token["expires_at"] = expires_at.replace(tzinfo=timezone.utc).timestamp()
         self.storage.set(self, _token)

@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added support for authorization flow with PKCE_
 
 `6.2.0`_ (2022-10-12)
 ---------------------
@@ -395,7 +395,7 @@ Fixed
 .. _#161: https://github.com/singingwolfboy/flask-dance/issues/161
 .. _isort: https://pycqa.github.io/isort/
 .. _flit: https://flit.pypa.io/
-
+.. _PKCE: https://www.rfc-editor.org/rfc/rfc7636
 
 .. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v6.2.0...HEAD
 .. _6.2.0: https://github.com/singingwolfboy/flask-dance/compare/v6.1.1...v6.2.0
