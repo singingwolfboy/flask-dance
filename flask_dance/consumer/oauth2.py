@@ -213,7 +213,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     def login(self):
         log.debug("client_id = %s", self.client_id)
         self.session.redirect_uri = url_for(".authorized", _external=True)
-        code_verifier = None
         if self.use_pkce:
             code_verifier = generate_token(length=48)
             code_challenge = self.session._client.create_code_challenge(
@@ -226,6 +225,9 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                     "code_challenge": code_challenge,
                 }
             )
+            code_verifier_key = f"{self.name}_oauth_code_verifier"
+            flask.session[code_verifier_key] = code_verifier
+            log.debug("code_verifier = %s", code_verifier)
 
         url, state = self.session.authorization_url(
             self.authorization_url, state=self.state, **self.authorization_url_params
@@ -233,10 +235,6 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         state_key = f"{self.name}_oauth_state"
         flask.session[state_key] = state
         log.debug("state = %s", state)
-        if code_verifier:
-            code_verifier_key = f"{self.name}_{state}_oauth_code_verifier"
-            flask.session[code_verifier_key] = code_verifier
-            log.debug("code_verifier = %s", code_verifier)
         log.debug("redirect URL = %s", url)
         oauth_before_login.send(self, url=url)
         return redirect(url)
@@ -282,8 +280,8 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         self.session._state = state
         del flask.session[state_key]
 
-        if self.use_pkce and state:
-            code_verifier_key = f"{self.name}_{state}_oauth_code_verifier"
+        if self.use_pkce:
+            code_verifier_key = f"{self.name}_oauth_code_verifier"
             if code_verifier_key not in flask.session:
                 # can't find code_verifier, so redirect back to login view
                 log.info("code_verifier not found, redirecting user to login")
