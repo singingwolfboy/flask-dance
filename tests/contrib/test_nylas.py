@@ -35,6 +35,14 @@ def test_blueprint_factory():
     assert nylas_bp.token_url == "https://api.nylas.com/oauth/token"
     assert nylas_bp.token_url_params == {"include_client_id": True}
 
+def test_blueprint_factory_base_url():
+    nylas_bp = make_nylas_blueprint(
+        client_id="foo", client_secret="bar", redirect_to="index", base_url="https://ireland.api.nylas.com"
+    )
+    assert nylas_bp.session.base_url == "https://ireland.api.nylas.com"
+    assert nylas_bp.session.token_url == "https://ireland.api.nylas.com/oauth/token/oauth/authorize"
+    assert nylas_bp.session.authorization_url == "https://ireland.api.nylas.com/"
+
 
 def test_load_from_config(make_app):
     app = make_app()
