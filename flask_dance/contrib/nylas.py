@@ -50,8 +50,8 @@ def make_nylas_blueprint(
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         rule_kwargs (dict, optional): Additional arguments that should be passed when adding
             the login and authorized routes. Defaults to ``None``.
-        base_url (str,optional): A string that points to the data-center the application is stored on
-        Defaults to US Data-center(https://api.nylas.com/) EU Data-center (https://ireland.api.nylas.com)
+        base_url (str,optional): A string that points to the data-center the Nylas application is stored on.
+            Defaults to US Data-center(https://api.nylas.com/) EU Data-center (https://ireland.api.nylas.com)
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
