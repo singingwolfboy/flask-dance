@@ -46,6 +46,14 @@ def test_load_from_config(make_app):
     client_id = URLObject(url).query.dict.get("client_id")
     assert client_id == "foo"
 
+def test_blueprint_factory_base_url():
+    nylas_bp = make_nylas_blueprint(
+        client_id="foo", client_secret="bar", redirect_to="index", base_url="https://ireland.api.nylas.com"
+    )
+    assert nylas_bp.session.base_url == "https://ireland.api.nylas.com"
+    assert nylas_bp.session.token_url == "https://ireland.api.nylas.com/oauth/token/oauth/token"
+    assert nylas_bp.session.authorization_url == "https://ireland.api.nylas.com/oauth/authorize"
+
 
 @responses.activate
 def test_context_local(make_app):
