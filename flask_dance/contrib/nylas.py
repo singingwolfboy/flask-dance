@@ -18,7 +18,7 @@ def make_nylas_blueprint(
     session_class=None,
     storage=None,
     rule_kwargs=None,
-    base_url="https://api.nylas.com/",
+    subdomain=None,
 ):
     """
     Make a blueprint for authenticating with Nylas using OAuth 2. This requires
@@ -50,19 +50,25 @@ def make_nylas_blueprint(
                 :class:`~flask_dance.consumer.storage.session.SessionStorage`.
         rule_kwargs (dict, optional): Additional arguments that should be passed when adding
             the login and authorized routes. Defaults to ``None``.
-        base_url (str,optional): A string that points to the data-center the Nylas application is stored on.
+        subdomain (str,optional): A string that points to the data-center the Nylas application is stored on.
             Defaults to US Data-center(https://api.nylas.com/) EU Data-center (https://ireland.api.nylas.com)
 
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
+    
+    if subdomain == "ireland":
+        subdomain = "https://ireland.api.nylas.com"
+    elif subdomain == "us":
+        subdomain =  "https://api.nylas.com/"
+        
     nylas_bp = OAuth2ConsumerBlueprint(
         "nylas",
         __name__,
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url=base_url,
+        base_url=subdomain,
         authorization_url= f"{base_url}/oauth/authorize",
         token_url= f"{base_url}/oauth/token",
         token_url_params={"include_client_id": True},
