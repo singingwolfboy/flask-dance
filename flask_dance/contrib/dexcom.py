@@ -10,7 +10,8 @@ def make_dexcom_blueprint(
     client_id=None,
     client_secret=None,
     *,
-    scope=None,
+    base_url="https://api.dexcom.com/",
+    scope="offline_access",
     redirect_url=None,
     redirect_to=None,
     login_url=None,
@@ -57,8 +58,8 @@ def make_dexcom_blueprint(
         client_id=client_id,
         client_secret=client_secret,
         scope=scope,
-        base_url="https://api.dexcom.com/",
-        authorization_url="https://www.dexcom.com/v2/oauth2/login",
+        base_url=base_url,
+        authorization_url="https://api.dexcom.com/v2/oauth2/login",
         token_url="https://api.dexcom.com/v2/oauth2/token",
         redirect_url=redirect_url,
         redirect_to=redirect_to,
@@ -68,8 +69,8 @@ def make_dexcom_blueprint(
         storage=storage,
         rule_kwargs=rule_kwargs,
     )
-    dexcom_bp.from_config["client_id"] = "dexcom_OAUTH_CLIENT_ID"
-    dexcom_bp.from_config["client_secret"] = "dexcom_OAUTH_CLIENT_SECRET"
+    dexcom_bp.from_config["client_id"] = "DEXCOM_OAUTH_CLIENT_ID"
+    dexcom_bp.from_config["client_secret"] = "DEXCOM_OAUTH_CLIENT_SECRET"
     dexcom_bp.auto_refresh_url = dexcom_bp.token_url
 
     @dexcom_bp.before_app_request
