@@ -31,14 +31,14 @@ def test_blueprint_factory():
     assert dexcom_bp.session.base_url == "https://api.dexcom.com/"
     assert dexcom_bp.session.client_id == "foo"
     assert dexcom_bp.client_secret == "bar"
-    assert dexcom_bp.authorization_url == "https://www.dexcom.com/oauth2/authorize"
-    assert dexcom_bp.token_url == "https://api.dexcom.com/oauth2/token"
+    assert dexcom_bp.authorization_url == "https://api.dexcom.com/v2/oauth2/login"
+    assert dexcom_bp.token_url == "https://api.dexcom.com/v2/oauth2/token"
 
 
 def test_load_from_config(make_app):
     app = make_app()
-    app.config["dexcom_OAUTH_CLIENT_ID"] = "foo"
-    app.config["dexcom_OAUTH_CLIENT_SECRET"] = "bar"
+    app.config["DEXCOM_OAUTH_CLIENT_ID"] = "foo"
+    app.config["DEXCOM_OAUTH_CLIENT_SECRET"] = "bar"
 
     resp = app.test_client().get("/dexcom")
     url = resp.headers["Location"]
