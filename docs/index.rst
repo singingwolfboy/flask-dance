@@ -28,7 +28,7 @@ Check out just how easy it can be to hook up your Flask app with OAuth:
 Ready to get started?
 
 .. _Flask: http://flask.pocoo.org/
-.. _requests: http://python-requests.org/
+.. _requests: https://requests.readthedocs.io/
 .. _oauthlib: https://oauthlib.readthedocs.io/
 
 User Guide
