@@ -184,12 +184,11 @@ def test_authorized_url():
             == "https://a.b.c/login/test-service/authorized"
         )
         # check that we stored the access token in the session
-        with client.session_transaction() as sess:
-            assert sess["test-service_oauth_token"] == {
-                "access_token": "foobar",
-                "scope": ["admin"],
-                "token_type": "bearer",
-            }
+        assert flask.session["test-service_oauth_token"] == {
+            "access_token": "foobar",
+            "scope": ["admin"],
+            "token_type": "bearer",
+        }
 
 
 def test_authorized_url_no_state():
@@ -207,8 +206,7 @@ def test_authorized_url_no_state():
             "/login/test-service",
         )
         # check that there's nothing in the session
-        with client.session_transaction() as sess:
-            assert "test-service_oauth_token" not in sess
+        assert "test-service_oauth_token" not in flask.session
 
 
 @responses.activate
@@ -295,8 +293,7 @@ def test_authorized_url_token_lifetime():
             "expires_in": 300,
             "expires_at": 1451649901,
         }
-        with client.session_transaction() as sess:
-            assert sess["test-service_oauth_token"] == expected_stored_token
+        assert flask.session["test-service_oauth_token"] == expected_stored_token
 
 
 @responses.activate
@@ -332,12 +329,11 @@ def test_authorized_url_with_pkce():
         )
         assert request_data["code_verifier"] == _code_verifier
         # check that we stored the access token in the session
-        with client.session_transaction() as sess:
-            assert sess["test-service_oauth_token"] == {
-                "access_token": "foobar",
-                "scope": ["admin"],
-                "token_type": "bearer",
-            }
+        assert flask.session["test-service_oauth_token"] == {
+            "access_token": "foobar",
+            "scope": ["admin"],
+            "token_type": "bearer",
+        }
 
 
 def test_authorized_url_pkce_flow_no_code_verifier():
@@ -357,8 +353,7 @@ def test_authorized_url_pkce_flow_no_code_verifier():
             "/login/test-service",
         )
         # check that there's nothing in the session
-        with client.session_transaction() as sess:
-            assert "test-service_oauth_token" not in sess
+        assert "test-service_oauth_token" not in flask.session
 
 
 def test_return_expired_token(request):
