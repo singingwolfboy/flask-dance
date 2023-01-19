@@ -64,7 +64,7 @@ def app(blueprint, db, request):
     app = flask.Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI", "sqlite://")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["CACHE_TYPE"] = "simple"
+    app.config["CACHE_TYPE"] = "SimpleCache"
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
     db.init_app(app)
