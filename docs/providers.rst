@@ -47,6 +47,18 @@ Azure
     already has the Azure AD authentication token loaded (assuming that the user
     has authenticated with Azure AD at some point in the past).
 
+Dexcom
+------
+.. module:: flask_dance.contrib.dexcom
+
+.. autofunction:: make_dexcom_blueprint
+
+.. data:: dexcom
+
+    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
+    already has the Dexcom authentication token loaded (assuming that the user
+    has authenticated with Dexcom at some point in the past).
+
 Digital Ocean
 -------------
 .. module:: flask_dance.contrib.digitalocean
@@ -224,7 +236,7 @@ ORCID
 .. data:: orcid
 
     A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the ORCID (or sandbox ORCID) authentication token loaded (assuming 
+    already has the ORCID (or sandbox ORCID) authentication token loaded (assuming
     that the user has authenticated with ORCID at some point in the past).
 
 Reddit
