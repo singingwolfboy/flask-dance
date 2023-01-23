@@ -21,15 +21,15 @@ def make_dexcom_blueprint(
     rule_kwargs=None,
 ):
     """
-    Make a blueprint for authenticating with dexcom using OAuth 2. This requires
-    a client ID and client secret from dexcom. You should either pass them to
+    Make a blueprint for authenticating with Dexcom using OAuth 2. This requires
+    a client ID and client secret from Dexcom. You should either pass them to
     this constructor, or make sure that your Flask application config defines
     them, using the variables :envvar:`DEXCOM_OAUTH_CLIENT_ID` and
     :envvar:`DEXCOM_OAUTH_CLIENT_SECRET`.
 
     Args:
-        client_id (str): The client ID for your application on dexcom.
-        client_secret (str): The client secret for your application on dexcom
+        client_id (str): The client ID for your application on Dexcom.
+        client_secret (str): The client secret for your application on Dexcom
         scope (str, optional): comma-separated list of scopes for the OAuth token
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
