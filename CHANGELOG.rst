@@ -3,6 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
+* Added Dexcom pre-set configuration
 * Added support for authorization flow with PKCE_
 
 `6.2.0`_ (2022-10-12)
