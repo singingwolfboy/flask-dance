@@ -141,7 +141,7 @@ class SQLAlchemyStorage(BaseStorage):
 
     def get(self, blueprint, user=None, user_id=None):
         """When you have a statement in your code that says
-        "if <provider>.authorized:" (for example "if twitter.authorized:"),
+        "if <provider>.authorized:" (for example "if google.authorized:"),
         a long string of function calls result in this function being used to
         check the Flask server's cache and database for any records associated
         with the current_user. The `user` and `user_id` parameters are actually

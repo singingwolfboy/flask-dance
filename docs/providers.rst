@@ -299,18 +299,6 @@ Twitch
     already has the Twitch authentication token loaded (assuming that the user
     has authenticated with Twitch at some point in the past).
 
-Twitter
--------
-.. module:: flask_dance.contrib.twitter
-
-.. autofunction:: make_twitter_blueprint
-
-.. data:: twitter
-
-    A :class:`~werkzeug.local.LocalProxy` to a :class:`requests.Session` that
-    already has the Twitter authentication token loaded (assuming that the user
-    has authenticated with Twitter at some point in the past).
-
 Spotify
 -------
 .. module:: flask_dance.contrib.spotify

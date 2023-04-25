@@ -18,7 +18,7 @@ class OAuth1Session(BaseOAuth1Session):
     * has a ``base_url`` property used for relative URL resolution
 
     Note that this is a session between the consumer (your website) and the
-    provider (e.g. Twitter), and *not* a session between a user of your website
+    provider (e.g. Google), and *not* a session between a user of your website
     and your website.
     """
 
@@ -47,7 +47,7 @@ class OAuth1Session(BaseOAuth1Session):
     @property
     def authorized(self):
         """This is the property used when you have a statement in your code
-        that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
+        that reads "if <provider>.authorized:", e.g. "if google.authorized:".
 
         The way it works is kind of complicated: this function just tries
         to load the token, and then the 'super()' statement basically just
@@ -111,7 +111,7 @@ class OAuth2Session(BaseOAuth2Session):
     * has a ``base_url`` property used for relative URL resolution
 
     Note that this is a session between the consumer (your website) and the
-    provider (e.g. Twitter), and *not* a session between a user of your website
+    provider (e.g. Google), and *not* a session between a user of your website
     and your website.
     """
 
@@ -145,7 +145,7 @@ class OAuth2Session(BaseOAuth2Session):
     @property
     def authorized(self):
         """This is the property used when you have a statement in your code
-        that reads "if <provider>.authorized:", e.g. "if twitter.authorized:".
+        that reads "if <provider>.authorized:", e.g. "if google.authorized:".
 
         The way it works is kind of complicated: this function just tries
         to load the token, and then the 'super()' statement basically just
