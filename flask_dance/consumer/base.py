@@ -32,7 +32,6 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
         storage=None,
         rule_kwargs=None,
     ):
-
         bp_kwargs = dict(
             name=name,
             import_name=import_name,

@@ -53,7 +53,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         session_class=None,
         storage=None,
         rule_kwargs=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Most of the constructor arguments are forwarded either to the
@@ -168,7 +168,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             force_include_body=self.force_include_body,
             blueprint=self,
             base_url=self.base_url,
-            **self.kwargs
+            **self.kwargs,
         )
 
     def teardown_session(self, exception=None):
