@@ -53,7 +53,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
         session_class=None,
         storage=None,
         rule_kwargs=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Most of the constructor arguments are forwarded either to the
@@ -103,7 +103,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 redirected to the root path (``/``).
             session_class: The class to use for creating a Requests session
                 between the consumer (your website) and the provider (e.g.
-                Twitter). Defaults to
+                Google). Defaults to
                 :class:`~flask_dance.consumer.requests.OAuth1Session`.
             storage: A token storage class, or an instance of a token storage
                 class, to use for this blueprint. Defaults to
@@ -154,7 +154,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     def session(self):
         """
         This is a session between the consumer (your website) and the provider
-        (e.g. Twitter). It is *not* a session between a user of your website
+        (e.g. Google). It is *not* a session between a user of your website
         and your website.
         :return:
         """
@@ -168,7 +168,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
             force_include_body=self.force_include_body,
             blueprint=self,
             base_url=self.base_url,
-            **self.kwargs
+            **self.kwargs,
         )
 
     def teardown_session(self, exception=None):
@@ -206,7 +206,7 @@ class OAuth1ConsumerBlueprint(BaseOAuthConsumerBlueprint):
     def authorized(self):
         """
         This is the route/function that the user will be redirected to by
-        the provider (e.g. Twitter) after the user has logged into the
+        the provider (e.g. Google) after the user has logged into the
         provider's website and authorized your app to access their account.
         """
         if self.redirect_url:

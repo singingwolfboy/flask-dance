@@ -32,7 +32,6 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
         storage=None,
         rule_kwargs=None,
     ):
-
         bp_kwargs = dict(
             name=name,
             import_name=import_name,
@@ -167,7 +166,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
     def session(self):
         """
         This is a session between the consumer (your website) and the provider
-        (e.g. Twitter). It is *not* a session between a user of your website
+        (e.g. Google). It is *not* a session between a user of your website
         and your website.
         """
         raise NotImplementedError()
@@ -180,7 +179,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
     def authorized(self):
         """
         This is the route/function that the user will be redirected to by
-        the provider (e.g. Twitter) after the user has logged into the
+        the provider (e.g. Google) after the user has logged into the
         provider's website and authorized your app to access their account.
         """
         raise NotImplementedError()

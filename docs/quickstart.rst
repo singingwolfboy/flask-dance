@@ -28,7 +28,6 @@ Flask sessions (easiest)
 * `Google <https://github.com/singingwolfboy/flask-dance-google>`__
 * `Facebook <https://github.com/singingwolfboy/flask-dance-facebook>`__
 * `Slack <https://github.com/singingwolfboy/flask-dance-slack>`__
-* `Twitter <https://github.com/singingwolfboy/flask-dance-twitter>`__
 * `LinkedIn <https://github.com/singingwolfboy/flask-dance-linkedin>`__
 * `Heroku <https://github.com/singingwolfboy/flask-dance-heroku>`__
 * `Fitbit <https://github.com/lila/flask-dance-fitbit>`__
@@ -38,7 +37,6 @@ SQLAlchemy
 
 * `Google <https://github.com/singingwolfboy/flask-dance-google-sqla>`__
 * `Google with Flask-Security <https://github.com/singingwolfboy/flask-dance-google-security-sqla>`__
-* `Twitter <https://github.com/singingwolfboy/flask-dance-twitter-sqla>`__
 * `Facebook <https://github.com/singingwolfboy/flask-dance-facebook-sqla>`__
 * `Heroku <https://github.com/singingwolfboy/flask-dance-heroku-sqla>`__
 * `Multiple providers simultaneously <https://github.com/singingwolfboy/flask-dance-multi-provider>`__

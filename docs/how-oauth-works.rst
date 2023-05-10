@@ -10,7 +10,7 @@ consent [#oauth-user]_. There are four roles in an OAuth interaction:
 
 provider
     A website that has information about a user. Well-known OAuth providers
-    include Google, Facebook, Twitter, etc.
+    include Google, Facebook, GitHub etc.
 consumer
     A website that wants to obtain some information about a user from the
     provider.
@@ -110,7 +110,7 @@ OAuth 1
 
 1.  The client visits the consumer at a special URL, indicating that they
     want to connect to the provider with OAuth. Typically, there is a button
-    on the consumer's website labeled "Log In with Twitter" or similar, which
+    on the consumer's website labeled "Log In with Google" or similar, which
     takes the user to this special URL.
 
 2.  The consumer tells the provider that they're about to do the OAuth dance.
