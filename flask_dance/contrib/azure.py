@@ -11,6 +11,7 @@ def make_azure_blueprint(
     client_secret=None,
     *,
     scope=None,
+    offline=False,
     redirect_url=None,
     redirect_to=None,
     login_url=None,
@@ -34,6 +35,8 @@ def make_azure_blueprint(
         client_id (str): The client ID for your application on Azure AD.
         client_secret (str): The client secret for your application on Azure AD
         scope (str, optional): comma-separated list of scopes for the OAuth token
+        offline (bool): Whether to request offline access for the OAuth token.
+            Defaults to False, but must be True to receive a refresh token.
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
@@ -75,7 +78,11 @@ def make_azure_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
+    auto_refresh_url = None  # see #161
     scope = scope or ["openid", "email", "profile", "User.Read"]
+    if offline:
+        scope.append("offline_access")
+        auto_refresh_url = f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token"
     authorization_url_params = {}
     if login_hint:
         authorization_url_params["login_hint"] = login_hint
@@ -92,6 +99,7 @@ def make_azure_blueprint(
         base_url="https://graph.microsoft.com",
         authorization_url=f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize",
         token_url=f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token",
+        auto_refresh_url=auto_refresh_url,
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
