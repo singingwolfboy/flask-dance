@@ -214,6 +214,7 @@ class SQLAlchemyStorage(BaseStorage):
         has_user = hasattr(self.model, "user")
         if has_user and u:
             existing_query = existing_query.filter_by(user=u)
+
         # queue up delete query -- won't be run until commit()
         existing_query.delete()
         # create a new model for this token
@@ -222,6 +223,20 @@ class SQLAlchemyStorage(BaseStorage):
             kwargs["user_id"] = uid
         if has_user and u:
             kwargs["user"] = u
+
+        existing = existing_query.first()
+
+        # if the oauth model is overridden, make sure to copy the columns
+        column_names = [
+            col.name
+            for col in self.model.__table__.columns
+            if not col.nullable
+            and not col.primary_key
+            and col.name not in kwargs.keys()
+        ]
+        for name in column_names:
+            kwargs[name] = getattr(existing, name)
+
         self.session.add(self.model(**kwargs))
         # commit to delete and add simultaneously
         self.session.commit()

@@ -692,6 +692,7 @@ def test_sqla_delete_token(app, db, blueprint, request):
 
 def test_sqla_overwrite_token(app, db, blueprint, request):
     class OAuth(OAuthConsumerMixin, db.Model):
+
         pass
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
@@ -708,6 +709,8 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
     existing = OAuth(
         provider="test-service",
         token={"access_token": "something", "token_type": "bearer", "scope": ["blah"]},
+        provider_user_id="some-hash",
+        provider_user_login = "user.name"
     )
     db.session.add(existing)
     db.session.commit()
@@ -743,6 +746,10 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
         "token_type": "bearer",
         "scope": [""],
     }
+
+
+# def test_sqla_overwrite_token_override_model(app, db, blueprint, request):
+#     class OAuth(OAuthConsumerMixin, db.Model):
 
 
 def test_sqla_cache(app, db, blueprint, request):
