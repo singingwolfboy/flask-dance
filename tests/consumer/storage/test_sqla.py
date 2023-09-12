@@ -692,8 +692,8 @@ def test_sqla_delete_token(app, db, blueprint, request):
 
 def test_sqla_overwrite_token(app, db, blueprint, request):
     class OAuth(OAuthConsumerMixin, db.Model):
-
-        pass
+        provider_user_id=db.Column(db.String, nullable=False)
+        provider_user_login=db.Column(db.String, nullable=False)
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
@@ -733,7 +733,7 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 2
+    assert len(queries) == 3
 
     # check that the database record was overwritten
     authorizations = OAuth.query.all()
