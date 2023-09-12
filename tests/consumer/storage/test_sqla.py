@@ -128,7 +128,7 @@ def test_sqla_storage_without_user(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 2
+    assert len(queries) == 3
 
     # check the database
     authorizations = OAuth.query.all()
@@ -211,7 +211,7 @@ def test_sqla_storage(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 3
+    assert len(queries) == 4
 
     # check the database
     alice = User.query.first()
@@ -351,7 +351,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
     if "_login_user" in flask.g:
@@ -519,7 +519,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # check the database
     users = User.query.all()
@@ -781,7 +781,7 @@ def test_sqla_cache(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 2
+    assert len(queries) == 3
 
     expected_token = {"access_token": "foobar", "token_type": "bearer", "scope": [""]}
 
