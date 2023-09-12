@@ -748,10 +748,6 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
     }
 
 
-# def test_sqla_overwrite_token_override_model(app, db, blueprint, request):
-#     class OAuth(OAuthConsumerMixin, db.Model):
-
-
 def test_sqla_cache(app, db, blueprint, request):
     cache = Cache(app)
 
