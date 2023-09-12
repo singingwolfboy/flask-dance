@@ -18,6 +18,7 @@ def make_gitlab_blueprint(
     client_secret=None,
     *,
     scope=None,
+    refresh=False,
     redirect_url=None,
     redirect_to=None,
     login_url=None,
@@ -39,6 +40,9 @@ def make_gitlab_blueprint(
         client_id (str): The client ID for your application on GitLab.
         client_secret (str): The client secret for your application on GitLab
         scope (str, optional): comma-separated list of scopes for the OAuth token
+        refresh (bool): Whether this instance of Gitlab supports token refreshes.
+            `Refresh opt out was removed in Gitlab 15.0
+            <https://docs.gitlab.com/ee/integration/oauth_provider.html#access-token-expiration>`
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
@@ -66,6 +70,8 @@ def make_gitlab_blueprint(
     :rtype: :class:`~flask_dance.consumer.OAuth2ConsumerBlueprint`
     :returns: A :doc:`blueprint <flask:blueprints>` to attach to your Flask app.
     """
+    auto_refresh_url = None
+
     if not verify_tls_certificates:
         if session_class:
             raise ValueError(
@@ -73,6 +79,9 @@ def make_gitlab_blueprint(
             )
         else:
             session_class = NoVerifyOAuth2Session
+
+    if refresh:
+        auto_refresh_url = f"https://{hostname}/oauth/token"
 
     gitlab_bp = OAuth2ConsumerBlueprint(
         "gitlab",
@@ -83,6 +92,7 @@ def make_gitlab_blueprint(
         base_url=f"https://{hostname}/api/v4/",
         authorization_url=f"https://{hostname}/oauth/authorize",
         token_url=f"https://{hostname}/oauth/token",
+        auto_refresh_url=auto_refresh_url,
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,

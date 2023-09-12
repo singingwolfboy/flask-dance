@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added auto refresh support for Gitlab
 
 `7.0.0`_ (2023-05-10)
 ---------------------
