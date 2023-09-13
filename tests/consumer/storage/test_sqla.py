@@ -351,7 +351,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 6
+    assert len(queries) == 5
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
     if "_login_user" in flask.g:
@@ -692,8 +692,8 @@ def test_sqla_delete_token(app, db, blueprint, request):
 
 def test_sqla_overwrite_token(app, db, blueprint, request):
     class OAuth(OAuthConsumerMixin, db.Model):
-        provider_user_id=db.Column(db.String, nullable=False)
-        provider_user_login=db.Column(db.String, nullable=False)
+        provider_user_id = db.Column(db.String, nullable=False)
+        provider_user_login = db.Column(db.String, nullable=False)
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
@@ -710,7 +710,7 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
         provider="test-service",
         token={"access_token": "something", "token_type": "bearer", "scope": ["blah"]},
         provider_user_id="some-hash",
-        provider_user_login = "user.name"
+        provider_user_login="user.name",
     )
     db.session.add(existing)
     db.session.commit()
