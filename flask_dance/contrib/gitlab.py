@@ -40,7 +40,7 @@ def make_gitlab_blueprint(
         client_id (str): The client ID for your application on GitLab.
         client_secret (str): The client secret for your application on GitLab
         scope (str, optional): comma-separated list of scopes for the OAuth token
-        refresh (bool): Whether this instance of Gitlab supports token refreshes.
+        refresh (bool): Whether this instance of `Gitlab` supports token refreshes.
             `Refresh opt out was removed in Gitlab 15.0
             <https://docs.gitlab.com/ee/integration/oauth_provider.html#access-token-expiration>`
         redirect_url (str): the URL to redirect to after the authentication
