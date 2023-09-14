@@ -351,7 +351,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
     if "_login_user" in flask.g:
