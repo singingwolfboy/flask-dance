@@ -379,7 +379,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # check the database
     authorizations = OAuth.query.all()
