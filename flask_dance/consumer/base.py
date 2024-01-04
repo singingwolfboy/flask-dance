@@ -134,8 +134,8 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
             # Update the `expires_in` value, so that requests-oauthlib
             # can handle automatic token refreshing. Assume that
             # `expires_at` is a valid Unix timestamp.
-            expires_at = datetime.utcfromtimestamp(_token["expires_at"])
-            expires_in = expires_at - datetime.utcnow()
+            expires_at = datetime.fromtimestamp(_token["expires_at"], timezone.utc)
+            expires_in = expires_at - datetime.now(timezone.utc)
             _token["expires_in"] = expires_in.total_seconds()
         return _token
 
@@ -146,7 +146,7 @@ class BaseOAuthConsumerBlueprint(flask.Blueprint, metaclass=ABCMeta):
             # Set the `expires_at` value, overwriting any value
             # that may already be there.
             delta = timedelta(seconds=int(_token["expires_in"]))
-            expires_at = datetime.utcnow() + delta
+            expires_at = datetime.now(timezone.utc) + delta
             _token["expires_at"] = expires_at.replace(tzinfo=timezone.utc).timestamp()
         self.storage.set(self, _token)
         try:

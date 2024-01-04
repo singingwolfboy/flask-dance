@@ -14,6 +14,7 @@ def make_app():
 
     def _make_app(*args, **kwargs):
         app = Flask(__name__)
+        app.config["SERVER_NAME"] = "a.b.c"
         app.secret_key = "whatever"
         blueprint = make_gitlab_blueprint(*args, **kwargs)
         app.register_blueprint(blueprint)
