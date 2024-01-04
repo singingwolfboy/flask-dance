@@ -39,6 +39,7 @@ def make_app(login_url=None):
     app = flask.Flask(__name__)
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
+    app.config["SERVER_NAME"] = "a.b.c"
 
     @app.route("/")
     def index():
@@ -149,11 +150,10 @@ def test_authorized_url():
         assert auth_header["oauth_token"] == "foobar"
         assert auth_header["oauth_verifier"] == "xyz"
         # check that we stored the access token and secret in the session
-        with client.session_transaction() as sess:
-            assert sess["test-service_oauth_token"] == {
-                "oauth_token": "xxx",
-                "oauth_token_secret": "yyy",
-            }
+        assert flask.session["test-service_oauth_token"] == {
+            "oauth_token": "xxx",
+            "oauth_token_secret": "yyy",
+        }
 
 
 @responses.activate

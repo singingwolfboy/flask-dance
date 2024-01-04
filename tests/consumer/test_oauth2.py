@@ -47,6 +47,7 @@ def make_app(login_url=None, debug=False, **kwargs):
     app.secret_key = "secret"
     app.register_blueprint(blueprint, url_prefix="/login")
     app.debug = debug
+    app.config["SERVER_NAME"] = "a.b.c"
 
     @app.route("/")
     def index():
@@ -77,8 +78,7 @@ def test_login_url():
             "/login/test-service", base_url="https://a.b.c", follow_redirects=False
         )
         # check that we saved the state in the session
-        with client.session_transaction() as sess:
-            assert sess["test-service_oauth_state"] == "random-string"
+        assert flask.session["test-service_oauth_state"] == "random-string"
     # check that we redirected the client
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
@@ -94,28 +94,27 @@ def test_login_url():
 
 @responses.activate
 def test_login_url_with_pkce():
-    _code_challenge_method = "S256"  # That should be a default value
+    code_challenge_method = "S256"  # That should be a default value
     app, _ = make_app(use_pkce=True)
     with app.test_client() as client:
         resp = client.get(
             "/login/test-service", base_url="https://a.b.c", follow_redirects=False
         )
         # check that we saved the code verifier in the session
-        with client.session_transaction() as sess:
-            assert "test-service_oauth_code_verifier" in sess
-            _code_verifier = sess["test-service_oauth_code_verifier"]
-            assert 43 <= len(_code_verifier) <= 128  # RFC7636 section 4.1
-            _code_challenge = OAuth2Client("123").create_code_challenge(
-                _code_verifier, _code_challenge_method
-            )
+        assert "test-service_oauth_code_verifier" in flask.session
+        code_verifier = flask.session["test-service_oauth_code_verifier"]
+        assert 43 <= len(code_verifier) <= 128  # RFC7636 section 4.1
+        code_challenge = OAuth2Client("123").create_code_challenge(
+            code_verifier, code_challenge_method
+        )
 
     # check that we redirected the client
     assert resp.status_code == 302
     location = URLObject(resp.headers["Location"])
     assert location.without_query() == "https://example.com/oauth/authorize"
     # check PKCE specific query parameters
-    assert location.query_dict["code_challenge_method"] == _code_challenge_method
-    assert location.query_dict["code_challenge"] == _code_challenge
+    assert location.query_dict["code_challenge_method"] == code_challenge_method
+    assert location.query_dict["code_challenge"] == code_challenge
 
 
 @responses.activate
@@ -126,8 +125,7 @@ def test_login_url_with_invalid_code_challenge_method():
             "/login/test-service", base_url="https://a.b.c", follow_redirects=False
         )
         # the code verifier is saved in the session ...
-        with client.session_transaction() as sess:
-            assert "test-service_oauth_code_verifier" in sess
+        assert "test-service_oauth_code_verifier" in flask.session
 
     location = URLObject(resp.headers["Location"])
     assert location.without_query() == "https://example.com/oauth/authorize"
@@ -428,6 +426,7 @@ def test_redirect_url():
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
+    app.config["SERVER_NAME"] = "a.b.c"
     app.register_blueprint(blueprint, url_prefix="/login")
 
     with app.test_client() as client:
@@ -464,6 +463,7 @@ def test_redirect_to():
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
+    app.config["SERVER_NAME"] = "a.b.c"
     app.register_blueprint(blueprint, url_prefix="/login")
 
     @app.route("/blargl")
@@ -503,6 +503,7 @@ def test_redirect_fallback():
     )
     app = flask.Flask(__name__)
     app.secret_key = "secret"
+    app.config["SERVER_NAME"] = "a.b.c"
     app.register_blueprint(blueprint, url_prefix="/login")
 
     @app.route("/blargl")

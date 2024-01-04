@@ -1,9 +1,10 @@
+from urllib.parse import parse_qs
+
 import pytest
 import requests_oauthlib
 import responses
 from flask import Flask
 from urlobject import URLObject
-from werkzeug.urls import url_decode
 
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask_dance.consumer.storage import MemoryStorage
@@ -117,12 +118,12 @@ def test_auto_token_get(make_app):
             "chat.postMessage",
             data={"channel": "#general", "text": "ping", "icon_emoji": ":robot_face:"},
         )
-    request_data = url_decode(resp.request.body)
-    assert request_data["channel"] == "#general"
-    assert request_data["text"] == "ping"
-    assert request_data["icon_emoji"] == ":robot_face:"
+    request_data = parse_qs(resp.request.body)
+    assert request_data["channel"] == ["#general"]
+    assert request_data["text"] == ["ping"]
+    assert request_data["icon_emoji"] == [":robot_face:"]
     # the `token` parameter should have been automatically added
-    assert request_data["token"] == "abcde"
+    assert request_data["token"] == ["abcde"]
 
 
 @responses.activate
@@ -141,12 +142,12 @@ def test_auto_token_post(make_app):
             "chat.postMessage",
             data={"channel": "#general", "text": "ping", "icon_emoji": ":robot_face:"},
         )
-    request_data = url_decode(resp.request.body)
-    assert request_data["channel"] == "#general"
-    assert request_data["text"] == "ping"
-    assert request_data["icon_emoji"] == ":robot_face:"
+    request_data = parse_qs(resp.request.body)
+    assert request_data["channel"] == ["#general"]
+    assert request_data["text"] == ["ping"]
+    assert request_data["icon_emoji"] == [":robot_face:"]
     # the `token` parameter should have been automatically added
-    assert request_data["token"] == "abcde"
+    assert request_data["token"] == ["abcde"]
 
 
 @responses.activate
@@ -161,10 +162,10 @@ def test_auto_token_post_no_token(make_app):
             "chat.postMessage",
             data={"channel": "#general", "text": "ping", "icon_emoji": ":robot_face:"},
         )
-    request_data = url_decode(resp.request.body)
-    assert request_data["channel"] == "#general"
-    assert request_data["text"] == "ping"
-    assert request_data["icon_emoji"] == ":robot_face:"
+    request_data = parse_qs(resp.request.body)
+    assert request_data["channel"] == ["#general"]
+    assert request_data["text"] == ["ping"]
+    assert request_data["icon_emoji"] == [":robot_face:"]
     assert "token" not in request_data
     url = URLObject(resp.request.url)
     assert "token" not in url.query_dict
@@ -191,11 +192,11 @@ def test_override_token_get(make_app):
                 "icon_emoji": ":robot_face:",
             },
         )
-    request_data = url_decode(resp.request.body)
-    assert request_data["token"] == "xyz"
-    assert request_data["channel"] == "#general"
-    assert request_data["text"] == "ping"
-    assert request_data["icon_emoji"] == ":robot_face:"
+    request_data = parse_qs(resp.request.body)
+    assert request_data["token"] == ["xyz"]
+    assert request_data["channel"] == ["#general"]
+    assert request_data["text"] == ["ping"]
+    assert request_data["icon_emoji"] == [":robot_face:"]
     # should not be present in URL
     url = URLObject(resp.request.url)
     assert "token" not in url.query_dict
@@ -222,11 +223,11 @@ def test_override_token_post(make_app):
                 "icon_emoji": ":robot_face:",
             },
         )
-    request_data = url_decode(resp.request.body)
-    assert request_data["token"] == "xyz"
-    assert request_data["channel"] == "#general"
-    assert request_data["text"] == "ping"
-    assert request_data["icon_emoji"] == ":robot_face:"
+    request_data = parse_qs(resp.request.body)
+    assert request_data["token"] == ["xyz"]
+    assert request_data["channel"] == ["#general"]
+    assert request_data["text"] == ["ping"]
+    assert request_data["icon_emoji"] == [":robot_face:"]
     # should not be present
     url = URLObject(resp.request.url)
     assert "token" not in url.query_dict

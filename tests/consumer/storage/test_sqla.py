@@ -62,6 +62,7 @@ def db():
 def app(blueprint, db, request):
     "Make a Flask app, attach Flask-SQLAlchemy, and establish an app context"
     app = flask.Flask(__name__)
+    app.config["SERVER_NAME"] = "a.b.c"
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI", "sqlite://")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["CACHE_TYPE"] = "SimpleCache"
