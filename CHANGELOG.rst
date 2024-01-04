@@ -5,6 +5,10 @@ Changelog
 -------------
 nothing yet
 
+`7.0.1`_ (2024-01-05)
+---------------------
+* Support Werkzeug 3
+
 `7.0.0`_ (2023-05-10)
 ---------------------
 * Removed Twitter pre-set configuration
@@ -404,6 +408,7 @@ Fixed
 .. _PKCE: https://www.rfc-editor.org/rfc/rfc7636
 
 .. _unreleased: https://github.com/singingwolfboy/flask-dance/compare/v7.0.0...HEAD
+.. _7.0.1: https://github.com/singingwolfboy/flask-dance/compare/v7.0.0...v7.0.1
 .. _7.0.0: https://github.com/singingwolfboy/flask-dance/compare/v6.2.0...v7.0.0
 .. _6.2.0: https://github.com/singingwolfboy/flask-dance/compare/v6.1.1...v6.2.0
 .. _6.1.1: https://github.com/singingwolfboy/flask-dance/compare/v6.1.0...v6.1.1
