@@ -46,9 +46,8 @@ def test_blueprint_factory_offline():
     azure_bp = make_azure_blueprint(
         client_id="foo",
         client_secret="bar",
-        scope="user.read",
+        scope=["user.read", "offline_access"],
         redirect_to="index",
-        offline=True,
     )
     assert isinstance(azure_bp, OAuth2ConsumerBlueprint)
     assert azure_bp.session.scope == ["user.read", "offline_access"]

@@ -97,7 +97,7 @@ def make_azure_blueprint(
         base_url="https://graph.microsoft.com",
         authorization_url=authorization_url,
         token_url=token_url,
-        auto_refresh_url=token_url if "offline" in scope else None,
+        auto_refresh_url=token_url if "offline_access" in scope else None,
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
