@@ -33,7 +33,10 @@ def make_azure_blueprint(
     Args:
         client_id (str): The client ID for your application on Azure AD.
         client_secret (str): The client secret for your application on Azure AD
-        scope (str, optional): comma-separated list of scopes for the OAuth token
+        scope (str, optional): comma-separated list of scopes for the OAuth token.
+            If the ``offline_access`` scope is included, automatic token refresh
+            will be enabled. See the Azure documentation for more information.
+            <https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc#the-offline_access-scope>
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
