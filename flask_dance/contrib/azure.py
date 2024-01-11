@@ -83,7 +83,7 @@ def make_azure_blueprint(
     authorization_url = (
         f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize"
     )
-    auto_refresh_url = None  # see #161
+    auto_refresh_url = None
     if offline:
         scope = [scope] if not isinstance(scope, list) else scope
         scope.append("offline_access")
