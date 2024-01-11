@@ -3,7 +3,8 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Set ``auto_refresh_url`` automatically in ``make_azure_blueprint`` when the ``offline_access``
+  scope is included, thereby enabling automatic token refresh
 
 `7.0.1`_ (2024-01-05)
 ---------------------
