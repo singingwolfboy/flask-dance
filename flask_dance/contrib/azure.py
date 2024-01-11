@@ -11,7 +11,6 @@ def make_azure_blueprint(
     client_secret=None,
     *,
     scope=None,
-    offline=False,
     redirect_url=None,
     redirect_to=None,
     login_url=None,
