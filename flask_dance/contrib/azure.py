@@ -35,8 +35,6 @@ def make_azure_blueprint(
         client_id (str): The client ID for your application on Azure AD.
         client_secret (str): The client secret for your application on Azure AD
         scope (str, optional): comma-separated list of scopes for the OAuth token
-        offline (bool): Whether to request offline access for the OAuth token.
-            Defaults to False, but must be True to receive a refresh token.
         redirect_url (str): the URL to redirect to after the authentication
             dance is complete
         redirect_to (str): if ``redirect_url`` is not defined, the name of the
@@ -83,11 +81,6 @@ def make_azure_blueprint(
     authorization_url = (
         f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize"
     )
-    auto_refresh_url = None
-    if offline:
-        scope = [scope] if not isinstance(scope, list) else scope
-        scope.append("offline_access")
-        auto_refresh_url = token_url
     authorization_url_params = {}
     if login_hint:
         authorization_url_params["login_hint"] = login_hint
@@ -104,7 +97,7 @@ def make_azure_blueprint(
         base_url="https://graph.microsoft.com",
         authorization_url=authorization_url,
         token_url=token_url,
-        auto_refresh_url=auto_refresh_url,
+        auto_refresh_url=token_url if "offline" in scope else None,
         redirect_url=redirect_url,
         redirect_to=redirect_to,
         login_url=login_url,
