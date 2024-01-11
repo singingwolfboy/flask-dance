@@ -3,7 +3,8 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added ``offline`` option to  ``make_azure_blueprint``. When set to ``True``,
+  automatic token refresh is enabled
 
 `7.0.1`_ (2024-01-05)
 ---------------------
