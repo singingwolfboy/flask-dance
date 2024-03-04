@@ -80,5 +80,15 @@ The following signals exist in Flask-Dance:
     anyway, so it is your responsibility to hook into this signal and inform
     the user that there was an error.
 
+    You can also return a :class:`~flask.Response` instance from an event
+    subscriber. If you do, that response will be returned to the user instead
+    of the normal redirect. For example::
+
+        from flask import redirect, url_for
+
+        @oauth_error.connect
+        def handle_error(blueprint, error, error_description=None, error_uri=None):
+            return redirect(url_for("custom_error_page"))
+
 .. _flash a message: http://flask.pocoo.org/docs/latest/patterns/flashing/
 .. _blinker: http://pythonhosted.org/blinker/

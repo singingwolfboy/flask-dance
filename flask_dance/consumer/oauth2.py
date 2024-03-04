@@ -264,9 +264,13 @@ class OAuth2ConsumerBlueprint(BaseOAuthConsumerBlueprint):
                 error_desc,
                 error_uri,
             )
-            oauth_error.send(
+            results = oauth_error.send(
                 self, error=error, error_description=error_desc, error_uri=error_uri
             )
+            if results:
+                for _, ret in results:
+                    if isinstance(ret, (Response, current_app.response_class)):
+                        return ret
             return redirect(next_url)
 
         state_key = f"{self.name}_oauth_state"
