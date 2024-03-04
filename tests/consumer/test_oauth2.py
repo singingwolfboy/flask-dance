@@ -768,6 +768,42 @@ def test_signal_oauth_error(request):
     assert resp.status_code == 302
 
 
+@requires_blinker
+def test_signal_oauth_error_response(request):
+    app, bp = make_app()
+
+    calls = []
+
+    def callback(*args, **kwargs):
+        calls.append((args, kwargs))
+        return flask.redirect("/url")
+
+    oauth_error.connect(callback)
+    request.addfinalizer(lambda: oauth_error.disconnect(callback))
+
+    with app.test_client() as client:
+        resp = client.get(
+            "/login/test-service/authorized?"
+            "error=unauthorized_client&"
+            "error_description=Invalid+redirect+URI&"
+            "error_uri=https%3a%2f%2fexample.com%2fdocs%2fhelp",
+            base_url="https://a.b.c",
+        )
+
+        assert resp.status_code == 302
+        assert resp.headers["Location"] in ("/url", "http://localhost/url")
+
+    assert len(calls) == 1
+    assert calls[0] == (
+        (bp,),
+        {
+            "error": "unauthorized_client",
+            "error_description": "Invalid redirect URI",
+            "error_uri": "https://example.com/docs/help",
+        },
+    )
+
+
 class CustomOAuth2Session(OAuth2Session):
     my_attr = "foobar"
 

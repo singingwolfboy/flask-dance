@@ -5,6 +5,7 @@ Changelog
 -------------
 * Set ``auto_refresh_url`` automatically in ``make_azure_blueprint`` when the ``offline_access``
   scope is included, thereby enabling automatic token refresh
+* Allow returning a custom response from a ``oauth_error`` signal handler.
 
 `7.0.1`_ (2024-01-05)
 ---------------------
