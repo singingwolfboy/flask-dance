@@ -51,7 +51,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "Flask Dance"
-copyright = "2014-2021, David Baumgold"
+copyright = "2014-2024, David Baumgold"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
