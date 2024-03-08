@@ -62,7 +62,7 @@ docs = [
     "sqlalchemy>=1.3.11",
     "pytest",
     "betamax",
-    "pillow<=9.5"
+    "pillow<=10.2.0"
 ]
 sqla = ["sqlalchemy>=1.3.11"]
 signals = ["blinker"]
