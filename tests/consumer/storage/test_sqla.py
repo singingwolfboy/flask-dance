@@ -129,7 +129,7 @@ def test_sqla_storage_without_user(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 2
+    assert len(queries) == 3
 
     # check the database
     authorizations = OAuth.query.all()
@@ -212,7 +212,7 @@ def test_sqla_storage(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 3
+    assert len(queries) == 4
 
     # check the database
     alice = User.query.first()
@@ -352,7 +352,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # lets do it again, with Bob as the logged in user -- he gets a different token
     if "_login_user" in flask.g:
@@ -380,7 +380,7 @@ def test_sqla_flask_login(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # check the database
     authorizations = OAuth.query.all()
@@ -520,7 +520,7 @@ def test_sqla_flask_login_anon_to_authed(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 5
+    assert len(queries) == 6
 
     # check the database
     users = User.query.all()
@@ -693,7 +693,8 @@ def test_sqla_delete_token(app, db, blueprint, request):
 
 def test_sqla_overwrite_token(app, db, blueprint, request):
     class OAuth(OAuthConsumerMixin, db.Model):
-        pass
+        provider_user_id = db.Column(db.String, nullable=False)
+        provider_user_login = db.Column(db.String, nullable=False)
 
     blueprint.storage = SQLAlchemyStorage(OAuth, db.session)
 
@@ -709,6 +710,8 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
     existing = OAuth(
         provider="test-service",
         token={"access_token": "something", "token_type": "bearer", "scope": ["blah"]},
+        provider_user_id="some-hash",
+        provider_user_login="user.name",
     )
     db.session.add(existing)
     db.session.commit()
@@ -731,7 +734,7 @@ def test_sqla_overwrite_token(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 2
+    assert len(queries) == 3
 
     # check that the database record was overwritten
     authorizations = OAuth.query.all()
@@ -779,7 +782,7 @@ def test_sqla_cache(app, db, blueprint, request):
                 "/oauth_done",
             )
 
-    assert len(queries) == 2
+    assert len(queries) == 3
 
     expected_token = {"access_token": "foobar", "token_type": "bearer", "scope": [""]}
 

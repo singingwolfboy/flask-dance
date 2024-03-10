@@ -3,7 +3,7 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* Added support for auto refreshing tokens if the OAuth model is overriden as in the multi-provider example
 
 `7.1.0`_ (2024-03-05)
 ---------------------
