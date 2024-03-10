@@ -162,3 +162,16 @@ def test_no_verify_api_call(make_app, mocker):
         mock_on_request.assert_called()
         call_verify = mock_on_request.call_args[1].get("verify", True)
         assert call_verify is False
+
+
+def test_blueprint_factory_refresh():
+    glbp = make_gitlab_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope="read_user",
+        hostname="my-instance.com",
+        redirect_to="index",
+        refresh=True,
+    )
+
+    assert glbp.auto_refresh_url == "https://my-instance.com/oauth/token"
