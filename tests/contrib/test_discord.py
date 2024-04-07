@@ -39,7 +39,25 @@ def test_blueprint_factory():
     assert discord_bp.authorization_url_params["prompt"] == "consent"
 
 
-def test_blueprint_factory_with_prompt():
+def test_blueprint_factory_with_prompt_consent():
+    discord_bp = make_discord_blueprint(
+        client_id="foo",
+        client_secret="bar",
+        scope=["identify", "email"],
+        redirect_to="index",
+        prompt="consent",
+    )
+    assert isinstance(discord_bp, OAuth2ConsumerBlueprint)
+    assert discord_bp.session.scope == ["identify", "email"]
+    assert discord_bp.session.base_url == "https://discord.com/"
+    assert discord_bp.session.client_id == "foo"
+    assert discord_bp.client_secret == "bar"
+    assert discord_bp.authorization_url == "https://discord.com/api/oauth2/authorize"
+    assert discord_bp.token_url == "https://discord.com/api/oauth2/token"
+    assert discord_bp.authorization_url_params["prompt"] == "consent"
+
+
+def test_blueprint_factory_with_prompt_None():
     discord_bp = make_discord_blueprint(
         client_id="foo",
         client_secret="bar",
@@ -54,8 +72,7 @@ def test_blueprint_factory_with_prompt():
     assert discord_bp.client_secret == "bar"
     assert discord_bp.authorization_url == "https://discord.com/api/oauth2/authorize"
     assert discord_bp.token_url == "https://discord.com/api/oauth2/token"
-    assert discord_bp.authorization_url_params["prompt"] == None
-
+    assert discord_bp.authorization_url_params["prompt"] == "none"
 
 def test_load_from_config(make_app):
     app = make_app(redirect_to="index")
