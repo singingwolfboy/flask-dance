@@ -74,6 +74,7 @@ def test_blueprint_factory_with_prompt_None():
     assert discord_bp.token_url == "https://discord.com/api/oauth2/token"
     assert discord_bp.authorization_url_params["prompt"] == "none"
 
+
 def test_load_from_config(make_app):
     app = make_app(redirect_to="index")
     app.config["DISCORD_OAUTH_CLIENT_ID"] = "foo"
