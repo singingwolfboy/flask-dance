@@ -58,7 +58,7 @@ def make_discord_blueprint(
     scope = scope or ["identify"]
     authorization_url_params = {"prompt": "consent"}
     if prompt is None:
-        authorization_url_params["prompt"] = None
+        authorization_url_params["prompt"] = "none"
     discord_bp = OAuth2ConsumerBlueprint(
         "discord",
         __name__,
