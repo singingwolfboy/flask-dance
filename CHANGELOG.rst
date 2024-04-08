@@ -3,7 +3,8 @@ Changelog
 
 `unreleased`_
 -------------
-nothing yet
+* When using the Discord configuration with ``prompt`` set to ``None``,
+  pass the string `"none"` in the URL, to follow the Discord developer documentation.
 
 `7.1.0`_ (2024-03-05)
 ---------------------
