@@ -100,11 +100,18 @@ Full Documentation
 This README provides just a taste of what Flask-Dance is capable of. To see more,
 `read the documentation on ReadTheDocs <http://flask-dance.readthedocs.io/>`_.
 
+Security contact information
+============================
+
+To report a security vulnerability, please use the `Tidelift security contact`_.
+Tidelift will coordinate the fix and disclosure.
+
 .. _supported OAuth providers: https://flask-dance.readthedocs.io/en/latest/providers.html
 .. _SQLAlchemy: http://www.sqlalchemy.org/
 .. _Flask-SQLAlchemy: http://pythonhosted.org/Flask-SQLAlchemy/
 .. _Flask-Login: https://flask-login.readthedocs.io/
 .. _Flask-Caching: https://flask-caching.readthedocs.io/
+.. _Tidelift security contact: https://tidelift.com/security
 
 .. |build-status| image:: https://github.com/singingwolfboy/flask-dance/workflows/Test/badge.svg
    :target: https://github.com/singingwolfboy/flask-dance/actions?query=workflow%3ATest
